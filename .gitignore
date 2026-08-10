@@ -221,3 +221,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Lexicon working file: regenerable, carries evidence blocks.
+# The deliverable is lexicon.json, which stays tracked.
+amharic_tokenizer/lexicon/candidates.json
