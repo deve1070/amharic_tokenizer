@@ -176,8 +176,34 @@ class TestFusionIsOneToMany:
 
 
 class TestDetachInfix:
+    """
+    There is no infix inventory. The inserted fidel is a copy of the
+    consonant that follows it, carrying ኣ, so it is always that
+    consonant's order-4 form.
+    """
+
     def test_spec_example(self):
         assert detach_infix("ቀጫጭን") == [("ቀጭን", "ጫ")]
+
+    def test_two_fidel_base(self):
+        assert detach_infix("ነጫጭ") == [("ነጭ", "ጫ")]
+
+    def test_the_inserted_fidel_is_not_always_the_same(self):
+        # Reading ጫ off the spec's one example would miss all of these.
+        assert detach_infix("ትላልቅ") == [("ትልቅ", "ላ")]
+        assert detach_infix("ረጃጅም") == [("ረጅም", "ጃ")]
+        assert detach_infix("ጥቃቁር") == [("ጥቁር", "ቃ")]
+        assert detach_infix("ቀያይ") == [("ቀይ", "ያ")]
+
+    def test_copy_may_sit_past_the_first_radical(self):
+        assert detach_infix("ወፍራራም") == [("ወፍራም", "ራ")]
+
+    def test_wrong_order_is_not_an_infix(self):
+        # ጭ before ጭ is the same family but not order 4.
+        assert detach_infix("ቀጭጭን") == []
+
+    def test_different_family_is_not_an_infix(self):
+        assert detach_infix("ቀጫልን") == []
 
     def test_word_initial_position_is_not_an_infix(self):
         assert detach_infix("ጫማ") == []
@@ -222,6 +248,13 @@ class TestSegmentWord:
         result = segment_word("ቀጫጭን", lexicon("ቀጭን"))
         assert result.morphemes == ["ቀጭን", "ጫ"]
         assert result.infix == "ጫ"
+
+    def test_infix_on_another_stem(self):
+        assert segment_word("ትላልቅ", lexicon("ትልቅ")).morphemes == ["ትልቅ", "ላ"]
+
+    def test_infix_with_a_suffix(self):
+        result = segment_word("ትላልቆች", lexicon("ትልቅ"))
+        assert result.morphemes == ["ትልቅ", "ላ", "ኦች"]
 
     def test_empty_word(self):
         assert segment_word("", lexicon("ቤት")).known is False

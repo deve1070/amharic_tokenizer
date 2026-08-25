@@ -44,6 +44,15 @@ Ranked in this order:
    incomplete, so this ranks rather than rejects.
 3. Longest stem, then the morpheme sequence itself for determinism.
 
+── The infix is a pattern, not a morpheme ───────────────────────────────
+
+Spec section 2.3.1 gives one infix example, ቀጭን -> ቀጫጭን, and reading ጫ
+off it as the morpheme does not survive contact with another word: ነጭ
+gives ነጫጭ but ትልቅ gives ትላልቅ and ረጅም gives ረጃጅም. The inserted fidel
+is a copy of the consonant that follows it, carrying the vowel ኣ, so it
+is always that consonant's order-4 form. detach_infix() tests for that
+rather than consulting a list.
+
 ── Unknown words ────────────────────────────────────────────────────────
 
 A word whose stem is not in the lexicon comes back whole, with known
@@ -71,10 +80,8 @@ DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "የ", "በ", 
 # Suffixes that concatenate without changing the stem.
 DEFAULT_PLAIN_SUFFIXES = ("ን", "ም", "ና", "ች", "ው", "ዋ", "ዎ", "ዎች", "ኦች")
 
-# Spec section 2.3.1 gives ጫ, marking the plural adjective: ቀጭን ->
-# ቀጫጭን. Whether it is the only infix is open question 3, so this is an
-# inventory rather than a special case.
-DEFAULT_INFIXES = ("ጫ",)
+# The order an infix always surfaces at. See detach_infix().
+_INFIX_ORDER = 4
 
 # Vowel orders that a suffix can fuse onto a stem's final consonant.
 # Order 7 (ኦ) marks the plural before ች; order 2 (ኡ) and order 4 (ኣ)
@@ -229,20 +236,35 @@ def strip_suffixes(word: str, suffixes=DEFAULT_PLAIN_SUFFIXES) -> set[str]:
     return {stem for stem, _ in detach_suffix(word, suffixes)}
 
 
-def detach_infix(word: str, infixes=DEFAULT_INFIXES) -> list[tuple[str, str]]:
+def detach_infix(word: str) -> list[tuple[str, str]]:
     """
     Infixes removable from a surface form, with the remainder.
 
-    Spec section 2.3.2 describes infix detection as subsequence
-    matching: the independent word's characters appear in order but not
-    contiguously, and what sits between them is the infix. Removing a
-    known infix from every position it occurs at gives the same result
-    without searching the lexicon by subsequence, and it cannot invent
-    an infix that is not in the inventory.
+    There is no infix inventory. Spec section 2.3.1 gives one example,
+    ቀጭን -> ቀጫጭን, and reading ጫ off it as a morpheme is a mistake: the
+    inserted fidel is different in every other word.
+
+        ነጭ    -> ነጫጭ     ጫ
+        ትልቅ   -> ትላልቅ    ላ
+        ረጅም   -> ረጃጅም    ጃ
+        ጥቁር   -> ጥቃቁር    ቃ
+        ቀይ    -> ቀያይ     ያ
+        ወፍራም  -> ወፍራራም   ራ
+
+    What is constant is the pattern. The infix is a COPY of the
+    consonant that follows it, carrying the vowel ኣ — so it is always
+    the order-4 form of that consonant's own family. ጭ takes ጫ, ል takes
+    ላ, ቁ takes ቃ. Detection is that test, which is why nothing needs to
+    be listed.
+
+    This parallels the fused suffixes, where ኦች rides its ኦ on the
+    stem's final consonant. Here the invariant is the vowel ኣ and the
+    consonant is copied from the stem. The difference is that the copy
+    is additional material — the stem keeps its own ጭ — so the inserted
+    fidel is reported as it appears rather than reduced to ኣ.
 
     Args:
-        word:    Surface form.
-        infixes: Infix inventory.
+        word: Surface form.
 
     Returns:
         List of (remainder, infix morpheme).
@@ -250,17 +272,23 @@ def detach_infix(word: str, infixes=DEFAULT_INFIXES) -> list[tuple[str, str]]:
     Examples:
         >>> detach_infix("ቀጫጭን")
         [('ቀጭን', 'ጫ')]
+        >>> detach_infix("ነጫጭ")
+        [('ነጭ', 'ጫ')]
+        >>> detach_infix("ትላልቅ")
+        [('ትልቅ', 'ላ')]
     """
     found: list[tuple[str, str]] = []
     seen: set[tuple[str, str]] = set()
-    for infix in infixes:
-        for index in range(1, len(word) - len(infix)):
-            if word[index:index + len(infix)] != infix:
-                continue
-            stem = word[:index] + word[index + len(infix):]
-            if stem and (stem, infix) not in seen:
-                seen.add((stem, infix))
-                found.append((stem, infix))
+    for index in range(1, len(word) - 1):
+        infix = word[index]
+        if fidel_order(infix) != _INFIX_ORDER:
+            continue
+        if to_order6(infix) != to_order6(word[index + 1]):
+            continue
+        stem = word[:index] + word[index + 1:]
+        if stem and (stem, infix) not in seen:
+            seen.add((stem, infix))
+            found.append((stem, infix))
     return found
 
 
@@ -333,7 +361,6 @@ def _analyses(
     max_suffixes: int,
     prefixes,
     suffixes,
-    infixes,
 ) -> list[Segmentation]:
     """Every analysis whose stem is a lexicon entry."""
     found: list[Segmentation] = []
@@ -387,7 +414,7 @@ def _analyses(
         # One infix at most: it is an internal modification of a single
         # stem, not something that stacks.
         if node.infix is None:
-            for rest, infix in detach_infix(node.text, infixes):
+            for rest, infix in detach_infix(node.text):
                 queue.append(
                     _Node(
                         rest,
@@ -449,7 +476,6 @@ def segment_word(
     max_suffixes: int = 3,
     prefixes=DEFAULT_PREFIXES,
     suffixes=DEFAULT_PLAIN_SUFFIXES,
-    infixes=DEFAULT_INFIXES,
 ) -> Segmentation:
     """
     Level 4: split a surface word into its morphemes.
@@ -465,7 +491,6 @@ def segment_word(
         max_suffixes: Most suffixes to strip from one word.
         prefixes:     Prefix inventory.
         suffixes:     Plain suffix inventory.
-        infixes:      Infix inventory.
 
     Returns:
         The best Segmentation. When no analysis has a stem in the
@@ -485,7 +510,7 @@ def segment_word(
         return Segmentation(word=word, stem=word, known=False)
 
     found = _analyses(
-        word, lexicon, max_prefixes, max_suffixes, prefixes, suffixes, infixes
+        word, lexicon, max_prefixes, max_suffixes, prefixes, suffixes
     )
     if not found:
         return Segmentation(word=word, stem=word, known=False)
@@ -499,7 +524,6 @@ def segment_all(
     max_suffixes: int = 3,
     prefixes=DEFAULT_PREFIXES,
     suffixes=DEFAULT_PLAIN_SUFFIXES,
-    infixes=DEFAULT_INFIXES,
 ) -> list[Segmentation]:
     """
     Every Level 4 analysis of a word, best first.
@@ -514,12 +538,11 @@ def segment_all(
         max_suffixes: Most suffixes to strip from one word.
         prefixes:     Prefix inventory.
         suffixes:     Plain suffix inventory.
-        infixes:      Infix inventory.
 
     Returns:
         Ranked analyses. Empty when the word has no lexicon anchor.
     """
     found = _analyses(
-        word, lexicon, max_prefixes, max_suffixes, prefixes, suffixes, infixes
+        word, lexicon, max_prefixes, max_suffixes, prefixes, suffixes
     )
     return rank_analyses(found, lexicon)
