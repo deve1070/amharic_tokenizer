@@ -394,8 +394,12 @@ class TestStandaloneRatio:
         assert generate_candidates(counts)[0]["standalone_ratio"] == 0.5
 
     def test_threshold_is_configurable(self):
+        # min_stem_length is relaxed too, so this isolates the ratio knob.
         counts = Counter({"ነ": 300, "ነው": 500_000, "ነን": 100_000})
-        assert generate_candidates(counts, min_standalone_ratio=0.0) != []
+        relaxed = generate_candidates(
+            counts, min_standalone_ratio=0.0, min_stem_length=1
+        )
+        assert relaxed != []
 
 
 class TestAmbiguousFusionGuard:
@@ -582,3 +586,108 @@ class TestWriteLexiconCandidates:
         assert write_lexicon_candidates(
             generate_candidates(counts), str(path), limit=1
         ) == 1
+
+
+# ── Stems that are not independent words ─────────────────────────────────────
+
+from amharic_tokenizer.frequency import (  # noqa: E402
+    RULE_DEFINITE_FUSION,
+    RULE_SUFFIX,
+    derived_stems,
+)
+
+
+class TestMinStemLength:
+    """
+    Single fidels reach the candidate list through spacing noise. A
+    prefix typed with a space after it is indistinguishable from a word
+    standing alone, so the standalone ratio cannot reject them.
+    """
+
+    def test_single_fidel_rejected(self):
+        counts = Counter({"የ": 54_653, "የው": 2_000, "የን": 1_500, "የም": 1_200})
+        assert generate_candidates(counts) == []
+
+    def test_two_fidel_word_kept(self):
+        counts = Counter({"ቤት": 100_000, "ቤቶች": 30_000, "ቤቱ": 20_000})
+        assert generate_candidates(counts)[0]["stem"] == "ቤት"
+
+    def test_threshold_is_configurable(self):
+        counts = Counter({"የ": 54_653, "የው": 2_000, "የን": 1_500})
+        assert generate_candidates(counts, min_stem_length=1) != []
+
+
+class TestDerivedStems:
+    """
+    A stem attested as an inflection of another stem is discarded, or
+    Level 4 matches it whole and loses the affix. How much a derivation
+    counts depends on the rule that produced it.
+    """
+
+    def test_unambiguous_fusion_needs_no_frequency_check(self):
+        # Nothing but a plural produces order-7 + ች.
+        attested = {"ልጅ": {"ልጆች": RULE_PLURAL_FUSION}, "ልጆች": {"ልጆቹ": RULE_SUFFIX}}
+        counts = Counter({"ልጅ": 33_026, "ልጆች": 21_730})
+        assert derived_stems(attested, counts) == {"ልጆች"}
+
+    def test_unambiguous_fusion_applies_even_when_the_form_is_commoner(self):
+        attested = {"ልጅ": {"ልጆች": RULE_PLURAL_FUSION}, "ልጆች": {"ልጆቹ": RULE_SUFFIX}}
+        counts = Counter({"ልጅ": 1_000, "ልጆች": 50_000})
+        assert derived_stems(attested, counts) == {"ልጆች"}
+
+    def test_suffix_derivation_holds_when_the_base_is_commoner(self):
+        attested = {"ስብሰባ": {"ስብሰባው": RULE_SUFFIX}, "ስብሰባው": {"ስብሰባውን": RULE_SUFFIX}}
+        counts = Counter({"ስብሰባ": 12_787, "ስብሰባው": 1_567})
+        assert derived_stems(attested, counts) == {"ስብሰባው"}
+
+    def test_definite_fusion_ignored_when_the_claimer_is_rarer(self):
+        # ልዩ ends in order 2 without being the definite of ልይ.
+        attested = {"ልይ": {"ልዩ": RULE_DEFINITE_FUSION}, "ልዩ": {"ልዩው": RULE_SUFFIX}}
+        counts = Counter({"ልይ": 72, "ልዩ": 26_881})
+        assert derived_stems(attested, counts) == set()
+
+    def test_suffix_derivation_ignored_when_the_claimer_is_rarer(self):
+        # ሰላም is not ሰላ + ም; the affix rules just run backwards over it.
+        attested = {"ሰላ": {"ሰላም": RULE_SUFFIX}, "ሰላም": {"ሰላሙ": RULE_SUFFIX}}
+        counts = Counter({"ሰላ": 29, "ሰላም": 20_213})
+        assert derived_stems(attested, counts) == set()
+
+    def test_ambiguous_fusion_never_derives(self):
+        # ቀና is a word, not the definite of ቀን, though it is rarer.
+        attested = {"ቀን": {"ቀና": RULE_AMBIGUOUS_FUSION}, "ቀና": {"ቀናው": RULE_SUFFIX}}
+        counts = Counter({"ቀን": 74_594, "ቀና": 2_910})
+        assert derived_stems(attested, counts) == set()
+
+    def test_base_survives(self):
+        attested = {"ቤት": {"ቤቱ": RULE_DEFINITE_FUSION}, "ቤቱ": {"ቤቱን": RULE_SUFFIX}}
+        counts = Counter({"ቤት": 118_411, "ቤቱ": 22_836})
+        assert "ቤት" not in derived_stems(attested, counts)
+
+    def test_forms_that_are_not_stems_are_ignored(self):
+        # ቤቶች is a form of ቤት but never a stem in its own right.
+        attested = {"ቤት": {"ቤቶች": RULE_PLURAL_FUSION}}
+        assert derived_stems(attested, Counter({"ቤት": 100})) == set()
+
+    def test_empty(self):
+        assert derived_stems({}, Counter()) == set()
+
+
+class TestDerivedStemsAreNotCandidates:
+    """End to end through generate_candidates()"""
+
+    def test_definite_form_excluded(self):
+        counts = Counter({
+            "ቤት": 100_000, "ቤቶች": 30_000, "ቤቱ": 20_000,
+            "ቤቱን": 3_000, "ቤቱም": 2_500, "የቤቱ": 2_000,
+        })
+        stems = {c["stem"] for c in generate_candidates(counts)}
+        assert "ቤት" in stems
+        assert "ቤቱ" not in stems
+
+    def test_base_keeps_the_derived_form_as_evidence(self):
+        counts = Counter({
+            "ቤት": 100_000, "ቤቶች": 30_000, "ቤቱ": 20_000,
+            "ቤቱን": 3_000, "ቤቱም": 2_500,
+        })
+        entry = next(c for c in generate_candidates(counts) if c["stem"] == "ቤት")
+        assert "ቤቱ" in entry["forms"]

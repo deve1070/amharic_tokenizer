@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from amharic_tokenizer.lexicon_builder import (  # noqa: E402
     SCHEMA_FIELDS,
+    annotation_gaps,
     build_lexicon,
     lexicon_index,
     load_lexicon,
@@ -171,6 +172,15 @@ class TestValidationStatus:
         entries = [entry("ቤት", validated=True), entry("ሰው", validated=False)]
         assert validation_status(entries)["fraction_validated"] == 0.5
 
+    def test_annotated_counts_only_fully_filled_entries(self):
+        entries = [
+            entry("ቤት", validated=True, category="noun", gender="none"),
+            entry("ሰው", validated=True, category=None),
+        ]
+        status = validation_status(entries)
+        assert status["validated"] == 2
+        assert status["annotated"] == 1
+
     def test_empty(self):
         assert validation_status([])["fraction_validated"] == 0.0
 
@@ -206,10 +216,33 @@ class TestSchemaErrors:
         broken = entry(allows_prefix="የ")
         assert any("allows_prefix" in p for p in schema_errors(broken))
 
-    def test_validated_without_category_flagged(self):
-        # Usually means the flag was flipped before the linguistic fields.
-        problems = schema_errors(entry(validated=True, category=None))
-        assert any("category is still null" in p for p in problems)
+    def test_validated_without_category_is_not_a_schema_error(self):
+        # Confirming a word is an independent morpheme and labelling its
+        # part of speech are separate passes; annotation_gaps() tracks
+        # the second one.
+        assert schema_errors(entry(validated=True, category=None)) == []
+
+
+class TestAnnotationGaps:
+    """Descriptive fields, counted apart from the validated flag"""
+
+    def test_reports_unfilled_fields(self):
+        gaps = annotation_gaps([entry("ቤት", validated=True)])
+        assert gaps["ቤት"] == ["category", "gender"]
+
+    def test_ignores_unvalidated_entries(self):
+        assert annotation_gaps([entry("ቤት", validated=False)]) == {}
+
+    def test_fully_annotated_entry_has_no_gap(self):
+        complete = entry("ቤት", validated=True, category="noun", gender="none")
+        assert annotation_gaps([complete]) == {}
+
+    def test_partial_annotation(self):
+        partial = entry("ቤት", validated=True, category="noun")
+        assert annotation_gaps([partial]) == {"ቤት": ["gender"]}
+
+    def test_empty(self):
+        assert annotation_gaps([]) == {}
 
 
 class TestValidateLexicon:
@@ -219,7 +252,7 @@ class TestValidateLexicon:
         assert validate_lexicon([entry("ቤት"), entry("ሰው")]) == {}
 
     def test_reports_by_word(self):
-        report = validate_lexicon([entry("ቤት", validated=True, category=None)])
+        report = validate_lexicon([entry("ቤት", category="thing")])
         assert "ቤት" in report
 
     def test_handles_missing_word(self):

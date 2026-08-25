@@ -304,6 +304,67 @@ def candidate_stems(
     return set(candidate_stems_with_rules(word, prefixes, suffixes))
 
 
+# The one derivation whose morphology is unambiguous: nothing but a
+# plural produces order-7 + ች, so a stem reached this way is an
+# inflection whatever its frequency. Order-2 definite fusion does not
+# qualify — ልዩ, ሙሉ, ጥሩ and ክፉ all end in order 2 without being the
+# definite of anything.
+_UNAMBIGUOUS_DERIVATIONS = (RULE_PLURAL_FUSION,)
+
+
+def derived_stems(
+    attested: dict[str, dict[str, str]],
+    counts: Counter,
+) -> set[str]:
+    """
+    Stems that are themselves an inflected form of another stem.
+
+    A word can pass every standalone test and still be an inflection:
+    ቤቱ is written without a space, is frequent, and takes further
+    affixes of its own. What gives it away is that it appears in ቤት's
+    form set. Keeping both would let Level 4 match ቤቱ as a whole stem
+    and lose the definite marker.
+
+    How much weight that membership carries depends on the rule that
+    produced it, which is why the rule is tracked alongside each form.
+
+    Plural fusion is unambiguous. No Amharic word ends in order-7 + ች
+    by coincidence, so ልጆች is the plural of ልጅ and nothing else, and
+    the derivation stands on its own.
+
+    Every other rule also runs backwards over ordinary words: ሰላም
+    decomposes to ሰላ + ም, ወንድም to ወንድ + ም, and ልዩ to ልይ + ኡ, none of
+    which is how the word was formed. Frequency separates most of
+    these. A real base outranks its own inflection — ስብሰባ stands alone
+    12,787 times against ስብሰባው's 1,567 — while a spurious claimer is
+    rarer than the word it claims, ልይ managing 72 against ልዩ's 26,881.
+    So those derivations count only when the base is the more frequent
+    of the pair.
+
+    Order-4 fusion never counts. It is tagged ambiguous precisely
+    because many native words simply end in an order-4 character, and
+    discarding ቀና as the definite of ቀን would lose a real word.
+
+    Args:
+        attested: Stem to a dict of surface form to the RULE_* that
+                  derived the stem from it.
+        counts:   Frequency table, read for standalone counts.
+
+    Returns:
+        Set of stems to discard.
+    """
+    derived: set[str] = set()
+    for base, forms in attested.items():
+        for form, rule in forms.items():
+            if form == base or form not in attested:
+                continue
+            if rule in _UNAMBIGUOUS_DERIVATIONS:
+                derived.add(form)
+            elif rule != RULE_AMBIGUOUS_FUSION and counts[form] <= counts[base]:
+                derived.add(form)
+    return derived
+
+
 def generate_candidates(
     counts: Counter,
     min_stem_frequency: int = 10,
@@ -311,6 +372,7 @@ def generate_candidates(
     min_distinct_forms: int = 2,
     min_standalone_ratio: float = 0.05,
     max_ambiguous_inflection_ratio: float = 0.5,
+    min_stem_length: int = 2,
     prefixes=DEFAULT_PREFIXES,
     suffixes=DEFAULT_PLAIN_SUFFIXES,
 ) -> list[dict]:
@@ -336,6 +398,21 @@ def generate_candidates(
     frequent as its claimed stem is really a separate word: ስራ (74,971)
     is not the definite of ስር (23,621).
 
+    min_stem_length rejects single-fidel stems. Every one the corpus
+    produces is a bound morpheme or a stray letter: የ and ለ are
+    prefixes, ን and ዎ and ኛ are suffixes, and the rest are initials
+    left behind by abbreviations. They pass the standalone ratio test
+    because that ratio measures spacing, not wordhood — a prefix typed
+    with a space after it is indistinguishable from a word standing
+    alone, and የ scores 0.97 on exactly that noise.
+
+    Finally, a stem attested as an inflection of another stem is
+    dropped. ቤቱ survives every test above on its own, but it also sits
+    in ቤት's form set, and admitting both breaks Level 4: longest-match
+    segmentation takes ቤቱ whole and the definite marker ኡ never appears
+    in the output. derived_stems() weighs that evidence by the rule
+    that produced it.
+
     Args:
         counts:                Frequency table.
         min_stem_frequency:    Minimum standalone count for a stem.
@@ -346,6 +423,7 @@ def generate_candidates(
         max_ambiguous_inflection_ratio: For order-4 fusion only, the
                                largest the derived form may be relative
                                to the stem.
+        min_stem_length:       Minimum fidels in a stem.
         prefixes:              Prefix inventory.
         suffixes:              Plain suffix inventory.
 
@@ -355,7 +433,7 @@ def generate_candidates(
             stem, standalone_frequency, distinct_forms, total_frequency,
             standalone_ratio, forms
     """
-    attested: dict[str, set[str]] = {}
+    attested: dict[str, dict[str, str]] = {}
 
     for word, count in counts.items():
         if count < min_surface_frequency:
@@ -372,10 +450,17 @@ def generate_candidates(
                 and count > stem_count * max_ambiguous_inflection_ratio
             ):
                 continue
-            attested.setdefault(stem, set()).add(word)
+            attested.setdefault(stem, {})[word] = rule
+
+    # Applied before derived_stems() so that a stem rejected here cannot
+    # go on to disqualify a real word as its inflection.
+    attested = {s: f for s, f in attested.items() if len(s) >= min_stem_length}
+    derived = derived_stems(attested, counts)
 
     candidates = []
     for stem, forms in attested.items():
+        if stem in derived:
+            continue
         if len(forms) < min_distinct_forms:
             continue
         standalone = counts[stem]

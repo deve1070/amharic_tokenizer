@@ -20,12 +20,18 @@ directory; a module of the same name would shadow it on import.
 
 ── Validation is incremental ────────────────────────────────────────────
 
-Every entry starts with validated=false. Level 4 reads only validated
-entries, so the lexicon can ship at full size and become useful the
-moment the first entries are confirmed — there is no threshold to reach
-before the segmenter can be built or tested. Validate the top of the
-file first; it is ordered by morphological productivity, so that is
-where the evidence is strongest.
+Every entry starts with validated=false. The flag carries one claim:
+this word is a genuine independent morpheme. Level 4 reads only
+validated entries, so the lexicon can ship at full size and become
+useful the moment the first entries are confirmed — there is no
+threshold to reach before the segmenter can be built or tested.
+Validate the top of the file first; it is ordered by morphological
+productivity, so that is where the evidence is strongest.
+
+Filling in category and gender is a second, independent pass. It is
+tracked by annotation_gaps() rather than by the same flag, because a
+word can be confirmed as an independent morpheme long before anyone
+labels its part of speech, and Level 4 needs only the former.
 
 ── What the corpus can and cannot fill in ───────────────────────────────
 
@@ -175,7 +181,9 @@ def validation_status(entries: list[dict]) -> dict:
         entries: Lexicon entries.
 
     Returns:
-        Dict with total, validated, remaining, and the fraction done.
+        Dict with total, validated, remaining, the fraction done, and
+        annotated — validated entries that also carry category and
+        gender. See annotation_gaps() for why the two are counted apart.
     """
     total = len(entries)
     done = len(validated_entries(entries))
@@ -184,6 +192,7 @@ def validation_status(entries: list[dict]) -> dict:
         "validated": done,
         "remaining": total - done,
         "fraction_validated": round(done / total, 4) if total else 0.0,
+        "annotated": done - len(annotation_gaps(entries)),
     }
 
 
@@ -224,12 +233,37 @@ def schema_errors(entry: dict) -> list[str]:
         if value is not None and not isinstance(value, list):
             problems.append(f"{field} must be a list")
 
-    # A validated entry with no category is half-filled, which usually
-    # means the flag was flipped before the linguistic fields.
-    if entry.get("validated") is True and entry.get("category") is None:
-        problems.append("validated but category is still null")
-
     return problems
+
+
+def annotation_gaps(entries: list[dict]) -> dict[str, list[str]]:
+    """
+    Validated entries whose descriptive fields are still unfilled.
+
+    Separate from schema_errors() because `validated` and the annotation
+    fields answer different questions. `validated` says the word is a
+    genuine independent morpheme, which is the claim Level 4 depends on:
+    it looks up word, root_consonants, allows_prefix and allows_suffix,
+    and never reads category or gender. Those two describe the word for
+    downstream consumers of the lexicon, and a missing one leaves an
+    entry incompletely described without making it unsafe to segment
+    against.
+
+    Args:
+        entries: Lexicon entries.
+
+    Returns:
+        Dict mapping word to the names of its unfilled fields, for
+        validated entries only. Empty when annotation is complete.
+    """
+    gaps = {}
+    for index, entry in enumerate(entries):
+        if entry.get("validated") is not True:
+            continue
+        missing = [f for f in ("category", "gender") if entry.get(f) is None]
+        if missing:
+            gaps[entry.get("word") or f"<entry {index}>"] = missing
+    return gaps
 
 
 def validate_lexicon(entries: list[dict]) -> dict[str, list[str]]:
