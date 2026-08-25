@@ -52,23 +52,15 @@ from amharic_tokenizer.levels import (
     level1_root,
     to_order6,
 )
+from amharic_tokenizer.morphology import (
+    DEFAULT_PLAIN_SUFFIXES,
+    DEFAULT_PREFIXES,
+    strip_prefixes,
+    strip_suffixes,
+)
 
 _ETHIOPIC_WORD = re.compile(r"^[ሀ-፿]+$")
 _PUNCTUATION_CHARS = set("።፣፤፥፦፡?!#‹›")
-
-# Per CLAUDE.md, minus ም and ና. Both inventories are open questions, so
-# they are parameters rather than constants baked into the algorithm.
-#
-# ም and ና are listed as prefixes in the open questions but do not behave
-# as prefixes in the corpus. Being single characters they strip the front
-# off ordinary words: ምግብ (food) -> ግብ, ምድር (earth) -> ድር, ናት -> ት, ምን
-# -> ን. In Amharic both are conjunctions or suffixes (ና "and", ም "also"),
-# which is consistent with the corpus evidence. Excluded by default;
-# pass them explicitly to reproduce the old behaviour.
-DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "የ", "በ", "ከ", "ለ")
-
-# Suffixes that concatenate without changing the stem.
-DEFAULT_PLAIN_SUFFIXES = ("ን", "ም", "ና", "ች", "ው", "ዋ", "ዎ", "ዎች", "ኦች")
 
 # Vowel orders that a suffix can fuse onto a stem's final consonant.
 # Order 7 (ኦ) marks the plural before ች; order 2 (ኡ) and order 4 (ኣ)
@@ -151,76 +143,6 @@ def coverage_curve(
     for target in remaining:
         result[f"{target:.0%}"] = len(counts)
     return result
-
-
-def strip_prefixes(word: str, prefixes=DEFAULT_PREFIXES) -> set[str]:
-    """
-    Candidate stems obtained by removing one prefix.
-
-    Prefixes concatenate without altering the stem, so this is plain
-    string removal.
-
-    Args:
-        word:     Surface form.
-        prefixes: Prefix inventory.
-
-    Returns:
-        Set of candidate stems. Empty if no prefix applies.
-
-    Examples:
-        >>> sorted(strip_prefixes("የቤት"))
-        ['ቤት']
-    """
-    stems = set()
-    for prefix in prefixes:
-        if word.startswith(prefix) and len(word) > len(prefix):
-            stems.add(word[len(prefix):])
-    return stems
-
-
-def strip_suffixes(word: str, suffixes=DEFAULT_PLAIN_SUFFIXES) -> set[str]:
-    """
-    Candidate stems obtained by removing one suffix.
-
-    Covers all three suffix shapes: plain concatenation, vowel fusion
-    followed by a consonant (the ኦች plural), and vowel fusion alone
-    (the ኡ definite).
-
-    Args:
-        word:     Surface form.
-        suffixes: Plain suffix inventory.
-
-    Returns:
-        Set of candidate stems. Empty if no suffix applies.
-
-    Examples:
-        >>> "ቤት" in strip_suffixes("ቤቶች")
-        True
-        >>> "ቤት" in strip_suffixes("ቤቱ")
-        True
-        >>> "ቤት" in strip_suffixes("ቤትን")
-        True
-    """
-    stems = set()
-
-    for suffix in suffixes:
-        if word.endswith(suffix) and len(word) > len(suffix):
-            stems.add(word[: -len(suffix)])
-
-    # Fusion + consonant: ቤቶች -> ቤት. The ኦ rides on the final consonant,
-    # which sits at order 7, and ች follows it.
-    if len(word) >= 3 and word.endswith("ች"):
-        carrier = word[-2]
-        if fidel_order(carrier) == _FUSED_PLURAL_ORDER:
-            stems.add(word[:-2] + to_order6(carrier))
-
-    # Fusion alone: ቤቱ -> ቤት, ቤታ -> ቤት.
-    if len(word) >= 2:
-        last = word[-1]
-        if fidel_order(last) in _FUSED_DEFINITE_ORDERS:
-            stems.add(word[:-1] + to_order6(last))
-
-    return stems
 
 
 # Derivation rules, tracked so that policy can differ per rule.

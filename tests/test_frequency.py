@@ -20,8 +20,6 @@ from amharic_tokenizer.frequency import (  # noqa: E402
     fidel_order,
     generate_candidates,
     is_ethiopic_word,
-    strip_prefixes,
-    strip_suffixes,
     to_order6,
     write_candidates,
 )
@@ -105,68 +103,6 @@ class TestIsEthiopicWord:
 
 
 # ── Affix stripping ───────────────────────────────────────────────────────────
-
-
-class TestStripPrefixes:
-    """Prefixes concatenate, so removal is plain string slicing"""
-
-    def test_ye_prefix(self):
-        assert "ቤት" in strip_prefixes("የቤት")
-
-    def test_be_prefix(self):
-        assert "ቤት" in strip_prefixes("በቤት")
-
-    def test_multi_character_prefix(self):
-        assert "ሰዎች" in strip_prefixes("ስለሰዎች")
-
-    def test_no_prefix(self):
-        assert strip_prefixes("ቤት") == set()
-
-    def test_prefix_alone_is_not_stripped(self):
-        # Stripping የ from የ would leave nothing.
-        assert strip_prefixes("የ") == set()
-
-
-class TestStripSuffixesPlain:
-    """Suffixes that concatenate without altering the stem"""
-
-    def test_accusative_n(self):
-        assert "ቤት" in strip_suffixes("ቤትን")
-
-    def test_woch_plural(self):
-        assert "ኢትዮጵያ" in strip_suffixes("ኢትዮጵያዎች")
-
-    def test_no_suffix(self):
-        assert strip_suffixes("ቤት") == set()
-
-
-class TestStripSuffixesFused:
-    """
-    ኦች and ኡ fuse their vowel into the stem's final consonant.
-
-    ቤት + ኦች is written ቤቶች, not ቤትኦች — removing the literal characters
-    would find nothing, so the fusion has to be inverted arithmetically.
-    """
-
-    def test_plural_fusion(self):
-        assert "ቤት" in strip_suffixes("ቤቶች")
-
-    def test_definite_fusion(self):
-        assert "ቤት" in strip_suffixes("ቤቱ")
-
-    def test_feminine_definite_fusion(self):
-        assert "ቤት" in strip_suffixes("ቤታ")
-
-    def test_plural_fusion_other_family(self):
-        # ልጅ + ኦች -> ልጆች
-        assert "ልጅ" in strip_suffixes("ልጆች")
-
-    def test_literal_removal_would_fail(self):
-        # The naive approach finds nothing, which is why fusion exists.
-        assert "ቤቶች".replace("ኦች", "") == "ቤቶች"
-
-    def test_too_short_for_fusion(self):
-        assert strip_suffixes("ች") == set()
 
 
 class TestCandidateStems:
@@ -424,28 +360,6 @@ class TestAmbiguousFusionGuard:
         counts = Counter({"ልጅ": 1_000, "ልጆች": 5_000, "ልጁ": 800})
         candidates = {c["stem"]: c for c in generate_candidates(counts)}
         assert "ልጆች" in candidates["ልጅ"]["forms"]
-
-
-class TestPrefixInventory:
-    """
-    ም and ና are listed as prefixes in the open questions but do not
-    behave as prefixes in the corpus — being single characters, they
-    strip the front off ordinary words.
-    """
-
-    def test_m_is_not_a_default_prefix(self):
-        # ምግብ (food) must not decompose to ግብ.
-        assert "ግብ" not in strip_prefixes("ምግብ")
-
-    def test_na_is_not_a_default_prefix(self):
-        assert "ት" not in strip_prefixes("ናት")
-
-    def test_real_prefixes_still_work(self):
-        assert "ቤት" in strip_prefixes("የቤት")
-        assert "ሰዎች" in strip_prefixes("ስለሰዎች")
-
-    def test_can_be_reenabled_explicitly(self):
-        assert "ግብ" in strip_prefixes("ምግብ", prefixes=("ም",))
 
 
 # ── Lexicon entries (spec section 3.3) ───────────────────────────────────────
