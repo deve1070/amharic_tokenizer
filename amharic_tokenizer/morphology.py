@@ -53,6 +53,20 @@ is a copy of the consonant that follows it, carrying the vowel ኣ, so it
 is always that consonant's order-4 form. detach_infix() tests for that
 rather than consulting a list.
 
+── One suffix, two functions ────────────────────────────────────────────
+
+ኡ attaches the same way to a noun and to a verb, and Level 4 finds the
+same boundary in both, but it is not the same morpheme:
+
+    ቤት  + ኡ  -> ቤቱ    the definite article, "the house"
+    ሆነ  + ኡ  -> ሆኑ    third person plural agreement, "they became"
+
+The fidel arithmetic cannot tell them apart, because nothing in the
+surface form differs. What decides is the part of speech of the stem,
+which is why suffix_function() reads the entry's category and returns
+None when that field is still unfilled. An unlabelled morpheme is
+honest; a guessed one would put a definite article on a verb.
+
 ── Unknown words ────────────────────────────────────────────────────────
 
 A word whose stem is not in the lexicon comes back whole, with known
@@ -92,10 +106,15 @@ _FUSED_DEFINITE_ORDERS = (2, 4)
 # Morpheme names for the fused definite, by the order they surface at.
 _DEFINITE_MORPHEMES = {2: "ኡ", 4: "ኣ"}
 
-# Stem-final orders a fused plural can be restored to. Order 6 is the
-# bare consonant (ሀገሮች -> ሀገር); order 4 is an ኣ-final stem whose vowel
-# the plural overwrites (ከተሞች -> ከተማ).
-_PLURAL_CARRIER_ORDERS = (6, 4)
+# Stem-final orders a fused suffix can be restored to. A fused vowel
+# OVERWRITES whatever vowel the stem's final fidel carried, so the
+# carrier records the suffix and says nothing about the stem.
+#
+# Order 6 is the bare consonant, which is where most nouns end:
+# ሀገሮች -> ሀገር, ቤቱ -> ቤት. Order 4 is an ኣ-final stem, ከተሞች -> ከተማ and
+# ወጡ -> ወጣ. Order 1 is where a verb's third person masculine
+# perfective ends, ሆኑ -> ሆነ and ሞቱ -> ሞተ.
+_CARRIER_ORDERS = (6, 4, 1)
 
 _ORDER_OFFSET = {order: order - 1 for order in range(1, 9)}
 
@@ -190,6 +209,10 @@ def detach_suffix(
     seen: set[tuple[str, str]] = set()
 
     def add(stem: str, morpheme: str) -> None:
+        # Restoring a carrier to the order it already sits at is a no-op
+        # that would report the whole word as its own stem.
+        if stem == word:
+            return
         if stem and (stem, morpheme) not in seen:
             seen.add((stem, morpheme))
             found.append((stem, morpheme))
@@ -203,7 +226,7 @@ def detach_suffix(
     if len(word) >= 3 and word.endswith("ች"):
         carrier = word[-2]
         if fidel_order(carrier) == _FUSED_PLURAL_ORDER:
-            for order in _PLURAL_CARRIER_ORDERS:
+            for order in _CARRIER_ORDERS:
                 add(word[:-2] + _at_order(carrier, order), "ኦች")
 
     # Fusion alone: ቤቱ -> ቤት, ቤታ -> ቤት.
@@ -211,7 +234,8 @@ def detach_suffix(
         last = word[-1]
         order = fidel_order(last)
         if order in _FUSED_DEFINITE_ORDERS:
-            add(word[:-1] + to_order6(last), _DEFINITE_MORPHEMES[order])
+            for restored in _CARRIER_ORDERS:
+                add(word[:-1] + _at_order(last, restored), _DEFINITE_MORPHEMES[order])
 
     return found
 
@@ -292,6 +316,78 @@ def detach_infix(word: str) -> list[tuple[str, str]]:
     return found
 
 
+# Morpheme kinds, by position relative to the independent morpheme.
+PREFIX = "prefix"
+INDEPENDENT = "independent"
+INFIX = "infix"
+SUFFIX = "suffix"
+
+# Categories whose members take the definite article. Anything that is
+# not a verb does; the split is verb against the rest.
+_VERB = "verb"
+
+# Suffixes that mean one thing on a verb and another on everything else.
+# Keyed suffix -> (function on a non-verb, function on a verb).
+_SUFFIX_FUNCTIONS = {
+    "ኡ": ("definite", "subject_3pl"),
+    "ው": ("definite", "subject_3ms"),
+}
+
+
+def suffix_function(suffix: str, category: str | None) -> str | None:
+    """
+    What a suffix does, given the part of speech of its stem.
+
+    Only the suffixes with two readings are listed. Everything else has
+    one function and needs no disambiguation, so it returns None rather
+    than a gloss invented here.
+
+    Args:
+        suffix:   A suffix morpheme.
+        category: The stem entry's category, or None if unfilled.
+
+    Returns:
+        The function name, or None when the suffix is unambiguous or the
+        stem's category is unknown.
+
+    Examples:
+        >>> suffix_function("ኡ", "noun")
+        'definite'
+        >>> suffix_function("ኡ", "verb")
+        'subject_3pl'
+        >>> suffix_function("ኡ", None) is None
+        True
+        >>> suffix_function("ኦች", "noun") is None
+        True
+    """
+    readings = _SUFFIX_FUNCTIONS.get(suffix)
+    if readings is None or category is None:
+        return None
+    return readings[1] if category == _VERB else readings[0]
+
+
+@dataclass(frozen=True)
+class Morpheme:
+    """
+    One morpheme with its position and, where it matters, its function.
+
+    text is always a real Amharic string, so Levels 3, 2 and 1 and the
+    BPE layer can consume it directly. The grammatical function is kept
+    beside it rather than folded into the string, because ኡ-def would
+    not be decomposable as Amharic.
+
+    Attributes:
+        text:     The morpheme.
+        kind:     PREFIX, INDEPENDENT, INFIX or SUFFIX.
+        function: What it does, when the morpheme has more than one
+                  reading and the stem's category resolves it.
+    """
+
+    text: str
+    kind: str
+    function: str | None = None
+
+
 @dataclass(frozen=True)
 class Segmentation:
     """
@@ -308,6 +404,8 @@ class Segmentation:
         infix:    Infix morpheme, or None.
         known:    Whether stem was found in the lexicon. False means the
                   word was returned whole, not that it was guessed at.
+        category: The stem entry's category, which is what resolves a
+                  suffix with two readings. None when unfilled.
     """
 
     word: str
@@ -316,6 +414,27 @@ class Segmentation:
     suffixes: tuple[str, ...] = ()
     infix: str | None = None
     known: bool = True
+    category: str | None = None
+
+    @property
+    def parts(self) -> list[Morpheme]:
+        """
+        All morphemes with their position and function, in order.
+
+        Examples:
+            >>> seg = Segmentation("ቤቱ", "ቤት", suffixes=("ኡ",), category="noun")
+            >>> [(p.text, p.function) for p in seg.parts]
+            [('ቤት', None), ('ኡ', 'definite')]
+        """
+        parts = [Morpheme(p, PREFIX) for p in self.prefixes]
+        parts.append(Morpheme(self.stem, INDEPENDENT))
+        if self.infix:
+            parts.append(Morpheme(self.infix, INFIX))
+        parts.extend(
+            Morpheme(s, SUFFIX, suffix_function(s, self.category))
+            for s in self.suffixes
+        )
+        return parts
 
     @property
     def morphemes(self) -> list[str]:
@@ -329,12 +448,7 @@ class Segmentation:
             >>> Segmentation("ቤቶች", "ቤት", suffixes=("ኦች",)).morphemes
             ['ቤት', 'ኦች']
         """
-        parts = list(self.prefixes)
-        parts.append(self.stem)
-        if self.infix:
-            parts.append(self.infix)
-        parts.extend(self.suffixes)
-        return parts
+        return [part.text for part in self.parts]
 
     @property
     def morpheme_count(self) -> int:
@@ -382,6 +496,7 @@ def _analyses(
                     prefixes=node.prefixes,
                     suffixes=node.suffixes,
                     infix=node.infix,
+                    category=lexicon[node.text].get("category"),
                 )
             )
 

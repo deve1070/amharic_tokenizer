@@ -11,6 +11,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from amharic_tokenizer.morphology import (  # noqa: E402
+    INDEPENDENT,
+    PREFIX,
+    SUFFIX,
     Segmentation,
     detach_infix,
     detach_prefix,
@@ -20,6 +23,7 @@ from amharic_tokenizer.morphology import (  # noqa: E402
     segment_word,
     strip_prefixes,
     strip_suffixes,
+    suffix_function,
 )
 
 
@@ -167,9 +171,17 @@ class TestFusionIsOneToMany:
         # ከተማ + ኦች -> ከተሞች. Reducing to order 6 alone would give ከተም.
         assert ("ከተማ", "ኦች") in detach_suffix("ከተሞች")
 
-    def test_both_readings_present(self):
+    def test_every_stem_final_order_is_offered(self):
         stems = {s for s, m in detach_suffix("ከተሞች") if m == "ኦች"}
-        assert stems == {"ከተም", "ከተማ"}
+        assert stems == {"ከተም", "ከተማ", "ከተመ"}
+
+    def test_verb_perfective_stem_is_reachable(self):
+        # ሆነ + ኡ -> ሆኑ. The ኡ overwrites the ኧ of ነ, so the carrier
+        # restores to order 1, not to the bare consonant.
+        assert ("ሆነ", "ኡ") in detach_suffix("ሆኑ")
+
+    def test_noun_stem_is_reachable_from_the_same_shape(self):
+        assert ("ቤት", "ኡ") in detach_suffix("ቤቱ")
 
     def test_the_lexicon_picks_the_right_one(self):
         assert segment_word("ከተሞች", lexicon("ከተማ")).morphemes == ["ከተማ", "ኦች"]
@@ -384,3 +396,72 @@ class TestSegmentationShape:
 
     def test_is_hashable(self):
         assert len({Segmentation("ቤት", "ቤት"), Segmentation("ቤት", "ቤት")}) == 1
+
+
+# ── One suffix, two functions ────────────────────────────────────────────────
+
+
+class TestSuffixFunction:
+    """
+    ኡ attaches the same way to a noun and a verb and Level 4 finds the
+    same boundary, but it is not the same morpheme. The stem's category
+    is what decides.
+    """
+
+    def test_definite_on_a_noun(self):
+        assert suffix_function("ኡ", "noun") == "definite"
+
+    def test_agreement_on_a_verb(self):
+        assert suffix_function("ኡ", "verb") == "subject_3pl"
+
+    def test_w_splits_the_same_way(self):
+        assert suffix_function("ው", "noun") == "definite"
+        assert suffix_function("ው", "verb") == "subject_3ms"
+
+    def test_unfilled_category_is_not_guessed(self):
+        # A guess would put a definite article on a verb.
+        assert suffix_function("ኡ", None) is None
+
+    def test_unambiguous_suffix_gets_no_gloss(self):
+        assert suffix_function("ኦች", "noun") is None
+
+    def test_adjectives_take_the_definite_reading(self):
+        assert suffix_function("ኡ", "adjective") == "definite"
+
+
+class TestFunctionsInASegmentation:
+    def test_noun_definite(self):
+        index = {"ቤት": {"category": "noun", "allows_suffix": ["ኡ"]}}
+        parts = segment_word("ቤቱ", index).parts
+        assert [(p.text, p.function) for p in parts] == [
+            ("ቤት", None),
+            ("ኡ", "definite"),
+        ]
+
+    def test_verb_plural(self):
+        index = {"ሆነ": {"category": "verb", "allows_suffix": ["ኡ"]}}
+        parts = segment_word("ሆኑ", index).parts
+        assert [(p.text, p.function) for p in parts] == [
+            ("ሆነ", None),
+            ("ኡ", "subject_3pl"),
+        ]
+
+    def test_same_boundary_either_way(self):
+        noun = segment_word("ቤቱ", {"ቤት": {"category": "noun"}})
+        verb = segment_word("ሆኑ", {"ሆነ": {"category": "verb"}})
+        assert noun.suffixes == verb.suffixes == ("ኡ",)
+
+    def test_morphemes_stay_amharic_strings(self):
+        # The function lives beside the morpheme, not inside it, so
+        # Levels 3, 2 and 1 can still decompose the text.
+        index = {"ቤት": {"category": "noun"}}
+        assert segment_word("ቤቱ", index).morphemes == ["ቤት", "ኡ"]
+
+    def test_kinds_are_reported(self):
+        index = {"ቤት": {"category": "noun"}}
+        parts = segment_word("የቤቶች", index).parts
+        assert [p.kind for p in parts] == [PREFIX, INDEPENDENT, SUFFIX]
+
+    def test_unknown_word_has_one_independent_part(self):
+        parts = segment_word("ኮምፒውተር", {}).parts
+        assert [(p.text, p.kind) for p in parts] == [("ኮምፒውተር", INDEPENDENT)]
