@@ -79,7 +79,7 @@ choice, not a limitation of the search.
 
 from dataclasses import dataclass, field
 
-from amharic_tokenizer.levels import fidel_order, is_ethiopic, to_order6
+from amharic_tokenizer.levels import fidel_order, to_order, to_order6
 
 # Per CLAUDE.md, minus ም and ና. Both inventories are open questions, so
 # they are parameters rather than constants baked into the algorithm.
@@ -116,15 +116,26 @@ _DEFINITE_MORPHEMES = {2: "ኡ", 4: "ኣ"}
 # perfective ends, ሆኑ -> ሆነ and ሞቱ -> ሞተ.
 _CARRIER_ORDERS = (6, 4, 1)
 
-_ORDER_OFFSET = {order: order - 1 for order in range(1, 9)}
+# ── Derivation rules ─────────────────────────────────────────────────────
+#
+# Which rule detached a suffix is tracked because policy differs per
+# rule. frequency.derived_stems() trusts the plural unconditionally and
+# puts a frequency guard on the rest.
 
+RULE_PREFIX = "prefix"
+RULE_SUFFIX = "suffix"
+RULE_PLURAL_FUSION = "plural_fusion"
+RULE_DEFINITE_FUSION = "definite_fusion"
 
-def _at_order(char: str, order: int) -> str:
-    """The given order of a character's own fidel family."""
-    if not is_ethiopic(char):
-        return char
-    base = ord(char) - ord(char) % 8
-    return chr(base + _ORDER_OFFSET[order])
+# Order-4 (ኣ) fusion is the ambiguous one: many native words simply end
+# in an order-4 character without being an inflected form of anything.
+# ስራ (work) is not the definite of ስር (root); አርባ (forty) is not the
+# definite of አርብ (Friday). Order-7 + ች (the plural) has no such
+# ambiguity — no Amharic word ends that way by coincidence.
+RULE_AMBIGUOUS_FUSION = "ambiguous_fusion"
+
+# Rule naming each order a definite can fuse at.
+_DEFINITE_RULES = {2: RULE_DEFINITE_FUSION, 4: RULE_AMBIGUOUS_FUSION}
 
 
 def strip_prefixes(word: str, prefixes=DEFAULT_PREFIXES) -> set[str]:
@@ -205,21 +216,47 @@ def detach_suffix(
         >>> detach_suffix("ቤትን")
         [('ቤት', 'ን')]
     """
-    found: list[tuple[str, str]] = []
+    return [(stem, morpheme) for stem, morpheme, _ in detach_suffix_with_rule(word, suffixes)]
+
+
+def detach_suffix_with_rule(
+    word: str, suffixes=DEFAULT_PLAIN_SUFFIXES
+) -> list[tuple[str, str, str]]:
+    """
+    detach_suffix() with the rule that produced each remainder.
+
+    The single implementation of suffix inversion. Corpus analysis needs
+    the rule in order to weigh a derivation (frequency.derived_stems);
+    segmentation needs only the morpheme. Both read this.
+
+    Args:
+        word:     Surface form.
+        suffixes: Plain suffix inventory.
+
+    Returns:
+        List of (remainder, suffix morpheme, RULE_*), without duplicates.
+
+    Examples:
+        >>> detach_suffix_with_rule("ቤቶች")[0]
+        ('ቤት', 'ኦች', 'plural_fusion')
+        >>> detach_suffix_with_rule("ቤትን")[0]
+        ('ቤት', 'ን', 'suffix')
+    """
+    found: list[tuple[str, str, str]] = []
     seen: set[tuple[str, str]] = set()
 
-    def add(stem: str, morpheme: str) -> None:
+    def add(stem: str, morpheme: str, rule: str) -> None:
         # Restoring a carrier to the order it already sits at is a no-op
         # that would report the whole word as its own stem.
         if stem == word:
             return
         if stem and (stem, morpheme) not in seen:
             seen.add((stem, morpheme))
-            found.append((stem, morpheme))
+            found.append((stem, morpheme, rule))
 
     for suffix in suffixes:
         if word.endswith(suffix) and len(word) > len(suffix):
-            add(word[: -len(suffix)], suffix)
+            add(word[: -len(suffix)], suffix, RULE_SUFFIX)
 
     # Fusion + consonant: ቤቶች -> ቤት. The ኦ rides on the final consonant,
     # which sits at order 7, and ች follows it.
@@ -227,7 +264,7 @@ def detach_suffix(
         carrier = word[-2]
         if fidel_order(carrier) == _FUSED_PLURAL_ORDER:
             for order in _CARRIER_ORDERS:
-                add(word[:-2] + _at_order(carrier, order), "ኦች")
+                add(word[:-2] + to_order(carrier, order), "ኦች", RULE_PLURAL_FUSION)
 
     # Fusion alone: ቤቱ -> ቤት, ቤታ -> ቤት.
     if len(word) >= 2:
@@ -235,7 +272,11 @@ def detach_suffix(
         order = fidel_order(last)
         if order in _FUSED_DEFINITE_ORDERS:
             for restored in _CARRIER_ORDERS:
-                add(word[:-1] + _at_order(last, restored), _DEFINITE_MORPHEMES[order])
+                add(
+                    word[:-1] + to_order(last, restored),
+                    _DEFINITE_MORPHEMES[order],
+                    _DEFINITE_RULES[order],
+                )
 
     return found
 

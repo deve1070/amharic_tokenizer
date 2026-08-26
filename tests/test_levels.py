@@ -20,6 +20,7 @@ from amharic_tokenizer.levels import (  # noqa: E402
     level1_root,
     level2_sound,
     level3_fidel,
+    to_order,
     to_order6,
 )
 
@@ -40,6 +41,38 @@ class TestFidelOrder:
     def test_non_ethiopic(self):
         assert fidel_order("a") == 0
         assert fidel_order("") == 0
+
+
+class TestToOrder:
+    """The consonant is kept and the vowel replaced"""
+
+    def test_walks_a_family(self):
+        for order, char in enumerate("ተቱቲታቴትቶ", start=1):
+            assert to_order("ት", order) == char
+
+    def test_reaches_the_labialized_form(self):
+        assert to_order("ል", 8) == "ሏ"
+
+    def test_starting_order_does_not_matter(self):
+        # A fused vowel overwrites the stem's own, so the carrier's
+        # order says nothing about where it came from.
+        for char in "ተቱቲታቴትቶ":
+            assert to_order(char, 4) == "ታ"
+
+    def test_verb_stem_endings(self):
+        assert to_order("ደ", 4) == "ዳ"
+        assert to_order("ነ", 4) == "ና"
+
+    def test_non_ethiopic_unchanged(self):
+        assert to_order("a", 3) == "a"
+
+    def test_rejects_order_out_of_range(self):
+        for bad in (0, 9, -1):
+            try:
+                to_order("ት", bad)
+            except ValueError:
+                continue
+            raise AssertionError(f"expected ValueError for order {bad}")
 
 
 class TestToOrder6:

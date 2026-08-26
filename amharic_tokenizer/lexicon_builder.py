@@ -266,6 +266,87 @@ def annotation_gaps(entries: list[dict]) -> dict[str, list[str]]:
     return gaps
 
 
+# Fields the corpus establishes. Everything else in SCHEMA_FIELDS is
+# either identity (word, source) or the native speaker's (category,
+# gender, allows_infix, validated, notes).
+DERIVED_FIELDS = ("allows_prefix", "allows_suffix", "root_consonants")
+
+
+def refresh_derived_fields(entries: list[dict], evidence: dict[str, dict]) -> list[dict]:
+    """
+    Rewrite the corpus-derived fields from a fresh candidate run.
+
+    allows_prefix, allows_suffix and root_consonants are observations,
+    not judgements, so they can be recomputed at any time without
+    reopening validation. This is what makes a correction to the
+    candidate generator reach a lexicon that has already been validated
+    by hand: the derived fields are replaced and word, category, gender,
+    allows_infix, validated and notes are kept.
+
+    An entry with no fresh evidence is copied unchanged rather than
+    emptied. Failing the current candidate filters is not evidence that
+    a validated word takes no affixes.
+
+    Args:
+        entries:  Lexicon entries.
+        evidence: Dict mapping word to a fresh entry, as built by
+                  frequency.to_lexicon_entry() over a new candidate run.
+
+    Returns:
+        A new list of entries, order preserved.
+    """
+    refreshed = []
+    for entry in entries:
+        fresh = evidence.get(entry.get("word"))
+        if fresh is None:
+            refreshed.append(dict(entry))
+            continue
+        refreshed.append({**entry, **{f: fresh[f] for f in DERIVED_FIELDS}})
+    return refreshed
+
+
+def set_categories(entries: list[dict], categories: dict[str, str]) -> list[dict]:
+    """
+    Fill in `category` on the named entries.
+
+    This is the write path for the annotation pass that annotation_gaps()
+    tracks. It matters most for verbs: morphology.suffix_function reads
+    category to decide whether ኡ on a stem is the definite article
+    (ቤት + ኡ, "the house") or third person plural agreement (ሆነ + ኡ,
+    "they became"), and returns None while the field is unfilled rather
+    than guessing.
+
+    Unknown words raise rather than being skipped, because a mistyped
+    Amharic word would otherwise leave the entry unannotated with
+    nothing to show for it.
+
+    Args:
+        entries:    Lexicon entries.
+        categories: Dict mapping word to one of VALID_CATEGORIES.
+
+    Returns:
+        A new list of entries, order preserved, with category set on the
+        named words and every other entry copied unchanged.
+
+    Raises:
+        ValueError: If a category is not recognised, or a word is not in
+                    the lexicon.
+    """
+    unknown_category = {c for c in categories.values() if c not in VALID_CATEGORIES}
+    if unknown_category:
+        raise ValueError(f"category not recognised: {sorted(unknown_category)}")
+
+    present = {e.get("word") for e in entries}
+    missing = sorted(set(categories) - present)
+    if missing:
+        raise ValueError(f"not in the lexicon: {missing}")
+
+    return [
+        {**e, "category": categories.get(e.get("word"), e.get("category"))}
+        for e in entries
+    ]
+
+
 def validate_lexicon(entries: list[dict]) -> dict[str, list[str]]:
     """
     Run schema_errors over a whole lexicon.

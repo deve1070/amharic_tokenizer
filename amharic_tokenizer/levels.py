@@ -57,7 +57,7 @@ Two rules, applied together:
 """
 
 _FAMILY_SIZE = 8
-_ORDER6_OFFSET = 5
+_ORDER6 = 6
 
 _ETHIOPIC_FIRST = "ሀ"
 _ETHIOPIC_LAST = "፿"
@@ -112,6 +112,39 @@ def fidel_order(char: str) -> int:
     return ord(char) % _FAMILY_SIZE + 1
 
 
+def to_order(char: str, order: int) -> str:
+    """
+    Rewrite an Ethiopic syllable at another vowel order of its own family.
+
+    The consonant is kept and the vowel replaced. Families are 8-aligned,
+    so the target is family_base + order - 1.
+
+    Args:
+        char:  A single character.
+        order: Target vowel order, 1-8.
+
+    Returns:
+        The character at that order, or unchanged if not Ethiopic.
+
+    Raises:
+        ValueError: If order is outside 1-8.
+
+    Examples:
+        >>> to_order("ት", 7)
+        'ቶ'
+        >>> to_order("ደ", 4)
+        'ዳ'
+        >>> to_order("ቤ", 6)
+        'ብ'
+    """
+    if not 1 <= order <= _FAMILY_SIZE:
+        raise ValueError(f"vowel order must be 1-{_FAMILY_SIZE}, got {order}")
+    if not is_ethiopic(char):
+        return char
+    base = ord(char) - ord(char) % _FAMILY_SIZE
+    return chr(base + order - 1)
+
+
 def to_order6(char: str) -> str:
     """
     Bare-consonant (order 6) form of an Ethiopic syllable.
@@ -128,10 +161,7 @@ def to_order6(char: str) -> str:
         >>> to_order6("ቤ")
         'ብ'
     """
-    if not is_ethiopic(char):
-        return char
-    base = ord(char) - ord(char) % _FAMILY_SIZE
-    return chr(base + _ORDER6_OFFSET)
+    return to_order(char, _ORDER6)
 
 
 def is_glottal(char: str) -> bool:

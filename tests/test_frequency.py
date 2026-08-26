@@ -288,12 +288,12 @@ class TestWriteCandidates:
 
 # ── Filtering bound forms and coincidences ───────────────────────────────────
 
-from amharic_tokenizer.frequency import (  # noqa: E402
+from amharic_tokenizer.morphology import (  # noqa: E402
     RULE_AMBIGUOUS_FUSION,
     RULE_PLURAL_FUSION,
     RULE_PREFIX,
-    candidate_stems_with_rules,
 )
+from amharic_tokenizer.frequency import candidate_stems_with_rules  # noqa: E402
 
 
 class TestDerivationRules:
@@ -504,9 +504,11 @@ class TestWriteLexiconCandidates:
 
 # ── Stems that are not independent words ─────────────────────────────────────
 
-from amharic_tokenizer.frequency import (  # noqa: E402
+from amharic_tokenizer.morphology import (  # noqa: E402
     RULE_DEFINITE_FUSION,
     RULE_SUFFIX,
+)
+from amharic_tokenizer.frequency import (  # noqa: E402
     derived_stems,
 )
 
@@ -605,3 +607,141 @@ class TestDerivedStemsAreNotCandidates:
         })
         entry = next(c for c in generate_candidates(counts) if c["stem"] == "ቤት")
         assert "ቤቱ" in entry["forms"]
+
+
+# ── Verb detection ────────────────────────────────────────────────────────────
+
+from amharic_tokenizer.frequency import (  # noqa: E402
+    PERFECTIVE_FINAL_ORDERS,
+    VERBAL_PROBES,
+    verb_candidates,
+    verb_evidence,
+    verb_probe_forms,
+)
+
+
+class TestVerbProbeForms:
+    """Conjugated forms a stem would show if it were a verb"""
+
+    def test_negative_wraps_the_stem(self):
+        assert verb_probe_forms("ሆነ")["negative"] == "አልሆነም"
+
+    def test_imperfective_moves_the_final_fidel_to_order4(self):
+        # ነ (order 1) becomes ና (order 4): ሆነ -> ይሆናል.
+        assert verb_probe_forms("ሆነ")["imperfective"] == "ይሆናል"
+
+    def test_imperfective_leaves_an_order4_stem_alone(self):
+        assert verb_probe_forms("ገባ")["imperfective"] == "ይገባል"
+
+    def test_three_radicals_also_drop_the_second_vowel(self):
+        forms = verb_probe_forms("ጀመረ")
+        assert forms["imperfective"] == "ይጀመራል"
+        assert forms["imperfective_reduced"] == "ይጀምራል"
+
+    def test_two_radicals_have_no_reduced_form(self):
+        assert "imperfective_reduced" not in verb_probe_forms("ሆነ")
+
+    def test_third_person_feminine_concatenates(self):
+        assert verb_probe_forms("ወጣ")["perfective_3fs"] == "ወጣች"
+
+    def test_probes_are_generated_for_any_shape(self):
+        # The shape test belongs to verb_candidates(). This just builds
+        # the strings, so a noun gets them too and they simply miss.
+        assert verb_probe_forms("ቤት")["negative"] == "አልቤትም"
+
+    def test_single_fidel_is_too_short(self):
+        assert verb_probe_forms("ሆ") == {}
+
+    def test_non_ethiopic(self):
+        assert verb_probe_forms("house") == {}
+
+
+class TestVerbEvidence:
+    """Only the probes the corpus actually attests"""
+
+    def test_reports_the_probes_that_fired(self):
+        counts = Counter({"አልሆነም": 1193, "ይሆናል": 31197})
+        assert verb_evidence(["ሆነ"], counts) == {
+            "ሆነ": {"negative": 1193, "imperfective": 31197}
+        }
+
+    def test_omits_probes_with_no_count(self):
+        assert "perfective_3fs" not in verb_evidence(["ሆነ"], Counter({"ይሆናል": 5}))["ሆነ"]
+
+    def test_omits_stems_where_nothing_fired(self):
+        assert verb_evidence(["ቤት"], Counter({"ይሆናል": 5})) == {}
+
+    def test_empty(self):
+        assert verb_evidence([], Counter()) == {}
+
+
+class TestVerbCandidates:
+    """Evidence plus shape; either one alone is not enough"""
+
+    def test_keeps_an_order1_stem(self):
+        result = verb_candidates({"ሆነ": {"negative": 1193, "imperfective": 31197}})
+        assert [c["word"] for c in result] == ["ሆነ"]
+        assert result[0]["verbal_total"] == 32390
+
+    def test_keeps_an_order4_stem(self):
+        assert verb_candidates({"ገባ": {"imperfective": 19391}})[0]["word"] == "ገባ"
+
+    def test_drops_an_order6_stem_however_loud(self):
+        # ነገር is a noun. ይነገራል is attested 2,806 times off the same
+        # radicals, but no third person masculine perfective ends at
+        # order 6, so the shape rules it out.
+        assert verb_candidates({"ነገር": {"imperfective": 2806}}) == []
+
+    def test_drops_a_stem_that_only_fired_the_weak_probe(self):
+        # S + ች is a noun plural as readily as a 3fs perfective.
+        assert verb_candidates({"ሰራተኛ": {"perfective_3fs": 40}}) == []
+
+    def test_order1_ranks_before_order4(self):
+        evidence = {"ገባ": {"imperfective": 19391}, "ሄደ": {"imperfective": 1956}}
+        assert [c["word"] for c in verb_candidates(evidence)] == ["ሄደ", "ገባ"]
+
+    def test_louder_evidence_ranks_first_within_an_order(self):
+        evidence = {"ሄደ": {"imperfective": 1956}, "ሆነ": {"imperfective": 31197}}
+        assert [c["word"] for c in verb_candidates(evidence)] == ["ሆነ", "ሄደ"]
+
+    def test_the_negative_outranks_a_louder_imperfective(self):
+        # አልወጣም needs ወጣ itself to be a perfective stem. ይደክማል needs
+        # only ደካማ's radicals, and belongs to the verb ደከመ.
+        evidence = {
+            "ደካማ": {"imperfective_reduced": 65},
+            "ወጣ": {"negative": 349, "imperfective": 1233},
+        }
+        assert [c["word"] for c in verb_candidates(evidence)] == ["ወጣ", "ደካማ"]
+
+    def test_reports_whether_the_negative_fired(self):
+        result = verb_candidates({"ወጣ": {"negative": 349}, "ጥላ": {"imperfective": 321}})
+        assert {c["word"]: c["has_negative"] for c in result} == {
+            "ወጣ": True,
+            "ጥላ": False,
+        }
+
+    def test_the_negative_ranks_but_does_not_filter(self):
+        # አለ takes the irregular negative የለም, so አልአለም is not Amharic.
+        assert verb_candidates({"አለ": {"perfective_3fs": 2203, "imperfective": 9}})
+
+    def test_carries_the_form_behind_each_count(self):
+        probes = verb_candidates({"ሆነ": {"negative": 1193}})[0]["probes"]
+        assert probes["negative"] == {"form": "አልሆነም", "count": 1193}
+
+    def test_weak_probe_is_reported_but_does_not_qualify(self):
+        result = verb_candidates({"ሆነ": {"imperfective": 5, "perfective_3fs": 1190}})
+        assert result[0]["verbal_total"] == 5
+        assert "perfective_3fs" in result[0]["probes"]
+
+    def test_empty(self):
+        assert verb_candidates({}) == []
+
+
+class TestVerbProbeConstants:
+    """The weak probe is deliberately outside the verbal set"""
+
+    def test_perfective_3fs_is_not_verbal_only(self):
+        assert "perfective_3fs" not in VERBAL_PROBES
+
+    def test_perfective_orders(self):
+        assert PERFECTIVE_FINAL_ORDERS == (1, 4)

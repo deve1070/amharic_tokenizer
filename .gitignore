@@ -226,3 +226,6 @@ __marimo__/
 # The deliverable is lexicon.json, which stays tracked.
 amharic_tokenizer/lexicon/candidates.json
 commit_msg.txt
+
+# Verb-detection working file: regenerable from the corpus.
+verb_candidates.json

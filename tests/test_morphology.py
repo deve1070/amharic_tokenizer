@@ -465,3 +465,48 @@ class TestFunctionsInASegmentation:
     def test_unknown_word_has_one_independent_part(self):
         parts = segment_word("ኮምፒውተር", {}).parts
         assert [(p.text, p.kind) for p in parts] == [("ኮምፒውተር", INDEPENDENT)]
+
+
+# ── One implementation of suffix inversion ───────────────────────────────────
+
+from amharic_tokenizer.morphology import (  # noqa: E402
+    RULE_AMBIGUOUS_FUSION,
+    RULE_DEFINITE_FUSION,
+    RULE_PLURAL_FUSION,
+    RULE_SUFFIX,
+    detach_suffix_with_rule,
+)
+
+
+class TestDetachSuffixWithRule:
+    """The rule-tagged form the corpus analysis reads"""
+
+    def test_plain_suffix(self):
+        assert ("ቤት", "ን", RULE_SUFFIX) in detach_suffix_with_rule("ቤትን")
+
+    def test_plural_fusion(self):
+        assert ("ቤት", "ኦች", RULE_PLURAL_FUSION) in detach_suffix_with_rule("ቤቶች")
+
+    def test_order2_definite_is_unambiguous(self):
+        assert ("ቤት", "ኡ", RULE_DEFINITE_FUSION) in detach_suffix_with_rule("ቤቱ")
+
+    def test_order4_definite_is_ambiguous(self):
+        # ስራ is a word in its own right, not the definite of ስር.
+        assert ("ስር", "ኣ", RULE_AMBIGUOUS_FUSION) in detach_suffix_with_rule("ስራ")
+
+    def test_reaches_a_verb_stem_at_order1(self):
+        # ሆኑ is ሆነ + ኡ. Restoring the carrier to order 6 alone gives ሆን,
+        # which is where the corpus analysis and the segmenter used to
+        # disagree.
+        stems = [stem for stem, _, _ in detach_suffix_with_rule("ሆኑ")]
+        assert "ሆነ" in stems and "ሆን" in stems
+
+    def test_reaches_an_order4_stem_through_the_plural(self):
+        stems = [stem for stem, _, _ in detach_suffix_with_rule("ከተሞች")]
+        assert "ከተማ" in stems
+
+    def test_agrees_with_detach_suffix(self):
+        for word in ("ቤቶች", "ቤቱ", "ቤትን", "ሆኑ", "ከተሞች", "ስራ"):
+            assert detach_suffix(word) == [
+                (stem, morpheme) for stem, morpheme, _ in detach_suffix_with_rule(word)
+            ]

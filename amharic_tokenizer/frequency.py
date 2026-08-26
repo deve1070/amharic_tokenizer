@@ -50,23 +50,24 @@ from collections import Counter
 from amharic_tokenizer.levels import (
     fidel_order,
     level1_root,
+    to_order,
     to_order6,
 )
 from amharic_tokenizer.morphology import (
     DEFAULT_PLAIN_SUFFIXES,
     DEFAULT_PREFIXES,
+    RULE_AMBIGUOUS_FUSION,
+    RULE_PLURAL_FUSION,
+    RULE_PREFIX,
+    detach_prefix,
+    detach_suffix,
+    detach_suffix_with_rule,
     strip_prefixes,
     strip_suffixes,
 )
 
 _ETHIOPIC_WORD = re.compile(r"^[ሀ-፿]+$")
 _PUNCTUATION_CHARS = set("።፣፤፥፦፡?!#‹›")
-
-# Vowel orders that a suffix can fuse onto a stem's final consonant.
-# Order 7 (ኦ) marks the plural before ች; order 2 (ኡ) and order 4 (ኣ)
-# mark the definite forms.
-_FUSED_PLURAL_ORDER = 7
-_FUSED_DEFINITE_ORDERS = (2, 4)
 
 
 def is_ethiopic_word(token: str) -> bool:
@@ -145,20 +146,6 @@ def coverage_curve(
     return result
 
 
-# Derivation rules, tracked so that policy can differ per rule.
-RULE_PREFIX = "prefix"
-RULE_SUFFIX = "suffix"
-RULE_PLURAL_FUSION = "plural_fusion"
-RULE_DEFINITE_FUSION = "definite_fusion"
-
-# Order-4 (ኣ) fusion is the ambiguous one: many native words simply end
-# in an order-4 character without being an inflected form of anything.
-# ስራ (work) is not the definite of ስር (root); አርባ (forty) is not the
-# definite of አርብ (Friday). Order-7 + ች (the plural) has no such
-# ambiguity — no Amharic word ends that way by coincidence.
-RULE_AMBIGUOUS_FUSION = "ambiguous_fusion"
-
-
 def candidate_stems_with_rules(
     word: str, prefixes=DEFAULT_PREFIXES, suffixes=DEFAULT_PLAIN_SUFFIXES
 ) -> dict[str, str]:
@@ -179,28 +166,11 @@ def candidate_stems_with_rules(
     """
     rules: dict[str, str] = {}
 
-    for stem in strip_prefixes(word, prefixes):
+    for stem, _ in detach_prefix(word, prefixes):
         rules[stem] = RULE_PREFIX
 
-    for suffix in suffixes:
-        if word.endswith(suffix) and len(word) > len(suffix):
-            rules.setdefault(word[: -len(suffix)], RULE_SUFFIX)
-
-    if len(word) >= 3 and word.endswith("ች"):
-        carrier = word[-2]
-        if fidel_order(carrier) == _FUSED_PLURAL_ORDER:
-            rules.setdefault(
-                word[:-2] + to_order6(carrier), RULE_PLURAL_FUSION
-            )
-
-    if len(word) >= 2:
-        last = word[-1]
-        order = fidel_order(last)
-        if order in _FUSED_DEFINITE_ORDERS:
-            rule = (
-                RULE_AMBIGUOUS_FUSION if order == 4 else RULE_DEFINITE_FUSION
-            )
-            rules.setdefault(word[:-1] + to_order6(last), rule)
+    for stem, _, rule in detach_suffix_with_rule(word, suffixes):
+        rules.setdefault(stem, rule)
 
     rules.pop(word, None)
     return {stem: rule for stem, rule in rules.items() if stem}
@@ -407,6 +377,184 @@ def generate_candidates(
     return candidates
 
 
+# ── Verb detection ────────────────────────────────────────────────────────────
+#
+# The lexicon's `category` field switches on the ኡ/ው distinction in
+# morphology.suffix_function: ቤት + ኡ is the definite article, ሆነ + ኡ is third
+# person plural agreement. Only the verb branch matters, so the question the
+# corpus has to answer is narrow — which stems are verbs.
+#
+# Affix profiles cannot answer it. Verbs and nouns both take የ and both show a
+# ች-final plural, so allows_prefix and allows_suffix look the same for ሆነ and
+# ቤት. Conjugation can, because the forms below have no nominal reading:
+#
+#     negative        አል + S + ም                  አልሄደም, አልሆነም, አልገባም
+#     imperfective    ይ + S at final order 4 + ል   ሄደ -> ይሄዳል, ሆነ -> ይሆናል
+#     3fs perfective  S + ች                        ሄደች, ሆነች, ወጣች
+#
+# Three radicals and up also drop the vowel on the second radical in the
+# imperfective — ጀመረ gives ይጀምራል, not ይጀመራል — so both are generated and
+# either one counts.
+#
+# S + ች is the weak probe of the three. A verb's third person feminine
+# perfective and a noun's plural are the same suffix on the surface, and the
+# probe only distinguishes them because the ordinary noun plural fuses to
+# order 7 instead (ከተማ -> ከተሞች, not ከተማች). It is reported apart from the
+# other three for that reason.
+#
+# ── What the probes are evidence about ───────────────────────────────────────
+#
+# The radicals, not the stored word. Amharic shares roots across parts of
+# speech: ነገር is a noun ("thing"), but ይነገራል ("it is said") is attested 2,806
+# times off the same consonants. Shape is what separates them. A third person
+# masculine perfective ends at order 1 (ሆነ, ሄደ, ሰጠ) or order 4 (ገባ, ወጣ, ሰማ)
+# and never at order 6, so ነገር, በር and ገደል are excluded by their own final
+# fidel however loudly the root conjugates.
+#
+# Order 1 is the cleaner of the two. Few Amharic nouns end there, while many
+# end at order 4 (ከተማ, ጎዳና, ጫማ, ዋጋ), so the two are reported apart rather
+# than merged into one list.
+#
+# This proposes; it does not decide. Spec section 3.2 requires a native
+# speaker on every lexicon field, and category is no exception.
+
+PROBE_NEGATIVE = "negative"
+PROBE_IMPERFECTIVE = "imperfective"
+PROBE_IMPERFECTIVE_REDUCED = "imperfective_reduced"
+PROBE_PERFECTIVE_3FS = "perfective_3fs"
+
+# The probes with no nominal reading at all.
+VERBAL_PROBES = (
+    PROBE_NEGATIVE,
+    PROBE_IMPERFECTIVE,
+    PROBE_IMPERFECTIVE_REDUCED,
+)
+
+# Final vowel orders a third person masculine perfective can end at.
+PERFECTIVE_FINAL_ORDERS = (1, 4)
+
+_IMPERFECTIVE_FINAL_ORDER = 4
+_MIN_REDUCIBLE_RADICALS = 3
+
+
+def verb_probe_forms(stem: str) -> dict[str, str]:
+    """
+    Surface forms a stem would show if it were a verb.
+
+    Args:
+        stem: A lexicon stem, stored as the third person masculine
+              perfective if it is a verb at all.
+
+    Returns:
+        Dict mapping probe name to the surface form it looks for. Empty
+        if the stem is too short or not wholly Ethiopic.
+
+    Examples:
+        >>> verb_probe_forms("ሆነ")["negative"]
+        'አልሆነም'
+        >>> verb_probe_forms("ሆነ")["imperfective"]
+        'ይሆናል'
+        >>> verb_probe_forms("ጀመረ")["imperfective_reduced"]
+        'ይጀምራል'
+    """
+    if len(stem) < 2 or not is_ethiopic_word(stem):
+        return {}
+
+    imperfective_stem = stem[:-1] + to_order(stem[-1], _IMPERFECTIVE_FINAL_ORDER)
+    forms = {
+        PROBE_NEGATIVE: "አል" + stem + "ም",
+        PROBE_IMPERFECTIVE: "ይ" + imperfective_stem + "ል",
+        PROBE_PERFECTIVE_3FS: stem + "ች",
+    }
+    if len(stem) >= _MIN_REDUCIBLE_RADICALS:
+        reduced = imperfective_stem[0] + to_order6(imperfective_stem[1]) + imperfective_stem[2:]
+        forms[PROBE_IMPERFECTIVE_REDUCED] = "ይ" + reduced + "ል"
+    return forms
+
+
+def verb_evidence(stems: list[str], counts: Counter) -> dict[str, dict[str, int]]:
+    """
+    Corpus counts for each stem's verb probes.
+
+    Args:
+        stems:  Lexicon stems to test.
+        counts: Frequency table from build_frequency_table().
+
+    Returns:
+        Dict mapping stem to {probe name: count}, carrying only the
+        probes that actually fired. Stems where nothing fired are
+        omitted.
+    """
+    evidence = {}
+    for stem in stems:
+        hits = {
+            name: counts[form]
+            for name, form in verb_probe_forms(stem).items()
+            if counts[form]
+        }
+        if hits:
+            evidence[stem] = hits
+    return evidence
+
+
+def verb_candidates(evidence: dict[str, dict[str, int]]) -> list[dict]:
+    """
+    Rank the stems whose evidence and shape both point to a verb.
+
+    Args:
+        evidence: Output of verb_evidence().
+
+    Returns:
+        List of dicts with word, final_order, has_negative, verbal_total
+        and probes. Stems that fired no verbal probe, or whose final
+        fidel is at an order no third person masculine perfective ends
+        at, are dropped.
+
+        Sorted by final order (1 before 4, the cleaner signal first),
+        then by whether the negative probe fired, then by how loudly the
+        verbal probes fired.
+
+    ── Why the negative probe is ranked above the rest ──────────────────
+
+    አል + S + ም needs S itself to be a well-formed perfective stem, while
+    ይ + S + ል needs only the radicals. So the negative is the one probe
+    that tests the stored word rather than its root, and the order-4
+    residue separates on it: ገባ, መጣ, ወጣ and ሰማ attest አልገባም, አልመጣም,
+    አልወጣም, አልሰማም, while ደካማ, ጨለማ, ጎዳና and መኪና fire only an
+    imperfective belonging to some other word off the same radicals
+    (ደካማ is an adjective; ይደክማል is the verb ደከመ).
+
+    It ranks rather than filters, because a few genuine verbs have no
+    such form: አለ takes the irregular negative የለም, so አልአለም is not
+    Amharic.
+    """
+    candidates = []
+    for stem, probes in evidence.items():
+        verbal_total = sum(probes.get(name, 0) for name in VERBAL_PROBES)
+        if not verbal_total:
+            continue
+        order = fidel_order(stem[-1])
+        if order not in PERFECTIVE_FINAL_ORDERS:
+            continue
+        candidates.append(
+            {
+                "word": stem,
+                "final_order": order,
+                "has_negative": PROBE_NEGATIVE in probes,
+                "verbal_total": verbal_total,
+                "probes": {
+                    name: {"form": verb_probe_forms(stem)[name], "count": count}
+                    for name, count in sorted(probes.items(), key=lambda p: -p[1])
+                },
+            }
+        )
+
+    candidates.sort(
+        key=lambda c: (c["final_order"], not c["has_negative"], -c["verbal_total"])
+    )
+    return candidates
+
+
 def consonantal_root(word: str) -> list[str]:
     """
     Level 1 root consonants for an independent morpheme.
@@ -458,29 +606,13 @@ def identify_affix(form: str, stem: str) -> tuple[str, str] | None:
         >>> identify_affix("ቤቱ", "ቤት")
         ('suffix', 'ኡ')
     """
-    for prefix in DEFAULT_PREFIXES:
-        if form.startswith(prefix) and form[len(prefix):] == stem:
+    for remainder, prefix in detach_prefix(form):
+        if remainder == stem:
             return ("prefix", prefix)
 
-    for suffix in DEFAULT_PLAIN_SUFFIXES:
-        if form.endswith(suffix) and form[: -len(suffix)] == stem:
-            return ("suffix", suffix)
-
-    # Fused plural: the ኦ rides on the final consonant, ች follows.
-    if len(form) >= 3 and form.endswith("ች"):
-        carrier = form[-2]
-        if (
-            fidel_order(carrier) == _FUSED_PLURAL_ORDER
-            and form[:-2] + to_order6(carrier) == stem
-        ):
-            return ("suffix", "ኦች")
-
-    # Fused definite: the vowel rides on the final consonant alone.
-    if len(form) >= 2:
-        last = form[-1]
-        order = fidel_order(last)
-        if order in _FUSED_DEFINITE_ORDERS and form[:-1] + to_order6(last) == stem:
-            return ("suffix", "ኡ" if order == 2 else "ኣ")
+    for remainder, morpheme in detach_suffix(form):
+        if remainder == stem:
+            return ("suffix", morpheme)
 
     return None
 
