@@ -5802,7 +5802,7 @@
     ],
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "Kept by hand: a real word, not ወንድ + ም. The suffix rule runs backwards over it."
   },
   {
     "word": "ስደት",
@@ -7623,35 +7623,6 @@
     "root_consonants": [
       "ዝ",
       "ን"
-    ],
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": ""
-  },
-  {
-    "word": "ዜጎች",
-    "category": null,
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን",
-      "ኡ",
-      "ዋ"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ዝ",
-      "ግ",
-      "ች"
     ],
     "source": "corpus_bootstrap",
     "validated": true,
@@ -24889,35 +24860,6 @@
       "ን",
       "ግ",
       "ት"
-    ],
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": ""
-  },
-  {
-    "word": "ጓደኞች",
-    "category": null,
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "በ",
-      "ከ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን",
-      "ኡ",
-      "ዋ",
-      "ዎ"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ጕ",
-      "ድ",
-      "ኝ",
-      "ች"
     ],
     "source": "corpus_bootstrap",
     "validated": true,

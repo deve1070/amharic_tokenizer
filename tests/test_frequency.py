@@ -509,6 +509,7 @@ from amharic_tokenizer.morphology import (  # noqa: E402
     RULE_SUFFIX,
 )
 from amharic_tokenizer.frequency import (  # noqa: E402
+    derived_lexicon_entries,
     derived_stems,
 )
 
@@ -544,35 +545,41 @@ class TestDerivedStems:
         # Nothing but a plural produces order-7 + ች.
         attested = {"ልጅ": {"ልጆች": RULE_PLURAL_FUSION}, "ልጆች": {"ልጆቹ": RULE_SUFFIX}}
         counts = Counter({"ልጅ": 33_026, "ልጆች": 21_730})
-        assert derived_stems(attested, counts) == {"ልጆች"}
+        assert derived_stems(attested, counts) == {
+            "ልጆች": ("ልጅ", RULE_PLURAL_FUSION)
+        }
 
     def test_unambiguous_fusion_applies_even_when_the_form_is_commoner(self):
         attested = {"ልጅ": {"ልጆች": RULE_PLURAL_FUSION}, "ልጆች": {"ልጆቹ": RULE_SUFFIX}}
         counts = Counter({"ልጅ": 1_000, "ልጆች": 50_000})
-        assert derived_stems(attested, counts) == {"ልጆች"}
+        assert derived_stems(attested, counts) == {
+            "ልጆች": ("ልጅ", RULE_PLURAL_FUSION)
+        }
 
     def test_suffix_derivation_holds_when_the_base_is_commoner(self):
         attested = {"ስብሰባ": {"ስብሰባው": RULE_SUFFIX}, "ስብሰባው": {"ስብሰባውን": RULE_SUFFIX}}
         counts = Counter({"ስብሰባ": 12_787, "ስብሰባው": 1_567})
-        assert derived_stems(attested, counts) == {"ስብሰባው"}
+        assert derived_stems(attested, counts) == {
+            "ስብሰባው": ("ስብሰባ", RULE_SUFFIX)
+        }
 
     def test_definite_fusion_ignored_when_the_claimer_is_rarer(self):
         # ልዩ ends in order 2 without being the definite of ልይ.
         attested = {"ልይ": {"ልዩ": RULE_DEFINITE_FUSION}, "ልዩ": {"ልዩው": RULE_SUFFIX}}
         counts = Counter({"ልይ": 72, "ልዩ": 26_881})
-        assert derived_stems(attested, counts) == set()
+        assert derived_stems(attested, counts) == {}
 
     def test_suffix_derivation_ignored_when_the_claimer_is_rarer(self):
         # ሰላም is not ሰላ + ም; the affix rules just run backwards over it.
         attested = {"ሰላ": {"ሰላም": RULE_SUFFIX}, "ሰላም": {"ሰላሙ": RULE_SUFFIX}}
         counts = Counter({"ሰላ": 29, "ሰላም": 20_213})
-        assert derived_stems(attested, counts) == set()
+        assert derived_stems(attested, counts) == {}
 
     def test_ambiguous_fusion_never_derives(self):
         # ቀና is a word, not the definite of ቀን, though it is rarer.
         attested = {"ቀን": {"ቀና": RULE_AMBIGUOUS_FUSION}, "ቀና": {"ቀናው": RULE_SUFFIX}}
         counts = Counter({"ቀን": 74_594, "ቀና": 2_910})
-        assert derived_stems(attested, counts) == set()
+        assert derived_stems(attested, counts) == {}
 
     def test_base_survives(self):
         attested = {"ቤት": {"ቤቱ": RULE_DEFINITE_FUSION}, "ቤቱ": {"ቤቱን": RULE_SUFFIX}}
@@ -582,10 +589,59 @@ class TestDerivedStems:
     def test_forms_that_are_not_stems_are_ignored(self):
         # ቤቶች is a form of ቤት but never a stem in its own right.
         attested = {"ቤት": {"ቤቶች": RULE_PLURAL_FUSION}}
-        assert derived_stems(attested, Counter({"ቤት": 100})) == set()
+        assert derived_stems(attested, Counter({"ቤት": 100})) == {}
 
     def test_empty(self):
-        assert derived_stems({}, Counter()) == set()
+        assert derived_stems({}, Counter()) == {}
+
+
+class TestDerivedLexiconEntries:
+    """
+    The same check applied to a lexicon that has already been validated,
+    so a correction to the affix arithmetic reaches entries admitted
+    under the old one.
+    """
+
+    def test_plural_entry_rejected(self):
+        # ዜጎች entered the lexicon when plural fusion was inverted to
+        # order 6 only, giving ዜግ. Restoring order 4 as well reaches ዜጋ.
+        counts = Counter({"ዜጋ": 6_064, "ዜጎች": 15_263})
+        assert derived_lexicon_entries(["ዜጋ", "ዜጎች"], counts) == {
+            "ዜጎች": ("ዜጋ", RULE_PLURAL_FUSION)
+        }
+
+    def test_base_survives(self):
+        counts = Counter({"ዜጋ": 6_064, "ዜጎች": 15_263})
+        assert "ዜጋ" not in derived_lexicon_entries(["ዜጋ", "ዜጎች"], counts)
+
+    def test_base_absent_from_the_lexicon_is_no_evidence(self):
+        # ጓደኞች alone proves nothing; the pair is what disqualifies it.
+        counts = Counter({"ጓደኞች": 836})
+        assert derived_lexicon_entries(["ጓደኞች"], counts) == {}
+
+    def test_suffix_derivation_needs_the_commoner_base(self):
+        counts = Counter({"ስብሰባ": 12_787, "ስብሰባው": 1_567})
+        assert derived_lexicon_entries(["ስብሰባ", "ስብሰባው"], counts) == {
+            "ስብሰባው": ("ስብሰባ", RULE_SUFFIX)
+        }
+
+    def test_suffix_derivation_ignored_when_the_claimer_is_rarer(self):
+        counts = Counter({"ሰላ": 29, "ሰላም": 20_213})
+        assert derived_lexicon_entries(["ሰላ", "ሰላም"], counts) == {}
+
+    def test_ambiguous_fusion_never_derives(self):
+        counts = Counter({"ቀን": 74_594, "ቀና": 2_910})
+        assert derived_lexicon_entries(["ቀን", "ቀና"], counts) == {}
+
+    def test_accepts_any_iterable(self):
+        counts = Counter({"ዜጋ": 6_064, "ዜጎች": 15_263})
+        entries = ({"word": w} for w in ("ዜጋ", "ዜጎች"))
+        assert derived_lexicon_entries(
+            (e["word"] for e in entries), counts
+        ) == {"ዜጎች": ("ዜጋ", RULE_PLURAL_FUSION)}
+
+    def test_empty(self):
+        assert derived_lexicon_entries([], Counter()) == {}
 
 
 class TestDerivedStemsAreNotCandidates:

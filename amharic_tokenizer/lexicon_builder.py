@@ -347,6 +347,39 @@ def set_categories(entries: list[dict], categories: dict[str, str]) -> list[dict
     ]
 
 
+def remove_entries(entries: list[dict], words) -> list[dict]:
+    """
+    Drop the named entries from the lexicon.
+
+    The write path for a word that should never have been admitted. Its
+    caller is frequency.derived_lexicon_entries(), which finds entries
+    that are an inflection of another entry: keeping both breaks Level 4,
+    because longest match takes the inflected form whole and the affix
+    never appears. ዜጎች is a lexicon entry and the plural of ዜጋ, which is
+    also an entry, so ኦች is never reported for that word.
+
+    Unknown words raise rather than being ignored, on the same reasoning
+    as set_categories(): a mistyped Amharic word would otherwise remove
+    nothing and report success.
+
+    Args:
+        entries: Lexicon entries.
+        words:   Words to remove, any iterable.
+
+    Returns:
+        New list with those entries removed. The input is not modified.
+
+    Raises:
+        ValueError: If a word is not in the lexicon.
+    """
+    words = set(words)
+    missing = sorted(words - {e.get("word") for e in entries})
+    if missing:
+        raise ValueError(f"not in the lexicon: {missing}")
+
+    return [e for e in entries if e.get("word") not in words]
+
+
 def validate_lexicon(entries: list[dict]) -> dict[str, list[str]]:
     """
     Run schema_errors over a whole lexicon.

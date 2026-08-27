@@ -19,6 +19,7 @@ from amharic_tokenizer.lexicon_builder import (  # noqa: E402
     lexicon_index,
     load_lexicon,
     refresh_derived_fields,
+    remove_entries,
     save_lexicon,
     schema_errors,
     set_categories,
@@ -377,3 +378,61 @@ class TestRefreshDerivedFields:
 
     def test_empty(self):
         assert refresh_derived_fields([], {}) == []
+
+
+class TestRemoveEntries:
+    """
+    The write path for an entry that should never have been admitted:
+    one that is an inflection of another entry.
+    """
+
+    def test_removes_the_named_entry(self):
+        entries = [entry("ዜጋ"), entry("ዜጎች")]
+        assert [e["word"] for e in remove_entries(entries, ["ዜጎች"])] == ["ዜጋ"]
+
+    def test_removes_several(self):
+        entries = [entry("ዜጋ"), entry("ዜጎች"), entry("ጓደኛ"), entry("ጓደኞች")]
+        result = remove_entries(entries, ["ዜጎች", "ጓደኞች"])
+        assert [e["word"] for e in result] == ["ዜጋ", "ጓደኛ"]
+
+    def test_preserves_order(self):
+        entries = [entry("ሆነ"), entry("ቤት"), entry("ወጣ")]
+        result = remove_entries(entries, ["ቤት"])
+        assert [e["word"] for e in result] == ["ሆነ", "ወጣ"]
+
+    def test_does_not_mutate_the_input(self):
+        entries = [entry("ዜጋ"), entry("ዜጎች")]
+        remove_entries(entries, ["ዜጎች"])
+        assert len(entries) == 2
+
+    def test_keeps_the_entry_objects_intact(self):
+        entries = [entry("ዜጋ", validated=True, category="noun")]
+        assert remove_entries(entries, [])[0]["category"] == "noun"
+
+    def test_rejects_a_word_not_in_the_lexicon(self):
+        try:
+            remove_entries([entry("ዜጋ")], ["ኮምፒውተር"])
+        except ValueError as e:
+            assert "ኮምፒውተር" in str(e)
+            return
+        raise AssertionError("expected ValueError")
+
+    def test_reports_every_missing_word(self):
+        try:
+            remove_entries([entry("ዜጋ")], ["ሀሁ", "ኮምፒውተር"])
+        except ValueError as e:
+            assert "ሀሁ" in str(e) and "ኮምፒውተር" in str(e)
+            return
+        raise AssertionError("expected ValueError")
+
+    def test_accepts_any_iterable(self):
+        entries = [entry("ዜጋ"), entry("ዜጎች")]
+        result = remove_entries(entries, (w for w in ["ዜጎች"]))
+        assert [e["word"] for e in result] == ["ዜጋ"]
+
+    def test_removing_nothing_is_a_copy(self):
+        entries = [entry("ዜጋ")]
+        assert remove_entries(entries, []) == entries
+
+    def test_empty(self):
+        assert remove_entries([], []) == []

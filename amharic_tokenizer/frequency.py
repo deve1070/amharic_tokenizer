@@ -207,7 +207,7 @@ _UNAMBIGUOUS_DERIVATIONS = (RULE_PLURAL_FUSION,)
 def derived_stems(
     attested: dict[str, dict[str, str]],
     counts: Counter,
-) -> set[str]:
+) -> dict[str, tuple[str, str]]:
     """
     Stems that are themselves an inflected form of another stem.
 
@@ -243,18 +243,68 @@ def derived_stems(
         counts:   Frequency table, read for standalone counts.
 
     Returns:
-        Set of stems to discard.
+        Dict mapping each stem to discard to the (base, rule) pair that
+        disqualified it. The reason travels with the verdict so a
+        rejection can be audited without re-deriving it.
     """
-    derived: set[str] = set()
+    derived: dict[str, tuple[str, str]] = {}
     for base, forms in attested.items():
         for form, rule in forms.items():
             if form == base or form not in attested:
                 continue
             if rule in _UNAMBIGUOUS_DERIVATIONS:
-                derived.add(form)
+                derived.setdefault(form, (base, rule))
             elif rule != RULE_AMBIGUOUS_FUSION and counts[form] <= counts[base]:
-                derived.add(form)
+                derived.setdefault(form, (base, rule))
     return derived
+
+
+def derived_lexicon_entries(
+    words,
+    counts: Counter,
+    prefixes=DEFAULT_PREFIXES,
+    suffixes=DEFAULT_PLAIN_SUFFIXES,
+) -> dict[str, tuple[str, str]]:
+    """
+    Lexicon entries that are an inflection of another lexicon entry.
+
+    generate_candidates() applies derived_stems() to the corpus, but the
+    lexicon that results is then validated by hand and lives on
+    independently. A later correction to the affix arithmetic changes
+    what counts as a derivation, and nothing re-tests the entries
+    already admitted. ዜጎች entered the lexicon because plural fusion was
+    inverted to order 6 only, giving ዜግ, which is not a word; with the
+    carrier also restored to order 4 the base is ዜጋ and the entry is a
+    plural. This is the check that catches that.
+
+    It reads the lexicon as its own attestation set: every entry is
+    both a possible base and a possible inflection, so a pair is found
+    without consulting the corpus for anything but frequency.
+
+    Args:
+        words:    The lexicon's words, any iterable.
+        counts:   Frequency table, read for the standalone counts that
+                  weigh the rules other than plural fusion.
+        prefixes: Prefix inventory.
+        suffixes: Plain suffix inventory.
+
+    Returns:
+        Dict mapping each entry to discard to the (base, rule) pair
+        that disqualified it.
+
+    Examples:
+        >>> counts = Counter({"ልጅ": 500, "ልጆች": 900})
+        >>> derived_lexicon_entries(["ልጅ", "ልጆች"], counts)
+        {'ልጆች': ('ልጅ', 'plural_fusion')}
+    """
+    attested: dict[str, dict[str, str]] = {word: {} for word in words}
+    for word in attested:
+        for base, rule in candidate_stems_with_rules(
+            word, prefixes, suffixes
+        ).items():
+            if base in attested:
+                attested[base][word] = rule
+    return derived_stems(attested, counts)
 
 
 def generate_candidates(
