@@ -15,7 +15,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from amharic_tokenizer.normalizer import normalize, normalize_lines
+from amharic_morph.normalizer import normalize, normalize_lines
 
 # ── ሀ family ─────────────────────────────────────────────────────────────────
 

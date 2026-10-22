@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_tokenizer.morphology import (  # noqa: E402
+from amharic_morph.morphology import (  # noqa: E402
     INDEPENDENT,
     PREFIX,
     SUFFIX,
@@ -469,7 +469,7 @@ class TestFunctionsInASegmentation:
 
 # ── One implementation of suffix inversion ───────────────────────────────────
 
-from amharic_tokenizer.morphology import (  # noqa: E402
+from amharic_morph.morphology import (  # noqa: E402
     RULE_AMBIGUOUS_FUSION,
     RULE_DEFINITE_FUSION,
     RULE_PLURAL_FUSION,

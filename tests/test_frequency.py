@@ -13,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_tokenizer.frequency import (  # noqa: E402
+from amharic_morph.frequency import (  # noqa: E402
     build_frequency_table,
     candidate_stems,
     coverage_curve,
@@ -288,12 +288,12 @@ class TestWriteCandidates:
 
 # ── Filtering bound forms and coincidences ───────────────────────────────────
 
-from amharic_tokenizer.morphology import (  # noqa: E402
+from amharic_morph.morphology import (  # noqa: E402
     RULE_AMBIGUOUS_FUSION,
     RULE_PLURAL_FUSION,
     RULE_PREFIX,
 )
-from amharic_tokenizer.frequency import candidate_stems_with_rules  # noqa: E402
+from amharic_morph.frequency import candidate_stems_with_rules  # noqa: E402
 
 
 class TestDerivationRules:
@@ -364,7 +364,7 @@ class TestAmbiguousFusionGuard:
 
 # ── Lexicon entries (spec section 3.3) ───────────────────────────────────────
 
-from amharic_tokenizer.frequency import (  # noqa: E402
+from amharic_morph.frequency import (  # noqa: E402
     consonantal_root,
     identify_affix,
     to_lexicon_entry,
@@ -504,11 +504,11 @@ class TestWriteLexiconCandidates:
 
 # ── Stems that are not independent words ─────────────────────────────────────
 
-from amharic_tokenizer.morphology import (  # noqa: E402
+from amharic_morph.morphology import (  # noqa: E402
     RULE_DEFINITE_FUSION,
     RULE_SUFFIX,
 )
-from amharic_tokenizer.frequency import (  # noqa: E402
+from amharic_morph.frequency import (  # noqa: E402
     derived_lexicon_entries,
     derived_stems,
 )
@@ -667,7 +667,7 @@ class TestDerivedStemsAreNotCandidates:
 
 # ── Verb detection ────────────────────────────────────────────────────────────
 
-from amharic_tokenizer.frequency import (  # noqa: E402
+from amharic_morph.frequency import (  # noqa: E402
     PERFECTIVE_FINAL_ORDERS,
     VERBAL_PROBES,
     verb_candidates,

@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from amharic_tokenizer.segmenter import segment, segment_lines
+from amharic_morph.segmenter import segment, segment_lines
 
 # ── Basic ። splitting ─────────────────────────────────────────────────────────
 

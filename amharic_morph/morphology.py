@@ -79,7 +79,7 @@ choice, not a limitation of the search.
 
 from dataclasses import dataclass, field
 
-from amharic_tokenizer.levels import fidel_order, to_order, to_order6
+from amharic_morph.levels import fidel_order, to_order, to_order6
 
 # Per CLAUDE.md, minus ም and ና. Both inventories are open questions, so
 # they are parameters rather than constants baked into the algorithm.

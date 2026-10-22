@@ -37,12 +37,12 @@ no lexicon. See morphology.segment_word() for why nothing is guessed.
 
 from pathlib import Path
 
-from amharic_tokenizer.levels import level1_root, level2_sound, level3_fidel
-from amharic_tokenizer.lexicon_builder import lexicon_index, load_lexicon
-from amharic_tokenizer.morphology import Segmentation, segment_word
-from amharic_tokenizer.normalizer import normalize
-from amharic_tokenizer.punctuation import normalize_punctuation
-from amharic_tokenizer.script_classifier import classify_text
+from amharic_morph.levels import level1_root, level2_sound, level3_fidel
+from amharic_morph.lexicon_builder import lexicon_index, load_lexicon
+from amharic_morph.morphology import Segmentation, segment_word
+from amharic_morph.normalizer import normalize
+from amharic_morph.punctuation import normalize_punctuation
+from amharic_morph.script_classifier import classify_text
 
 MORPHEME = "morpheme"
 FIDEL = "fidel"

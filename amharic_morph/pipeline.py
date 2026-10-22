@@ -30,11 +30,11 @@ Filtering runs LAST and operates on the full sentence list at once,
 because deduplication requires seeing all sentences together.
 """
 
-from amharic_tokenizer.filter import filter_sentences
-from amharic_tokenizer.normalizer import normalize
-from amharic_tokenizer.punctuation import normalize_punctuation
-from amharic_tokenizer.script_classifier import classify_text
-from amharic_tokenizer.segmenter import segment
+from amharic_morph.filter import filter_sentences
+from amharic_morph.normalizer import normalize
+from amharic_morph.punctuation import normalize_punctuation
+from amharic_morph.script_classifier import classify_text
+from amharic_morph.segmenter import segment
 
 
 def process_line(line: str) -> list[str]:

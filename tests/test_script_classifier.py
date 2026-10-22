@@ -20,7 +20,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from amharic_tokenizer.script_classifier import classify_text, classify_token
+from amharic_morph.script_classifier import classify_text, classify_token
 
 # ── Pure Ethiopic ─────────────────────────────────────────────────────────────
 

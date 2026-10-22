@@ -25,7 +25,7 @@ classify_text().
 
 import re
 
-from amharic_tokenizer.punctuation import is_abbreviation
+from amharic_morph.punctuation import is_abbreviation
 
 # ── Character class detection ──────────────────────────────────────────────
 

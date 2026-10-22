@@ -35,9 +35,9 @@ import json
 import sys
 import time
 
-from amharic_tokenizer.filter import DROP_DUPLICATE, _dedup_key, drop_reason
-from amharic_tokenizer.pipeline import process_line
-from amharic_tokenizer.quality_check import CorpusStatistics, sentence_metadata
+from amharic_morph.filter import DROP_DUPLICATE, _dedup_key, drop_reason
+from amharic_morph.pipeline import process_line
+from amharic_morph.quality_check import CorpusStatistics, sentence_metadata
 
 # Digest width for the dedup set. 8 bytes gives a collision probability
 # around 1 in 10^5 at 20M sentences, which is far below the corpus's own
@@ -205,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     Command line entry point.
 
     Example:
-        python -m amharic_tokenizer.corpus_runner corpus/am.txt \\
+        python -m amharic_morph.corpus_runner corpus/am.txt \\
             --output corpus/corpus.txt --limit 100000
     """
     import argparse

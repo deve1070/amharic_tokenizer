@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from amharic_tokenizer.filter import (
+from amharic_morph.filter import (
     deduplicate,
     ethiopic_ratio,
     filter_sentences,
@@ -266,7 +266,7 @@ class TestFilterSentences:
 
 # ── Script-neutral characters in the ratio ───────────────────────────────────
 
-from amharic_tokenizer.filter import (  # noqa: E402
+from amharic_morph.filter import (  # noqa: E402
     DROP_TIGRINYA,
     drop_reason,
     is_likely_tigrinya,

@@ -1,1 +1,1 @@
-# amharic_tokenizer
+# amharic-morph

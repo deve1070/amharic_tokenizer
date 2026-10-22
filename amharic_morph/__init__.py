@@ -2,7 +2,7 @@
 AmharicTokenizer — Morphologically-aware Amharic tokenization library.
 """
 
-from amharic_tokenizer.tokenizer import AmharicTokenizer
+from amharic_morph.tokenizer import AmharicTokenizer
 
 __version__ = "0.1.0"
 __author__ = "Dawit"

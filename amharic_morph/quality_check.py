@@ -38,7 +38,7 @@ import json
 import re
 from collections import Counter
 
-from amharic_tokenizer.filter import (
+from amharic_morph.filter import (
     DROP_REASONS,
     _count_ethiopic_word_tokens,
     ethiopic_ratio,

@@ -224,7 +224,7 @@ __marimo__/
 
 # Lexicon working file: regenerable, carries evidence blocks.
 # The deliverable is lexicon.json, which stays tracked.
-amharic_tokenizer/lexicon/candidates.json
+amharic_morph/lexicon/candidates.json
 commit_msg.txt
 
 # Verb-detection working file: regenerable from the corpus.

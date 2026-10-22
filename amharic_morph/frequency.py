@@ -47,13 +47,13 @@ import json
 import re
 from collections import Counter
 
-from amharic_tokenizer.levels import (
+from amharic_morph.levels import (
     fidel_order,
     level1_root,
     to_order,
     to_order6,
 )
-from amharic_tokenizer.morphology import (
+from amharic_morph.morphology import (
     DEFAULT_PLAIN_SUFFIXES,
     DEFAULT_PREFIXES,
     RULE_AMBIGUOUS_FUSION,

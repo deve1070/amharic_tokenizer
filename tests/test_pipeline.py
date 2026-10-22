@@ -16,7 +16,7 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from amharic_tokenizer.pipeline import process_file, process_line, process_lines
+from amharic_morph.pipeline import process_file, process_line, process_lines
 
 # ── process_line ──────────────────────────────────────────────────────────────
 

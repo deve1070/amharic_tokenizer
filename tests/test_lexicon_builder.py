@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_tokenizer.lexicon_builder import (  # noqa: E402
+from amharic_morph.lexicon_builder import (  # noqa: E402
     SCHEMA_FIELDS,
     annotation_gaps,
     build_lexicon,

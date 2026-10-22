@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_tokenizer.levels import (  # noqa: E402
+from amharic_morph.levels import (  # noqa: E402
     decompose_fidel,
     fidel_order,
     is_ethiopic,

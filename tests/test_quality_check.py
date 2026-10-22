@@ -11,8 +11,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_tokenizer.filter import DROP_REASONS  # noqa: E402
-from amharic_tokenizer.quality_check import (  # noqa: E402
+from amharic_morph.filter import DROP_REASONS  # noqa: E402
+from amharic_morph.quality_check import (  # noqa: E402
     CorpusStatistics,
     compute_statistics,
     count_ethiopic_tokens,
