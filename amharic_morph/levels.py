@@ -1,8 +1,11 @@
 """
 The representation levels.
 
-Level 3 (Fidel), Level 2 (Sound), and Level 1 (Consonantal Root) live
-here, along with the fidel arithmetic they share. Level 4 (Morpheme) is
+Level 3 (Fidel) and Level 2 (Sound) live here, along with the fidel
+arithmetic they share and the consonant skeleton that proposes Level 1
+roots. Level 1 itself is a reviewed field on each lexicon entry
+(lexicon_builder.entry_root), because a root cannot be read off the
+spelling: መሆን has the skeleton ም-ህ-ን and the root ህ-ን. Level 4 (Morpheme) is
 lexicon-anchored and lives with the segmenter once a validated lexicon
 exists — nothing here depends on it.
 
@@ -12,7 +15,7 @@ The spec computes 4 -> 3 -> 2 -> 1. Level 1 takes the root of the
 INDEPENDENT morpheme only, so it needs morpheme boundaries first: run it
 on the raw surface form ቤቶች and you get ብ-ት-ች, with the suffix consonant
 polluting the root. The functions here are therefore written to be
-applied to a single morpheme, and level1_root() documents that contract.
+applied to a single morpheme, and consonant_skeleton() documents that contract.
 
 ── Fidel arithmetic ─────────────────────────────────────────────────────
 
@@ -51,7 +54,7 @@ have come from the surface word. That is what makes the Level 1 rule
 below decidable. (Spec section 2.1 writes order 1 as "ህ + አ", which
 would make the two indistinguishable.)
 
-── Level 1 root extraction ──────────────────────────────────────────────
+── The consonant skeleton ───────────────────────────────────────────────
 
 Two rules, applied together:
 
@@ -349,12 +352,17 @@ def level2_sound(word: str) -> list[str]:
     return units
 
 
-# ── Level 1 — Consonantal Root ───────────────────────────────────────────────
+# ── Consonant skeleton ───────────────────────────────────────────────────────
 
 
-def level1_root(morpheme: str) -> list[str] | None:
+def consonant_skeleton(morpheme: str) -> list[str] | None:
     """
-    Level 1: the consonantal root of an INDEPENDENT morpheme.
+    The consonant skeleton of an INDEPENDENT morpheme.
+
+    This is the root proposal for an entry with no reviewed root, not
+    Level 1 itself. It equals the root for an underived word (ቤት ብ-ት)
+    and keeps derivational consonants for a derived one (መሆን ም-ህ-ን,
+    root ህ-ን). See docs/dev_plans/level1_root_redesign.md.
 
     Must be given a single morpheme, not a surface word. Level 4 finds
     the independent morpheme; running this on ቤቶች directly would return
@@ -377,13 +385,13 @@ def level1_root(morpheme: str) -> list[str] | None:
         the case where nothing survives extraction.
 
     Examples:
-        >>> level1_root("ቤት")
+        >>> consonant_skeleton("ቤት")
         ['ብ', 'ት']
-        >>> level1_root("አለ")
+        >>> consonant_skeleton("አለ")
         ['እ', 'ል']
-        >>> level1_root("ጣእም")
+        >>> consonant_skeleton("ጣእም")
         ['ጥ', 'ም']
-        >>> level1_root("አ")
+        >>> consonant_skeleton("አ")
         ['እ']
     """
     root: list[str] = []

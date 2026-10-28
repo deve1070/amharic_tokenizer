@@ -28,7 +28,11 @@ def tok():
 
 @pytest.fixture
 def small(tmp_path):
-    """A tokenizer over a two-entry lexicon, one validated, one not."""
+    """
+    A tokenizer over a small lexicon: ቤት with a reviewed root, ሰው not
+    validated, መሆን validated with its root unreviewed, and ላይ reviewed
+    as having no root.
+    """
     entries = [
         {
             "word": "ቤት",
@@ -38,6 +42,7 @@ def small(tmp_path):
             "allows_suffix": ["ኦች", "ኡ"],
             "allows_infix": None,
             "root_consonants": ["ብ", "ት"],
+            "root_source": "native_speaker",
             "source": "test",
             "validated": True,
             "notes": "",
@@ -50,8 +55,35 @@ def small(tmp_path):
             "allows_suffix": ["ኦች"],
             "allows_infix": None,
             "root_consonants": ["ስ", "ው"],
+            "root_source": "skeleton",
             "source": "test",
             "validated": False,
+            "notes": "",
+        },
+        {
+            "word": "መሆን",
+            "category": "noun",
+            "gender": None,
+            "allows_prefix": [],
+            "allows_suffix": ["ኡ"],
+            "allows_infix": None,
+            "root_consonants": ["ም", "ህ", "ን"],
+            "root_source": "skeleton",
+            "source": "test",
+            "validated": True,
+            "notes": "",
+        },
+        {
+            "word": "ላይ",
+            "category": "preposition",
+            "gender": None,
+            "allows_prefix": ["በ"],
+            "allows_suffix": [],
+            "allows_infix": None,
+            "root_consonants": None,
+            "root_source": "native_speaker",
+            "source": "test",
+            "validated": True,
             "notes": "",
         },
     ]
@@ -78,8 +110,8 @@ class TestSpecExample:
     def test_sound(self, tok):
         assert tok.tokenize("ቤቶች", level="sound") == ["ብ", "ኤ", "ት", "ኦ", "ች"]
 
-    def test_root(self, tok):
-        assert tok.tokenize("ቤቶች", level="root") == ["ብ", "ት"]
+    def test_root(self, small):
+        assert small.tokenize("ቤቶች", level="root") == ["ብ", "ት"]
 
     def test_morpheme_is_the_default_level(self, tok):
         assert tok.tokenize("ቤቶች") == ["ቤት", "ኦች"]
@@ -94,12 +126,12 @@ class TestLevelsAreDifferentViews:
     def test_fidel_round_trips_the_surface_form(self, tok):
         assert "".join(tok.tokenize("ቤቶች", level="fidel")) == "ቤቶች"
 
-    def test_root_excludes_the_suffix_consonant(self, tok):
+    def test_root_excludes_the_suffix_consonant(self, small):
         # Run on the surface form, ቤቶች would give ብ-ት-ች.
-        assert "ች" not in tok.tokenize("ቤቶች", level="root")
+        assert "ች" not in small.tokenize("ቤቶች", level="root")
 
-    def test_root_of_the_bare_stem_matches(self, tok):
-        assert tok.tokenize("ቤት", level="root") == tok.tokenize("ቤቶች", level="root")
+    def test_root_of_the_bare_stem_matches(self, small):
+        assert small.tokenize("ቤት", level="root") == small.tokenize("ቤቶች", level="root")
 
     def test_sound_is_never_shorter_than_fidel(self, tok):
         for word in ("ቤቶች", "ሰላም", "አለ"):
@@ -129,9 +161,9 @@ class TestTokenizeText:
     def test_punctuation_survives_as_a_token(self, tok):
         assert "።" in tok.tokenize("ቤቶች ናቸው።")
 
-    def test_root_level_skips_words_without_one(self, tok):
+    def test_root_level_skips_words_without_one(self, small):
         # A root of None is not a token, so it contributes nothing.
-        assert tok.tokenize("ቤቶች ኮምፒውተር", level="root") == ["ብ", "ት"]
+        assert small.tokenize("ቤቶች ኮምፒውተር", level="root") == ["ብ", "ት"]
 
 
 # ── Unknown words ────────────────────────────────────────────────────────────
@@ -188,10 +220,37 @@ class TestAnalyze:
             "known",
         }
 
-    def test_agrees_with_tokenize(self, tok):
-        analysis = tok.analyze("ቤቶች")
+    def test_agrees_with_tokenize(self, small):
+        analysis = small.analyze("ቤቶች")
         for level in ("morpheme", "fidel", "sound", "root"):
-            assert analysis[level] == tok.tokenize("ቤቶች", level=level)
+            assert analysis[level] == small.tokenize("ቤቶች", level=level)
+
+
+# ── Level 1 reads the reviewed root ──────────────────────────────────────────
+
+
+class TestLevel1ReadsTheLexicon:
+    """
+    The root is a ruling stored on the entry, not computed from the
+    stem's spelling. An unreviewed root is withheld, as an unknown word's
+    segmentation is.
+    """
+
+    def test_reviewed_root_comes_from_the_entry(self, small):
+        assert small.root("የቤቶች") == ["ብ", "ት"]
+
+    def test_unreviewed_root_is_none(self, small):
+        # The stored skeleton ም-ህ-ን keeps the infinitive's መ; it is not
+        # reported as a root.
+        assert small.segment("መሆኑ").known is True
+        assert small.root("መሆኑ") is None
+        assert small.analyze("መሆኑ")["root"] is None
+
+    def test_reviewed_none_is_none(self, small):
+        assert small.root("በላይ") is None
+
+    def test_root_level_skips_unreviewed_roots(self, small):
+        assert small.tokenize("ቤቶች መሆኑ በላይ", level="root") == ["ብ", "ት"]
 
 
 # ── Level names ──────────────────────────────────────────────────────────────

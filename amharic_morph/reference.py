@@ -50,7 +50,7 @@ from amharic_morph.levels import (
     fidel_order,
     is_glottal,
     is_labiovelar,
-    level1_root,
+    consonant_skeleton,
 )
 from amharic_morph.morphology import DEFAULT_PLAIN_SUFFIXES, DEFAULT_PREFIXES
 from amharic_morph.normalizer import normalize
@@ -339,7 +339,7 @@ def inflection_agreement(
 # ── Root proposals ────────────────────────────────────────────────────────────
 #
 # Level 1 reads a reviewed root from each lexicon entry (see
-# docs/dev_plans/level1_root_redesign.md). The proposal for an entry is a
+# docs/dev_plans/consonant_skeleton_redesign.md). The proposal for an entry is a
 # vote: every reference word that Level 4 maps onto the entry casts its
 # annotated root, weighted by its corpus frequency. Pooling the forms
 # outvotes a typo on any one of them.
@@ -441,7 +441,7 @@ def propose_root(word: str, votes: Counter) -> RootProposal:
         >>> propose_root("መሆን", Counter({("ህ", "ን"): 3})).checks
         ('differs from skeleton', 'hidden ው?')
     """
-    skeleton = tuple(level1_root(word) or ())
+    skeleton = tuple(consonant_skeleton(word) or ())
     rooted = Counter({r: w for r, w in votes.items() if r is not None})
     checks = []
     if rooted:
@@ -505,7 +505,7 @@ def root_review_rows(words, votes: dict[str, Counter]) -> list[dict]:
         row = {
             "word": word,
             "proposed": RADICAL_SEPARATOR.join(proposal.root),
-            "skeleton": RADICAL_SEPARATOR.join(level1_root(word) or ()),
+            "skeleton": RADICAL_SEPARATOR.join(consonant_skeleton(word) or ()),
             "irit": _vote_summary(entry_votes),
             "check": "; ".join(proposal.checks),
             "reviewed": "",

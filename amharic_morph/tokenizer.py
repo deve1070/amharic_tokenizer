@@ -15,11 +15,15 @@ computed straight from the word:
     ቤቶች  sound  ['ብ', 'ኤ', 'ት', 'ኦ', 'ች']
 
 Level 1 is different. It is the root of the INDEPENDENT morpheme alone,
-so it cannot be computed until Level 4 has found the morpheme
-boundaries. Run on the surface form, ቤቶች gives ብ-ት-ች, with the plural
-suffix's consonant sitting inside the root. Run on the stem Level 4
-returns, it gives ብ-ት. That dependency is the whole reason the
-computational order is 4 -> 3 -> 2 -> 1.
+so it cannot be found until Level 4 has found the morpheme boundaries.
+Run on the surface form, ቤቶች would give ብ-ት-ች, with the plural
+suffix's consonant sitting inside the root. That dependency is the
+whole reason the computational order is 4 -> 3 -> 2 -> 1.
+
+The root is read from the stem's lexicon entry, where a native speaker
+has ruled on it, rather than computed from the stem's spelling. The
+spelling keeps derivational consonants: መሆን is spelled ም-ህ-ን and its
+root is ህ-ን. An entry whose root is not yet reviewed gives None.
 
 ── Text, not just words ─────────────────────────────────────────────────
 
@@ -38,8 +42,8 @@ no lexicon. See morphology.segment_word() for why nothing is guessed.
 from functools import lru_cache, partial
 from pathlib import Path
 
-from amharic_morph.levels import level1_root, level2_sound, level3_fidel
-from amharic_morph.lexicon_builder import lexicon_index, load_lexicon
+from amharic_morph.levels import level2_sound, level3_fidel
+from amharic_morph.lexicon_builder import entry_root, lexicon_index, load_lexicon
 from amharic_morph.morphology import Segmentation, segment_word
 from amharic_morph.normalizer import normalize
 from amharic_morph.punctuation import normalize_punctuation
@@ -153,19 +157,20 @@ class AmharicTokenizer:
             word: A single normalized word.
 
         Returns:
-            The root consonants, or None when the word has no lexicon
-            anchor or no root can be extracted. Per spec section 2.2,
-            None is documented behaviour for grammatical morphemes and
+            The root's radicals, or None when the word has no lexicon
+            anchor, its entry's root is not reviewed yet, or the
+            reviewer ruled that it has none. Per spec section 2.2, None
+            is documented behaviour for grammatical morphemes and
             loanwords, not an error.
 
         Examples:
-            >>> AmharicTokenizer().root("ቤቶች")
-            ['ብ', 'ት']
+            >>> AmharicTokenizer().root("ኮምፒውተር") is None
+            True
         """
         analysis = self.segment(word)
         if not analysis.known:
             return None
-        return level1_root(analysis.stem)
+        return entry_root(self.lexicon[analysis.stem])
 
     def analyze(self, word: str) -> dict:
         """
@@ -187,7 +192,7 @@ class AmharicTokenizer:
             "morpheme": analysis.morphemes,
             "fidel": level3_fidel(word),
             "sound": level2_sound(word),
-            "root": level1_root(analysis.stem) if analysis.known else None,
+            "root": self.root(word),
             "known": analysis.known,
         }
 
@@ -213,8 +218,8 @@ class AmharicTokenizer:
             >>> tok = AmharicTokenizer()
             >>> tok.tokenize("ቤቶች", level="morpheme")
             ['ቤት', 'ኦች']
-            >>> tok.tokenize("ቤቶች", level="root")
-            ['ብ', 'ት']
+            >>> tok.tokenize("ቤቶች", level="fidel")
+            ['ቤ', 'ቶ', 'ች']
         """
         if level == BPE:
             raise NotImplementedError(

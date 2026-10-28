@@ -21,7 +21,9 @@ from amharic_morph.lexicon_builder import (  # noqa: E402
     add_entries,
     annotation_gaps,
     apply_category_review,
+    apply_root_review,
     build_lexicon,
+    entry_root,
     lexicon_index,
     load_lexicon,
     read_category_review,
@@ -48,6 +50,7 @@ def entry(word="ቤት", validated=False, category=None, **kwargs):
         "allows_suffix": ["ኦች"],
         "allows_infix": None,
         "root_consonants": ["ብ", "ት"],
+        "root_source": "skeleton",
         "source": "corpus_bootstrap",
         "validated": validated,
         "notes": "",
@@ -228,6 +231,18 @@ class TestSchemaErrors:
         broken = entry(allows_prefix="የ")
         assert any("allows_prefix" in p for p in schema_errors(broken))
 
+    def test_unknown_root_source(self):
+        assert any("root_source" in p for p in schema_errors(entry(root_source="guess")))
+
+    def test_reviewed_root_may_be_none(self):
+        # A reviewed none is a ruling: the word has no root.
+        assert schema_errors(entry(root_consonants=None, root_source="native_speaker")) == []
+
+    def test_unreviewed_root_must_be_a_list(self):
+        # The skeleton placeholder always exists; None there is a broken entry.
+        broken = entry(root_consonants=None, root_source="skeleton")
+        assert any("root_consonants" in p for p in schema_errors(broken))
+
     def test_validated_without_category_is_not_a_schema_error(self):
         # Confirming a word is an independent morpheme and labelling its
         # part of speech are separate passes; annotation_gaps() tracks
@@ -380,6 +395,12 @@ class TestRefreshDerivedFields:
         entries = [entry("ሰው"), entry("ቤት"), entry("ልጅ")]
         result = refresh_derived_fields(entries, self.fresh())
         assert [e["word"] for e in result] == ["ሰው", "ቤት", "ልጅ"]
+
+    def test_root_is_a_ruling_and_is_not_refreshed(self):
+        reviewed = entry("ቤት", root_consonants=["ብ", "ይ", "ት"], root_source="native_speaker")
+        result = refresh_derived_fields([reviewed], self.fresh(root_consonants=["ብ", "ት"]))
+        assert result[0]["root_consonants"] == ["ብ", "ይ", "ት"]
+        assert result[0]["root_source"] == "native_speaker"
 
     def test_output_is_still_schema_clean(self):
         result = refresh_derived_fields([entry("ቤት", validated=True)], self.fresh())
@@ -651,6 +672,10 @@ class TestAddEntries:
     def test_computes_the_root(self):
         assert add_entries([], {"ፈጠራ": "noun"})[0]["root_consonants"] == ["ፍ", "ጥ", "ር"]
 
+    def test_root_of_an_added_word_is_unreviewed(self):
+        # The reviewer vouched for the word, not yet for its root.
+        assert add_entries([], {"ፈጠራ": "noun"})[0]["root_source"] == "skeleton"
+
     def test_affix_fields_start_empty(self):
         added = add_entries([], {"ድራማ": "noun"})[0]
         assert added["allows_prefix"] == [] and added["allows_suffix"] == []
@@ -710,3 +735,58 @@ class TestApplyCategoryReview:
     def test_no_decisions_is_a_copy(self):
         entries = [entry("ሆነ")]
         assert apply_category_review(entries, []) == entries
+
+
+class TestEntryRoot:
+    """Level 1 reports a root only once a native speaker has ruled on it"""
+
+    def test_reviewed_root(self):
+        reviewed = entry("ሆነ", root_consonants=["ህ", "ው", "ን"], root_source="native_speaker")
+        assert entry_root(reviewed) == ["ህ", "ው", "ን"]
+
+    def test_reviewed_none(self):
+        assert entry_root(entry("ላይ", root_consonants=None, root_source="native_speaker")) is None
+
+    def test_unreviewed_skeleton_is_not_reported(self):
+        assert entry_root(entry("መሆን", root_consonants=["ም", "ህ", "ን"])) is None
+
+    def test_entry_without_the_field_is_unreviewed(self):
+        legacy = entry()
+        del legacy["root_source"]
+        assert entry_root(legacy) is None
+
+
+class TestApplyRootReview:
+    def test_sets_the_root_and_marks_it_reviewed(self):
+        result = apply_root_review([entry("ሆነ")], [RootDecision("ሆነ", ["ህ", "ው", "ን"], "")])
+        assert result[0]["root_consonants"] == ["ህ", "ው", "ን"]
+        assert result[0]["root_source"] == "native_speaker"
+
+    def test_none_is_recorded(self):
+        result = apply_root_review([entry("ላይ")], [RootDecision("ላይ", None, "")])
+        assert result[0]["root_consonants"] is None
+        assert entry_root(result[0]) is None
+        assert schema_errors(result[0]) == []
+
+    def test_notes_are_appended(self):
+        result = apply_root_review(
+            [entry("ሆነ", notes="verb")], [RootDecision("ሆነ", ["ህ", "ው", "ን"], "Q2")]
+        )
+        assert result[0]["notes"] == "verb; Q2"
+
+    def test_other_entries_are_untouched(self):
+        result = apply_root_review(
+            [entry("ሆነ"), entry("ቤት")], [RootDecision("ሆነ", ["ህ", "ው", "ን"], "")]
+        )
+        assert result[1] == entry("ቤት")
+
+    def test_unknown_word_raises(self):
+        raises_value_error(
+            lambda: apply_root_review([entry("ቤት")], [RootDecision("ሆነ", ["ህ", "ን"], "")]),
+            "ሆነ",
+        )
+
+    def test_does_not_mutate_the_input(self):
+        entries = [entry("ሆነ")]
+        apply_root_review(entries, [RootDecision("ሆነ", ["ህ", "ው", "ን"], "")])
+        assert entries[0]["root_source"] == "skeleton"

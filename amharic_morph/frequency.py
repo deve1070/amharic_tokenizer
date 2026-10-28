@@ -49,10 +49,11 @@ from collections import Counter
 
 from amharic_morph.levels import (
     fidel_order,
-    level1_root,
+    consonant_skeleton,
     to_order,
     to_order6,
 )
+from amharic_morph.lexicon_builder import ROOT_SOURCE_SKELETON
 from amharic_morph.morphology import (
     DEFAULT_PLAIN_SUFFIXES,
     DEFAULT_PREFIXES,
@@ -609,7 +610,7 @@ def consonantal_root(word: str) -> list[str]:
     """
     Level 1 root consonants for an independent morpheme.
 
-    Thin wrapper over levels.level1_root that returns [] rather than
+    Thin wrapper over levels.consonant_skeleton that returns [] rather than
     None, because a lexicon entry's root_consonants field is a list.
 
     Level 1 is blocked for arbitrary surface forms because it applies to
@@ -631,7 +632,7 @@ def consonantal_root(word: str) -> list[str]:
         >>> consonantal_root("ጣእም")
         ['ጥ', 'ም']
     """
-    return level1_root(word) or []
+    return consonant_skeleton(word) or []
 
 
 def identify_affix(form: str, stem: str) -> tuple[str, str] | None:
@@ -678,7 +679,9 @@ def to_lexicon_entry(candidate: dict, max_forms: int = 20) -> dict:
     Derived here:
         allows_prefix, allows_suffix  from the attested forms — these
                                       are observations, not guesses
-        root_consonants               Level 1 over the stem
+        root_consonants               the consonant skeleton of the
+                                      stem, marked unreviewed in
+                                      root_source
         source                        corpus_bootstrap
 
     Left for the validator:
@@ -707,6 +710,7 @@ def to_lexicon_entry(candidate: dict, max_forms: int = 20) -> dict:
         "allows_suffix": sorted(suffixes),
         "allows_infix": None,
         "root_consonants": consonantal_root(stem),
+        "root_source": ROOT_SOURCE_SKELETON,
         "source": "corpus_bootstrap",
         "validated": False,
         "notes": "",

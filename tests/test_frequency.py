@@ -443,7 +443,8 @@ class TestToLexiconEntry:
         entry = self.make()
         for field in (
             "word", "category", "gender", "allows_prefix", "allows_suffix",
-            "allows_infix", "root_consonants", "source", "validated", "notes",
+            "allows_infix", "root_consonants", "root_source", "source",
+            "validated", "notes",
         ):
             assert field in entry
 
@@ -458,6 +459,11 @@ class TestToLexiconEntry:
 
     def test_root_consonants_computed(self):
         assert self.make()["root_consonants"] == ["ብ", "ት"]
+
+    def test_root_is_marked_unreviewed(self):
+        # The skeleton is a placeholder until a native speaker rules on
+        # the root; Level 1 does not report it.
+        assert self.make()["root_source"] == "skeleton"
 
     def test_source_marked(self):
         assert self.make()["source"] == "corpus_bootstrap"

@@ -35,13 +35,17 @@ labels its part of speech, and Level 4 needs only the former.
 
 ── What the corpus can and cannot fill in ───────────────────────────────
 
-allows_prefix, allows_suffix and root_consonants are derived: the first
-two from affixes actually attested in the corpus, the third from Level 1
-over the stem (valid because a lexicon entry IS an independent morpheme,
-so the usual Level 4 dependency does not apply).
+allows_prefix and allows_suffix are derived from affixes actually
+attested in the corpus.
 
 category, gender and allows_infix need a native speaker. They are null
 rather than guessed, so that an unfilled field is visibly unfilled.
+
+root_consonants is a native speaker's ruling too, but it is never null
+while unreviewed. It starts as the consonant skeleton, with root_source
+set to skeleton, and Level 1 does not report it (entry_root). The root
+review replaces it and sets root_source to native_speaker. A reviewed
+root of None means the word has no root: a loanword or a function word.
 
 ── The category review ──────────────────────────────────────────────────
 
@@ -58,7 +62,7 @@ import csv
 import json
 from dataclasses import dataclass
 
-from amharic_morph.levels import bare_consonant, is_ethiopic, level1_root
+from amharic_morph.levels import bare_consonant, consonant_skeleton, is_ethiopic
 
 # Spec section 3.3 field order.
 SCHEMA_FIELDS = (
@@ -69,6 +73,7 @@ SCHEMA_FIELDS = (
     "allows_suffix",
     "allows_infix",
     "root_consonants",
+    "root_source",
     "source",
     "validated",
     "notes",
@@ -85,6 +90,16 @@ VALID_CATEGORIES = (
 )
 
 VALID_GENDERS = ("masculine", "feminine", "none", "ambiguous")
+
+# Source recorded on an entry, or a root, a native speaker supplied.
+# Spec section 3.3.
+SOURCE_NATIVE_SPEAKER = "native_speaker"
+
+# root_source of a root nobody has reviewed: the consonant skeleton,
+# kept as the review's proposal and never reported as Level 1.
+ROOT_SOURCE_SKELETON = "skeleton"
+
+VALID_ROOT_SOURCES = (SOURCE_NATIVE_SPEAKER, ROOT_SOURCE_SKELETON)
 
 
 def to_schema_entry(entry: dict) -> dict:
@@ -247,6 +262,12 @@ def schema_errors(entry: dict) -> list[str]:
         if value is not None and not isinstance(value, list):
             problems.append(f"{field} must be a list")
 
+    root_source = entry.get("root_source")
+    if root_source not in VALID_ROOT_SOURCES:
+        problems.append(f"root_source not recognised: {root_source}")
+    elif root_source == ROOT_SOURCE_SKELETON and entry.get("root_consonants") is None:
+        problems.append("root_consonants is None but the root is unreviewed")
+
     return problems
 
 
@@ -282,20 +303,20 @@ def annotation_gaps(entries: list[dict]) -> dict[str, list[str]]:
 
 # Fields the corpus establishes. Everything else in SCHEMA_FIELDS is
 # either identity (word, source) or the native speaker's (category,
-# gender, allows_infix, validated, notes).
-DERIVED_FIELDS = ("allows_prefix", "allows_suffix", "root_consonants")
+# gender, allows_infix, root_consonants, root_source, validated, notes).
+DERIVED_FIELDS = ("allows_prefix", "allows_suffix")
 
 
 def refresh_derived_fields(entries: list[dict], evidence: dict[str, dict]) -> list[dict]:
     """
     Rewrite the corpus-derived fields from a fresh candidate run.
 
-    allows_prefix, allows_suffix and root_consonants are observations,
-    not judgements, so they can be recomputed at any time without
+    allows_prefix and allows_suffix are observations, not judgements,
+    so they can be recomputed at any time without
     reopening validation. This is what makes a correction to the
     candidate generator reach a lexicon that has already been validated
-    by hand: the derived fields are replaced and word, category, gender,
-    allows_infix, validated and notes are kept.
+    by hand: the derived fields are replaced and everything else is
+    kept. The root is a ruling (see the root review), so it is kept too.
 
     An entry with no fresh evidence is copied unchanged rather than
     emptied. Failing the current candidate filters is not evidence that
@@ -425,10 +446,6 @@ def validate_lexicon(entries: list[dict]) -> dict[str, list[str]]:
 # Marks common to every review, besides a value written out in full.
 REVIEW_ACCEPT = "ok"
 REVIEW_REJECT = "reject"
-
-# Source recorded on an entry the reviewer added by hand. Spec section 3.3.
-SOURCE_NATIVE_SPEAKER = "native_speaker"
-
 
 def write_review(
     rows: list[dict], path: str, columns: tuple[str, ...], encoding: str = "utf-8"
@@ -624,6 +641,33 @@ def parse_root(text: str) -> list[str] | None:
     return radicals
 
 
+def entry_root(entry: dict) -> list[str] | None:
+    """
+    Level 1: the reviewed root of a lexicon entry.
+
+    An unreviewed root is the consonant skeleton, which keeps
+    derivational consonants (መሆን ም-ህ-ን for the root ህ-ን), so it is
+    withheld rather than reported. That is the same rule Level 4 follows
+    for an unknown word.
+
+    Args:
+        entry: A lexicon entry.
+
+    Returns:
+        The root's radicals, or None when the root is unreviewed or the
+        reviewer ruled that the word has none.
+
+    Examples:
+        >>> entry_root({"root_consonants": ["ህ", "ው", "ን"], "root_source": "native_speaker"})
+        ['ህ', 'ው', 'ን']
+        >>> entry_root({"root_consonants": ["ም", "ህ", "ን"], "root_source": "skeleton"}) is None
+        True
+    """
+    if entry.get("root_source") != SOURCE_NATIVE_SPEAKER:
+        return None
+    return entry.get("root_consonants")
+
+
 def read_root_review(path: str, encoding: str = "utf-8") -> list[RootDecision]:
     """
     The reviewer's decisions from a root review file.
@@ -664,9 +708,9 @@ def add_entries(entries: list[dict], categories: dict[str, str]) -> list[dict]:
     entry, ድራማ ("drama") segments as ድር + ኣማ. The entry is validated
     at once and its source recorded as native_speaker. allows_prefix
     and allows_suffix start empty, since they are corpus observations
-    that refresh_derived_fields() fills in later; the root is Level 1
-    over the word, which is valid because an entry is an independent
-    morpheme.
+    that refresh_derived_fields() fills in later. The reviewer vouched
+    for the word, not its root, so the root is the consonant skeleton,
+    marked unreviewed.
 
     Args:
         entries:    Lexicon entries.
@@ -696,7 +740,8 @@ def add_entries(entries: list[dict], categories: dict[str, str]) -> list[dict]:
             "allows_prefix": [],
             "allows_suffix": [],
             "allows_infix": None,
-            "root_consonants": level1_root(word) or [],
+            "root_consonants": consonant_skeleton(word) or [],
+            "root_source": ROOT_SOURCE_SKELETON,
             "source": SOURCE_NATIVE_SPEAKER,
             "validated": True,
             "notes": "",
@@ -751,3 +796,40 @@ def apply_category_review(
         {**e, "notes": new_notes[e["word"]]} if e.get("word") in new_notes else e
         for e in result
     ]
+
+
+def apply_root_review(entries: list[dict], decisions: list[RootDecision]) -> list[dict]:
+    """
+    Write a root review into the lexicon.
+
+    Each decided entry gets its root and root_source native_speaker,
+    and the reviewer's notes are appended to its notes.
+
+    Args:
+        entries:   Lexicon entries.
+        decisions: Output of read_root_review().
+
+    Returns:
+        A new list of entries. The input is not modified.
+
+    Raises:
+        ValueError: If a decided word is not in the lexicon.
+    """
+    decided = {d.word: d for d in decisions}
+    missing = sorted(set(decided) - {e.get("word") for e in entries})
+    if missing:
+        raise ValueError(f"not in the lexicon: {missing}")
+
+    result = []
+    for e in entries:
+        d = decided.get(e.get("word"))
+        if d is None:
+            result.append(dict(e))
+            continue
+        result.append({
+            **e,
+            "root_consonants": d.root,
+            "root_source": SOURCE_NATIVE_SPEAKER,
+            "notes": _with_note(e.get("notes") or "", d.notes),
+        })
+    return result

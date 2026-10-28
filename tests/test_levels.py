@@ -19,7 +19,7 @@ from amharic_morph.levels import (  # noqa: E402
     is_ethiopic,
     is_glottal,
     is_labiovelar,
-    level1_root,
+    consonant_skeleton,
     level2_sound,
     level3_fidel,
     to_order,
@@ -124,7 +124,7 @@ class TestIsEthiopic:
         assert decompose_fidel("቎") == ("቎", "")
         assert fidel_order("዗") == 0
         assert level2_sound("዗አመት") == ["዗", "እ", "ኧ", "ም", "ኧ", "ት"]
-        assert "዗" not in level1_root("዗አመት")
+        assert "዗" not in consonant_skeleton("዗አመት")
 
 
 # ── Decomposition table ───────────────────────────────────────────────────────
@@ -296,51 +296,51 @@ class TestLevel2Sound:
 # ── Level 1 ───────────────────────────────────────────────────────────────────
 
 
-class TestLevel1Root:
+class TestConsonantSkeleton:
     """
     Both rules together: decomposition vowels never enter the root, and
     among surface አ-family letters only a word-initial one counts.
     """
 
     def test_spec_example(self):
-        assert level1_root("ቤት") == ["ብ", "ት"]
+        assert consonant_skeleton("ቤት") == ["ብ", "ት"]
 
     def test_decomposition_vowels_excluded(self):
         # ኤ and ኦ appear in ብኤትኦች but never existed in the surface form.
-        root = level1_root("ቤት")
+        root = consonant_skeleton("ቤት")
         assert "ኤ" not in root and "ኦ" not in root
 
     def test_word_initial_glottal_is_a_consonant(self):
-        assert level1_root("አለ") == ["እ", "ል"]
+        assert consonant_skeleton("አለ") == ["እ", "ል"]
 
     def test_word_internal_glottal_is_a_template_vowel(self):
-        assert level1_root("ጣእም") == ["ጥ", "ም"]
+        assert consonant_skeleton("ጣእም") == ["ጥ", "ም"]
 
     def test_vowels_stripped_from_every_order(self):
-        assert level1_root("ሰላም") == ["ስ", "ል", "ም"]
+        assert consonant_skeleton("ሰላም") == ["ስ", "ል", "ም"]
 
     def test_labialized_consonant_extracted(self):
-        assert level1_root("ሏ") == ["ል"]
+        assert consonant_skeleton("ሏ") == ["ል"]
 
     def test_labiovelar_gives_its_plain_consonant(self):
         # The glide is dropped, as the ዋ of ሏ is.
-        assert level1_root("ቋንቋ") == ["ቅ", "ን", "ቅ"]
-        assert level1_root("ኳስ") == ["ክ", "ስ"]
-        assert level1_root("ጓደኛ") == ["ግ", "ድ", "ኝ"]
-        assert level1_root("ኋላ") == ["ህ", "ል"]
+        assert consonant_skeleton("ቋንቋ") == ["ቅ", "ን", "ቅ"]
+        assert consonant_skeleton("ኳስ") == ["ክ", "ስ"]
+        assert consonant_skeleton("ጓደኛ") == ["ግ", "ድ", "ኝ"]
+        assert consonant_skeleton("ኋላ") == ["ህ", "ል"]
 
     def test_no_labiovelar_survives_into_a_root(self):
         for letters, _ in LABIOVELAR_FAMILIES:
-            assert not any(is_labiovelar(c) for c in level1_root(letters))
+            assert not any(is_labiovelar(c) for c in consonant_skeleton(letters))
 
     def test_single_glottal(self):
-        assert level1_root("አ") == ["እ"]
+        assert consonant_skeleton("አ") == ["እ"]
 
     def test_empty_returns_none(self):
-        assert level1_root("") is None
+        assert consonant_skeleton("") is None
 
     def test_non_ethiopic_returns_none(self):
-        assert level1_root("abc") is None
+        assert consonant_skeleton("abc") is None
 
 
 class TestLevel1RequiresAMorpheme:
@@ -352,10 +352,10 @@ class TestLevel1RequiresAMorpheme:
 
     def test_surface_word_gives_a_polluted_root(self):
         # The ች of the plural suffix ends up inside the root.
-        assert level1_root("ቤቶች") == ["ብ", "ት", "ች"]
+        assert consonant_skeleton("ቤቶች") == ["ብ", "ት", "ች"]
 
     def test_the_morpheme_gives_the_correct_root(self):
-        assert level1_root("ቤት") == ["ብ", "ት"]
+        assert consonant_skeleton("ቤት") == ["ብ", "ት"]
 
 
 # ── Cross-level consistency ───────────────────────────────────────────────────
@@ -366,7 +366,7 @@ class TestLevelsAgree:
 
     def test_level2_consonants_match_level1_for_a_clean_stem(self):
         consonants = [c for c in level2_sound("ቤት") if c not in "ኧኡኢኣኤኦዋ"]
-        assert consonants == level1_root("ቤት")
+        assert consonants == consonant_skeleton("ቤት")
 
     def test_level3_roundtrips(self):
         assert "".join(level3_fidel("ቤቶች")) == "ቤቶች"
