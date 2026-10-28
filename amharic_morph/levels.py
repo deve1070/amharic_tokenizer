@@ -20,6 +20,19 @@ Ethiopic syllable families are 8-aligned: seven vowel orders plus a
 labialized form in the eighth slot. So order = codepoint % 8 + 1, and
 the bare consonant (order 6) is always family_base + 5.
 
+Labiovelars are the exception. ቋ, ኳ, ጓ, ኋ and their relatives sit
+in blocks of their own, each placed right after its plain family (ቈ
+after ቀ, ኰ after ከ). The arithmetic still gives the right vowel order
+inside such a block, but it gives the block's own bare form, ቍ, never
+the plain ቅ. Each block also fills only five of its eight slots (orders
+1, 3, 4, 5, 6). They are therefore decomposed through a table, like
+order 8:
+
+    ቈ  ቅ + ወ     ቊ  ቅ + ዊ     ቋ  ቅ + ዋ     ቌ  ቅ + ዌ     ቍ  ቅ + ው
+
+ቋ is ቅ + ዋ exactly as ሏ is ል + ዋ, and at Level 1 the glide is
+dropped from both.
+
 ── Level 2 decomposition ────────────────────────────────────────────────
 
 Each fidel splits into (bare consonant, vowel):
@@ -56,6 +69,8 @@ Two rules, applied together:
     ቤቶች   -> ብ-ት     ኤ and ኦ never existed in the surface form
 """
 
+import unicodedata
+
 _FAMILY_SIZE = 8
 _ORDER6 = 6
 
@@ -78,13 +93,46 @@ _ORDER_VOWELS = {
     8: "ዋ",
 }
 
+# Labiovelar blocks, keyed by codepoint base, mapped to the plain
+# consonant they labialize. The ኀ block maps to ህ rather than ኅ because
+# Layer 0 merges the ኀ family into ሀ, and a decomposition must not bring
+# back a letter the normalizer removed.
+_LABIOVELAR_CONSONANTS = {
+    0x1248: "ቅ",  # ቈ ቊ ቋ ቌ ቍ
+    0x1288: "ህ",  # ኈ ኊ ኋ ኌ ኍ
+    0x12B0: "ክ",  # ኰ ኲ ኳ ኴ ኵ
+    0x12C0: "ኽ",  # ዀ ዂ ዃ ዄ ዅ
+    0x1310: "ግ",  # ጐ ጒ ጓ ጔ ጕ
+}
+
+# The w-syllable each labiovelar contributes at Level 2, by vowel order.
+# Orders 2, 7 and 8 have no labiovelar letter.
+_LABIOVELAR_GLIDES = {1: "ወ", 3: "ዊ", 4: "ዋ", 5: "ዌ", 6: "ው"}
+
 # The አ family (U+12A0-U+12A7) carries the glottal stop.
 _GLOTTAL_BASE = ord("አ") - ord("አ") % _FAMILY_SIZE
 
 
 def is_ethiopic(char: str) -> bool:
-    """True if char is an Ethiopic character."""
-    return bool(char) and _ETHIOPIC_FIRST <= char <= _ETHIOPIC_LAST
+    """
+    True if char is an assigned Ethiopic character.
+
+    The block has unassigned codepoints, among them the empty slots of
+    each labiovelar block (U+1249) and U+12D7. They reach the corpus
+    through broken encodings, and treating them as syllables gives
+    the fidel arithmetic a vowel order for a letter that does not exist.
+
+    Examples:
+        >>> is_ethiopic("ቤ")
+        True
+        >>> is_ethiopic("\\u1249")
+        False
+    """
+    return (
+        bool(char)
+        and _ETHIOPIC_FIRST <= char <= _ETHIOPIC_LAST
+        and unicodedata.category(char) != "Cn"
+    )
 
 
 def fidel_order(char: str) -> int:
@@ -112,12 +160,30 @@ def fidel_order(char: str) -> int:
     return ord(char) % _FAMILY_SIZE + 1
 
 
+def _block_base(char: str) -> int:
+    return ord(char) - ord(char) % _FAMILY_SIZE
+
+
+def is_labiovelar(char: str) -> bool:
+    """
+    True if char is in one of the labiovelar blocks (ቈ ኈ ኰ ዀ ጐ).
+
+    Examples:
+        >>> is_labiovelar("ቋ")
+        True
+        >>> is_labiovelar("ሏ")
+        False
+    """
+    return is_ethiopic(char) and _block_base(char) in _LABIOVELAR_CONSONANTS
+
+
 def to_order(char: str, order: int) -> str:
     """
     Rewrite an Ethiopic syllable at another vowel order of its own family.
 
     The consonant is kept and the vowel replaced. Families are 8-aligned,
-    so the target is family_base + order - 1.
+    so the target is family_base + order - 1. A labiovelar stays in its
+    own block (ቋ at order 6 is ቍ), which is what fusion arithmetic needs.
 
     Args:
         char:  A single character.
@@ -127,7 +193,8 @@ def to_order(char: str, order: int) -> str:
         The character at that order, or unchanged if not Ethiopic.
 
     Raises:
-        ValueError: If order is outside 1-8.
+        ValueError: If order is outside 1-8, or char is a labiovelar and
+                    its block has no letter at that order.
 
     Examples:
         >>> to_order("ት", 7)
@@ -141,8 +208,9 @@ def to_order(char: str, order: int) -> str:
         raise ValueError(f"vowel order must be 1-{_FAMILY_SIZE}, got {order}")
     if not is_ethiopic(char):
         return char
-    base = ord(char) - ord(char) % _FAMILY_SIZE
-    return chr(base + order - 1)
+    if is_labiovelar(char) and order not in _LABIOVELAR_GLIDES:
+        raise ValueError(f"{char} has no order-{order} form")
+    return chr(_block_base(char) + order - 1)
 
 
 def to_order6(char: str) -> str:
@@ -162,6 +230,30 @@ def to_order6(char: str) -> str:
         'ብ'
     """
     return to_order(char, _ORDER6)
+
+
+def bare_consonant(char: str) -> str:
+    """
+    The plain consonant of an Ethiopic syllable.
+
+    The order-6 form for every family except the labiovelars, which
+    give the consonant they labialize.
+
+    Args:
+        char: A single character.
+
+    Returns:
+        The consonant, or the character unchanged if not Ethiopic.
+
+    Examples:
+        >>> bare_consonant("ቶ")
+        'ት'
+        >>> bare_consonant("ቋ")
+        'ቅ'
+    """
+    if is_labiovelar(char):
+        return _LABIOVELAR_CONSONANTS[_block_base(char)]
+    return to_order6(char)
 
 
 def is_glottal(char: str) -> bool:
@@ -197,9 +289,13 @@ def decompose_fidel(char: str) -> tuple[str, str]:
         ('ት', '')
         >>> decompose_fidel("ቶ")
         ('ት', 'ኦ')
+        >>> decompose_fidel("ቋ")
+        ('ቅ', 'ዋ')
     """
     if not is_ethiopic(char):
         return (char, "")
+    if is_labiovelar(char):
+        return (bare_consonant(char), _LABIOVELAR_GLIDES[fidel_order(char)])
     return (to_order6(char), _ORDER_VOWELS[fidel_order(char)])
 
 
@@ -266,7 +362,8 @@ def level1_root(morpheme: str) -> list[str] | None:
 
     Applies both rules described in the module docstring: decomposition
     vowels never enter the root, and among surface አ-family letters only
-    a word-initial one counts as a consonant.
+    a word-initial one counts as a consonant. A labiovelar gives its
+    plain consonant (ቋንቋ -> ቅ-ን-ቅ).
 
     Args:
         morpheme: A single independent morpheme.
@@ -297,6 +394,6 @@ def level1_root(morpheme: str) -> list[str] | None:
         # consonant. An initial one is the consonant itself.
         if is_glottal(char) and index > 0:
             continue
-        root.append(to_order6(char))
+        root.append(bare_consonant(char))
 
     return root or None

@@ -13,10 +13,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from amharic_morph.levels import (  # noqa: E402
+    bare_consonant,
     decompose_fidel,
     fidel_order,
     is_ethiopic,
     is_glottal,
+    is_labiovelar,
     level1_root,
     level2_sound,
     level3_fidel,
@@ -112,6 +114,18 @@ class TestIsEthiopic:
     def test_empty(self):
         assert is_ethiopic("") is False
 
+    def test_unassigned_codepoint_in_the_block_is_not(self):
+        # U+12D7 and U+124E sit inside the Ethiopic range but are not
+        # letters. They reach the corpus through broken encodings.
+        assert is_ethiopic("዗") is False
+        assert is_ethiopic("቎") is False
+
+    def test_unassigned_codepoint_passes_through_the_levels(self):
+        assert decompose_fidel("቎") == ("቎", "")
+        assert fidel_order("዗") == 0
+        assert level2_sound("዗አመት") == ["዗", "እ", "ኧ", "ም", "ኧ", "ት"]
+        assert "዗" not in level1_root("዗አመት")
+
 
 # ── Decomposition table ───────────────────────────────────────────────────────
 
@@ -154,6 +168,80 @@ class TestDecomposeFidel:
         # indistinguishable from a surface glottal consonant.
         for char in "ተለመሰረ":
             assert decompose_fidel(char)[1] != "አ"
+
+
+# ── Labiovelars ───────────────────────────────────────────────────────────────
+
+# Each labiovelar family as (letters, plain consonant). The letters are
+# the five assigned slots of the block, in codepoint order.
+LABIOVELAR_FAMILIES = (
+    ("ቈቊቋቌቍ", "ቅ"),
+    ("ኰኲኳኴኵ", "ክ"),
+    ("ጐጒጓጔጕ", "ግ"),
+    ("ዀዂዃዄዅ", "ኽ"),
+    # The ኀ family is merged into ሀ by Layer 0, so its labiovelars take ህ.
+    ("ኈኊኋኌኍ", "ህ"),
+)
+
+# The w-syllable each slot contributes, in the same order.
+GLIDES = ("ወ", "ዊ", "ዋ", "ዌ", "ው")
+
+
+class TestLabiovelars:
+    """
+    A labiovelar works like order 8: ቋ is ቅ + ዋ, as ሏ is ል + ዋ.
+
+    Unicode gives each labiovelar its own small block with its own
+    bare form (ቍ), so the 8-aligned arithmetic alone would keep ቋ inside
+    that block and never reach ቅ.
+    """
+
+    def test_every_letter_decomposes_to_plain_consonant_and_glide(self):
+        for letters, consonant in LABIOVELAR_FAMILIES:
+            for letter, glide in zip(letters, GLIDES):
+                assert decompose_fidel(letter) == (consonant, glide), letter
+
+    def test_wa_slot_matches_order8(self):
+        assert decompose_fidel("ቋ")[1] == decompose_fidel("ሏ")[1] == "ዋ"
+
+    def test_is_labiovelar(self):
+        for letters, _ in LABIOVELAR_FAMILIES:
+            assert all(is_labiovelar(c) for c in letters)
+
+    def test_plain_and_order8_letters_are_not_labiovelar(self):
+        for char in "ቀቁቅክግኽህሏቷ":
+            assert not is_labiovelar(char)
+
+    def test_bare_consonant_of_a_labiovelar(self):
+        for letters, consonant in LABIOVELAR_FAMILIES:
+            assert all(bare_consonant(c) == consonant for c in letters)
+
+    def test_bare_consonant_of_other_letters_is_order6(self):
+        for char in "ቤቶችሏአ":
+            assert bare_consonant(char) == to_order6(char)
+
+    def test_bare_consonant_non_ethiopic_unchanged(self):
+        assert bare_consonant("a") == "a"
+
+    def test_level2_word(self):
+        assert level2_sound("ቋንቋ") == ["ቅ", "ዋ", "ን", "ቅ", "ዋ"]
+        assert level2_sound("ጓደኛ") == ["ግ", "ዋ", "ድ", "ኧ", "ኝ", "ኣ"]
+
+    def test_to_order_stays_inside_the_block(self):
+        # Fusion arithmetic rewrites a vowel in place, so a labiovelar
+        # stays a labiovelar: ቋ at order 6 is ቍ.
+        assert to_order("ቋ", 6) == "ቍ"
+        assert to_order("ቍ", 1) == "ቈ"
+        assert to_order("ቈ", 4) == "ቋ"
+
+    def test_to_order_refuses_a_slot_the_block_does_not_have(self):
+        # The blocks have no order 2, 7 or 8. U+1249 is unassigned.
+        for order in (2, 7, 8):
+            try:
+                to_order("ቋ", order)
+            except ValueError:
+                continue
+            raise AssertionError(f"expected ValueError for order {order}")
 
 
 # ── Level 3 ───────────────────────────────────────────────────────────────────
@@ -233,6 +321,17 @@ class TestLevel1Root:
 
     def test_labialized_consonant_extracted(self):
         assert level1_root("ሏ") == ["ል"]
+
+    def test_labiovelar_gives_its_plain_consonant(self):
+        # The glide is dropped, as the ዋ of ሏ is.
+        assert level1_root("ቋንቋ") == ["ቅ", "ን", "ቅ"]
+        assert level1_root("ኳስ") == ["ክ", "ስ"]
+        assert level1_root("ጓደኛ") == ["ግ", "ድ", "ኝ"]
+        assert level1_root("ኋላ") == ["ህ", "ል"]
+
+    def test_no_labiovelar_survives_into_a_root(self):
+        for letters, _ in LABIOVELAR_FAMILIES:
+            assert not any(is_labiovelar(c) for c in level1_root(letters))
 
     def test_single_glottal(self):
         assert level1_root("አ") == ["እ"]
