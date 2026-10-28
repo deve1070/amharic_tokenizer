@@ -17345,36 +17345,6 @@
     "notes": ""
   },
   {
-    "word": "ራሳቸው",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ር",
-      "ስ",
-      "ች",
-      "ው"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ራስ (ራስ + ኣቸው); expected to be flagged in step 5"
-  },
-  {
     "word": "ሳምንት",
     "category": "noun",
     "gender": null,
@@ -17972,37 +17942,6 @@
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective (uniform)"
-  },
-  {
-    "word": "ሀገራችን",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ህ",
-      "ግ",
-      "ር",
-      "ች",
-      "ን"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ሀገር; expected to be flagged in step 5"
   },
   {
     "word": "ንጉስ",
@@ -18679,37 +18618,6 @@
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
-  },
-  {
-    "word": "አገራችን",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "እ",
-      "ግ",
-      "ር",
-      "ች",
-      "ን"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of አገር; expected to be flagged in step 5"
   },
   {
     "word": "ስልክ",
@@ -21382,36 +21290,6 @@
     "notes": "Ge'ez-pattern plural of ማህበር; deferred with ኣን/ኣት"
   },
   {
-    "word": "ራሳችን",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ር",
-      "ስ",
-      "ች",
-      "ን"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ራስ; expected to be flagged in step 5"
-  },
-  {
     "word": "አዳራሽ",
     "category": "noun",
     "gender": null,
@@ -21631,7 +21509,7 @@
     "root_source": "skeleton",
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "Kept by hand: ወሬ (rumour), not ወር + ኤ"
   },
   {
     "word": "ኦነግ",
@@ -21661,36 +21539,6 @@
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
-  },
-  {
-    "word": "ስራቸው",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ስ",
-      "ር",
-      "ች",
-      "ው"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ስራ; expected to be flagged in step 5"
   },
   {
     "word": "ጎዳና",
@@ -22331,34 +22179,6 @@
     "notes": ""
   },
   {
-    "word": "ራሴ",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ን",
-      "ው"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ር",
-      "ስ"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ራስ; expected to be flagged in step 5"
-  },
-  {
     "word": "ታማኝ",
     "category": "adjective",
     "gender": null,
@@ -22969,37 +22789,6 @@
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
-  },
-  {
-    "word": "ሀገራቸው",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "እንደ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ህ",
-      "ግ",
-      "ር",
-      "ች",
-      "ው"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ሀገር; expected to be flagged in step 5"
   },
   {
     "word": "ድንግል",
@@ -26906,35 +26695,6 @@
     "notes": ""
   },
   {
-    "word": "ሀገሬ",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "ከ",
-      "ወደ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን",
-      "ው"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ህ",
-      "ግ",
-      "ር"
-    ],
-    "root_source": "skeleton",
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "possessive of ሀገር; expected to be flagged in step 5"
-  },
-  {
     "word": "ጫካ",
     "category": "noun",
     "gender": null,
@@ -27215,7 +26975,7 @@
     "root_source": "skeleton",
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "Kept by hand: ቅኔ (poetry), not ቅን + ኤ"
   },
   {
     "word": "ስትራቴጂ",
@@ -28670,7 +28430,7 @@
     "root_source": "skeleton",
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "Kept by hand: በሬ (ox), not በር + ኤ"
   },
   {
     "word": "ጡት",
