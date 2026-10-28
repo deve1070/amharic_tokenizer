@@ -266,6 +266,19 @@ class TestInflectionAgreement:
         segment = segmenter({"ቤቶች": Segmentation("ቤቶች", "ቤት", suffixes=("ኦች",))})
         assert inflection_agreement(segment, reference, {}).compared_tokens == 0
 
+    def test_gerund_counts_on_a_verb(self):
+        # ሆኖ is ሆን_ኦ in the reference and ሆነ + ኦ in Level 4.
+        reference = {"ሆኖ": (ReferenceAnalysis(("ሆን", "ኦ"), ()),)}
+        segment = segmenter({"ሆኖ": Segmentation("ሆኖ", "ሆነ", suffixes=("ኦ",), category="verb")})
+        assert inflection_agreement(segment, reference, {"ሆኖ": 3}).agreeing_tokens == 3
+
+    def test_o_on_a_noun_is_left_as_derivation(self):
+        # ጉዞ is ጉዝ_ኦ in the reference: derivation, which Level 4 keeps
+        # inside the entry ጉዞ.
+        reference = {"ጉዞ": (ReferenceAnalysis(("ጉዝ", "ኦ"), ()),)}
+        segment = segmenter({"ጉዞ": Segmentation("ጉዞ", "ጉዞ", category="noun")})
+        assert inflection_agreement(segment, reference, {"ጉዞ": 3}).agreeing_tokens == 3
+
     def test_rate(self):
         reference = {"ቤቶች": (ReferenceAnalysis(("ቤት", "ኦች"), ()),)}
         segment = segmenter({"ቤቶች": Segmentation("ቤቶች", "ቤት", suffixes=("ኦች",))})

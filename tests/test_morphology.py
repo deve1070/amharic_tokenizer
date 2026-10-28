@@ -617,6 +617,12 @@ class TestSuffixTable:
         assert ("ገባ", "ቶ") in detach_suffix("ገብቶ")
         assert ("ገባ", "ታ") in detach_suffix("ገብታ")
 
+    def test_to_gerund_also_follows_an_order1_verb(self):
+        # ሰጠ -> ሰጥቶ, ቀረ -> ቀርቶ: the carrier restores to order 1 as well
+        # as to the order 4 of ገባ -> ገብቶ.
+        assert ("ሰጠ", "ቶ") in detach_suffix("ሰጥቶ")
+        assert ("ቀረ", "ታ") in detach_suffix("ቀርታ")
+
     def test_gerund_o_is_not_the_plural(self):
         # Both leave the carrier at order 7; the plural needs ች after it.
         assert ("ቤት", "ኦ") not in detach_suffix("ቤቶች")
@@ -636,7 +642,7 @@ class TestSuffixTable:
                 assert shape.carrier_order not in shape.restore_orders
 
     def test_a_custom_table_replaces_the_default(self):
-        only_n = (SuffixShape("ን", ANY, "ን"),)
+        only_n = (SuffixShape("ን", ANY, "ን", slot=3),)
         assert detach_suffix("ቤቶች", only_n) == []
         assert detach_suffix("ቤትን", only_n) == [("ቤት", "ን")]
 
@@ -682,6 +688,10 @@ class TestCategoryGating:
         assert segment_word("ሆና", lex).morphemes == ["ሆነ", "ኣ"]
         assert segment_word("ሆኖ", lex).morphemes == ["ሆነ", "ኦ"]
         assert segment_word("ገብቶ", lex).morphemes == ["ገባ", "ቶ"]
+
+    def test_to_gerund_on_an_order1_verb_is_one_suffix(self):
+        # Without order 1 the search reached ሰጠ only through ሰጣ + ኣ.
+        assert segment_word("ሰጥቶ", typed(ሰጠ="verb")).morphemes == ["ሰጠ", "ቶ"]
 
     def test_gerunds_are_refused_on_a_noun(self):
         lex = typed(ሆነ="noun")
@@ -729,3 +739,48 @@ class TestNegativePerfective:
 
     def test_al_on_an_unset_category_is_refused(self):
         assert segment_word("አልሆነም", typed(ሆነ=None)).known is False
+
+
+class TestSuffixPositions:
+    """
+    Suffixes take a fixed order, at most one per position. On a noun:
+    plural, then one possessive or definite, then ን, then ም, then ና.
+    On a verb: subject or gerund, then object, then ም, then ና. The order
+    is the one the IRIT annotation attests.
+    """
+
+    def test_plural_then_case_beats_two_possessives(self):
+        # ስራዎችን was ስራ + ዎ + ችን, "your our".
+        assert segment_word("ስራዎችን", typed(ስራ="noun")).morphemes == ["ስራ", "ዎች", "ን"]
+
+    def test_plural_definite_case(self):
+        assert segment_word("ቤቶቹን", typed(ቤት="noun")).morphemes == ["ቤት", "ኦች", "ኡ", "ን"]
+
+    def test_definite_case_particle(self):
+        assert segment_word("ቤቱንም", typed(ቤት="noun")).morphemes == ["ቤት", "ኡ", "ን", "ም"]
+
+    def test_two_possessives_on_a_noun_are_refused(self):
+        # ጥላሁን is a name, not ጥላ + ህ + ኡ + ን.
+        assert segment_word("ጥላሁን", typed(ጥላ="noun")).known is False
+        assert segment_word("ብሩህ", typed(ብር="noun")).known is False
+
+    def test_plural_after_a_possessive_is_refused(self):
+        assert segment_word("ቤቴዎች", typed(ቤት="noun")).known is False
+
+    def test_adjective_ending_precedes_the_plural(self):
+        assert segment_word("ውጤታማዎች", typed(ውጤት="noun")).morphemes == ["ውጤት", "ኣማ", "ዎች"]
+
+    def test_verb_subject_then_object(self):
+        # ሰጡኝ "they gave me": ኡ is the subject on a verb and precedes the
+        # object, where on a noun it would follow the plural.
+        assert segment_word("ሰጡኝ", typed(ሰጠ="verb")).morphemes == ["ሰጠ", "ኡ", "ኝ"]
+
+    def test_object_before_subject_is_refused(self):
+        assert segment_word("ሰጠኝኩ", typed(ሰጠ="verb")).known is False
+
+    def test_m_then_na(self):
+        assert segment_word("ቤቱምና", typed(ቤት="noun")).morphemes == ["ቤት", "ኡ", "ም", "ና"]
+
+    def test_every_row_has_a_position(self):
+        for shape in SUFFIX_TABLE:
+            assert isinstance(shape.slot, int)

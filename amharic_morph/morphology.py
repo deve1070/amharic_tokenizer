@@ -43,6 +43,10 @@ inverse (joining morphemes back into a word) will read, so the two
 directions cannot drift apart the way three copies of the inversion
 once did.
 
+Each row also has a position. Suffixes follow the stem in a fixed
+order, at most one per position (see ADJECTIVE ... AND), which is what
+rules out ስራ + ዎ + ችን ("your our") for ስራዎችን, ስራ + ዎች + ን.
+
 Each row also says what kind of stem it attaches to. A verb row needs a
 verb, a noun row a stem whose category is set and is not verb, and an
 any row attaches to everything. An entry whose category is still
@@ -173,6 +177,24 @@ NOUN = "noun"
 VERB = "verb"
 
 
+# Suffix positions. Suffixes follow the stem in a fixed order, at most
+# one per position. The IRIT annotation attests the same order: ኡ + ን,
+# ኦች + ኡ + ን and ኦች + ኣቸው + ን are its commonest sequences.
+#
+#   noun   stem + ADJECTIVE + PLURAL + POSSESSIVE + CASE + ALSO + AND
+#          ውጤት + ኣማ + ዎች;  ቤት + ኦች + ኡ + ን + ም
+#   verb   stem + SUBJECT + OBJECT + ALSO + AND
+#          ሰጠ + ኡ + ኝ "they gave me";  አል + ሄደ + ኩ + ም
+#
+# POSSESSIVE holds the definite too: a noun takes one or the other.
+ADJECTIVE = 0
+PLURAL = SUBJECT = 1
+POSSESSIVE = OBJECT = 2
+CASE = 3
+ALSO = 4
+AND = 5
+
+
 @dataclass(frozen=True)
 class SuffixShape:
     """
@@ -186,76 +208,101 @@ class SuffixShape:
         kind:           ANY, NOUN or VERB: the stems it attaches to.
         tail:           The letters written after the carrier, or the
                         whole suffix for a plain row.
+        slot:           Its position after a non-verb stem.
+        verb_slot:      Its position after a verb, when that differs.
+                        ኡ is the definite on a noun, after the plural,
+                        and the subject on a verb, before the object.
         carrier_order:  The order a fused row leaves on the stem's last
                         letter. None for a plain row.
         restore_orders: The orders the carrier may be returned to.
-        after_orders:   For a plain row, the orders the stem's last
-                        letter may have, or None for any.
+        after_orders:   For a plain row, the orders the letter before it
+                        may have, or None for any.
         rule:           RULE_* reported to the corpus analysis.
     """
 
     morpheme: str
     kind: str
     tail: str
+    slot: int
+    verb_slot: int | None = None
     carrier_order: int | None = None
     restore_orders: tuple[int, ...] = ()
     after_orders: tuple[int, ...] | None = None
     rule: str = RULE_SUFFIX
 
+    def position(self, category: str | None) -> int:
+        """The row's position after a stem of this category."""
+        if category == VERB and self.verb_slot is not None:
+            return self.verb_slot
+        return self.slot
 
-def _plain(morpheme, kind, after_orders=None):
-    return SuffixShape(morpheme, kind, morpheme, after_orders=after_orders)
+
+def _plain(morpheme, kind, slot, verb_slot=None, after_orders=None):
+    return SuffixShape(morpheme, kind, morpheme, slot, verb_slot, after_orders=after_orders)
 
 
-def _fused(morpheme, kind, carrier_order, tail, restore_orders, rule=RULE_FUSION):
-    return SuffixShape(morpheme, kind, tail, carrier_order, restore_orders, rule=rule)
+def _fused(morpheme, kind, slot, carrier_order, tail, restore_orders, verb_slot=None,
+           rule=RULE_FUSION):
+    return SuffixShape(
+        morpheme, kind, tail, slot, verb_slot, carrier_order, restore_orders, rule=rule
+    )
 
 
 # The suffix inventory. Rows are tried in order; the lexicon and the
 # ranking choose among the analyses they produce.
 SUFFIX_TABLE = (
-    # Plain rows that were the whole inventory before the table.
-    *(_plain(m, ANY) for m in ("ን", "ም", "ና", "ች", "ው", "ዋ", "ዎ", "ዎች", "ኦች")),
+    # ን is the case ending on a noun and the 1pl object on a verb (ሰጠን).
+    _plain("ን", ANY, CASE, OBJECT),
+    _plain("ም", ANY, ALSO),
+    _plain("ና", ANY, AND),
+    # The plural after a vowel on a noun, 3fs on a verb (ሄደች).
+    _plain("ች", ANY, PLURAL, SUBJECT),
+    _plain("ው", ANY, POSSESSIVE, OBJECT),
+    _plain("ዋ", ANY, POSSESSIVE, OBJECT),
+    _plain("ዎ", ANY, POSSESSIVE, OBJECT),
+    _plain("ዎች", ANY, PLURAL),
+    _plain("ኦች", ANY, PLURAL),
     # Possessives after a vowel-final stem: ስራዬ, ስራችን, ስራቸው.
-    _plain("ዬ", NOUN, _VOWEL_ORDERS),
-    _plain("ችን", NOUN, _VOWEL_ORDERS),
-    _plain("ችሁ", ANY, _VOWEL_ORDERS),
-    _plain("ቸው", ANY, _VOWEL_ORDERS),
+    _plain("ዬ", NOUN, POSSESSIVE, after_orders=_VOWEL_ORDERS),
+    _plain("ችን", NOUN, POSSESSIVE, after_orders=_VOWEL_ORDERS),
+    _plain("ችሁ", ANY, POSSESSIVE, OBJECT, _VOWEL_ORDERS),
+    _plain("ቸው", ANY, POSSESSIVE, OBJECT, _VOWEL_ORDERS),
     # The same after ኢ or ኤ, with a ያ glide: ፓርቲያችን, ጥያቄያችን.
-    _plain("ያችን", NOUN, (3, 5)),
-    # Your (m, f), on any stem: ቤትህ, ቤትሽ; on a verb the subject or object.
-    _plain("ህ", ANY),
-    _plain("ሽ", ANY),
+    _plain("ያችን", NOUN, POSSESSIVE, after_orders=(3, 5)),
+    # Your (m, f), on any stem: ቤትህ, ቤትሽ; on a verb the object.
+    _plain("ህ", ANY, POSSESSIVE, OBJECT),
+    _plain("ሽ", ANY, POSSESSIVE, OBJECT),
     # The adjective ending after an ኣ-final noun: ጤናማ.
-    _plain("ማ", NOUN, (4,)),
+    _plain("ማ", NOUN, ADJECTIVE, after_orders=(4,)),
     # I, after an ኣ-final verb (ገባሁ); me, after any verb (ሰጠኝ).
-    _plain("ሁ", VERB, (4,)),
-    _plain("ኝ", VERB, _VOWEL_ORDERS),
+    _plain("ሁ", VERB, SUBJECT, after_orders=(4,)),
+    _plain("ኝ", VERB, OBJECT, after_orders=_VOWEL_ORDERS),
     # The plural: ቤት + ኦች -> ቤቶች, the ኦ riding on the stem's last letter.
-    _fused("ኦች", ANY, 7, "ች", _CARRIER_ORDERS, RULE_PLURAL_FUSION),
+    _fused("ኦች", ANY, PLURAL, 7, "ች", _CARRIER_ORDERS, rule=RULE_PLURAL_FUSION),
     # The definite on a noun, 3pl agreement on a verb: ቤቱ, ሆኑ.
-    _fused("ኡ", ANY, 2, "", _CARRIER_ORDERS, RULE_DEFINITE_FUSION),
+    _fused("ኡ", ANY, POSSESSIVE, 2, "", _CARRIER_ORDERS, SUBJECT, RULE_DEFINITE_FUSION),
     # Possessives after a consonant-final noun, ruled 2026-10-22: ኣ turns
     # the order-6 letter into its order-4 form.
-    _fused("ኤ", NOUN, 5, "", (6,)),
-    _fused("ዋ", NOUN, 8, "", (6,)),
-    _fused("ኣችን", NOUN, 4, "ችን", (6,)),
-    _fused("ኣችሁ", ANY, 4, "ችሁ", (6, 1)),
-    _fused("ኣቸው", ANY, 4, "ቸው", (6, 1)),
+    _fused("ኤ", NOUN, POSSESSIVE, 5, "", (6,)),
+    _fused("ዋ", NOUN, POSSESSIVE, 8, "", (6,)),
+    _fused("ኣችን", NOUN, POSSESSIVE, 4, "ችን", (6,)),
+    _fused("ኣችሁ", ANY, POSSESSIVE, 4, "ችሁ", (6, 1), OBJECT),
+    _fused("ኣቸው", ANY, POSSESSIVE, 4, "ቸው", (6, 1), OBJECT),
     # The adjective ending: ውጤት + ኣማ -> ውጤታማ.
-    _fused("ኣማ", NOUN, 4, "ማ", (6,)),
+    _fused("ኣማ", NOUN, ADJECTIVE, 4, "ማ", (6,)),
     # Her, as an object: ሰጠ + ኣት -> ሰጣት.
-    _fused("ኣት", VERB, 4, "ት", (1,)),
+    _fused("ኣት", VERB, OBJECT, 4, "ት", (1,)),
     # Perfective subjects delete the stem's last vowel: ሄደ + ኩ -> ሄድኩ.
-    *(_fused(m, VERB, 6, m, (1,)) for m in ("ኩ", "ክ", "ሽ", "ን")),
+    *(_fused(m, VERB, SUBJECT, 6, m, (1,)) for m in ("ኩ", "ክ", "ሽ", "ን")),
     # Gerunds. Bare ኣ is the 3fs (ሆና), and on a noun ኣ is never a suffix
     # of its own, so it restores only to a verb's order 1. ስራ is not the
     # "definite" of ስር.
-    _fused("ኣ", VERB, 4, "", (1,), RULE_AMBIGUOUS_FUSION),
-    _fused("ኦ", VERB, 7, "", (1,)),
-    # After an ኣ-final verb the gerund is a separate letter: ገባ -> ገብቶ.
-    _fused("ቶ", VERB, 6, "ቶ", (4,)),
-    _fused("ታ", VERB, 6, "ታ", (4,)),
+    _fused("ኣ", VERB, SUBJECT, 4, "", (1,), rule=RULE_AMBIGUOUS_FUSION),
+    _fused("ኦ", VERB, SUBJECT, 7, "", (1,)),
+    # After an ኣ-final verb, and after some order-1 verbs, the gerund is a
+    # separate letter: ገባ -> ገብቶ, ሰጠ -> ሰጥቶ, ቀረ -> ቀርቶ.
+    _fused("ቶ", VERB, SUBJECT, 6, "ቶ", (4, 1)),
+    _fused("ታ", VERB, SUBJECT, 6, "ታ", (4, 1)),
 )
 
 
@@ -645,8 +692,8 @@ class _Node:
     infix: str | None = None
     depth_prefix: int = 0
     depth_suffix: int = 0
-    # The kind of each suffix row, parallel to suffixes.
-    kinds: tuple[str, ...] = ()
+    # The table row of each suffix, parallel to suffixes.
+    shapes: tuple[SuffixShape, ...] = ()
 
 
 def _kind_allows(kind: str, category: str | None) -> bool:
@@ -659,8 +706,15 @@ def _kind_allows(kind: str, category: str | None) -> bool:
 
 
 def _compatible(node: _Node, category: str | None) -> bool:
-    """Whether every affix of a finished analysis fits its stem."""
-    if not all(_kind_allows(k, category) for k in node.kinds):
+    """
+    Whether every affix of a finished analysis fits its stem: each row's
+    kind admits the category, and the suffixes are in strictly
+    increasing position.
+    """
+    if not all(_kind_allows(s.kind, category) for s in node.shapes):
+        return False
+    positions = [s.position(category) for s in node.shapes]
+    if any(a >= b for a, b in zip(positions, positions[1:])):
         return False
     if NEGATIVE_PREFIX in node.prefixes:
         return category == VERB and NEGATIVE_SUFFIX in node.suffixes
@@ -682,7 +736,7 @@ def _analyses(
 
     while queue:
         node = queue.pop()
-        key = (node.text, node.prefixes, node.suffixes, node.infix, node.kinds)
+        key = (node.text, node.prefixes, node.suffixes, node.infix, node.shapes)
         if key in seen:
             continue
         seen.add(key)
@@ -711,7 +765,7 @@ def _analyses(
                         node.infix,
                         node.depth_prefix + 1,
                         node.depth_suffix,
-                        node.kinds,
+                        node.shapes,
                     )
                 )
 
@@ -725,7 +779,7 @@ def _analyses(
                         node.infix,
                         node.depth_prefix,
                         node.depth_suffix + 1,
-                        (shape.kind,) + node.kinds,
+                        (shape,) + node.shapes,
                     )
                 )
 
@@ -741,7 +795,7 @@ def _analyses(
                         infix,
                         node.depth_prefix,
                         node.depth_suffix,
-                        node.kinds,
+                        node.shapes,
                     )
                 )
 

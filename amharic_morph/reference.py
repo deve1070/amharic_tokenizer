@@ -82,15 +82,26 @@ _ALTERNATIVE = re.compile(f"\\[({_ANALYSIS})\\]")
 # Level 4 suffix table's morphemes, normalized.
 #
 # Left out are the suffixes whose letters the reference also uses for
-# derivation: the bare vowels ኣ (normalized to አ), ኤ and ኦ (ከተም_ኣ,
-# ጥያቅ_ኤ), and the verb object ኣት, which normalizes to the reference's
-# nominal አት (አመት_አት, ልም_አት). Peeling them off would charge Level 4
-# for derivational splits.
-_DERIVATION_LOOKALIKES = {"ኣ", "ኤ", "ኦ", "ኣት"}
+# something Level 4 keeps inside the stem, where peeling them off would
+# charge Level 4 for a split it does not make by design:
+# - ኤ, which marks derivation on nouns (ጥያቅ_ኤ);
+# - bare ኣ. On a noun the reference uses it for derivation (ከተም_ኣ), and
+#   on a verb for the 3ms ending of an ኣ-final verb (ገብ_አ, ተ_ነስ_አ),
+#   which is part of Level 4's stem ገባ;
+# - ኦ and ኣት, which on a noun are derivation (ጉዝ_ኦ, አመት_አት) and on a
+#   verb the gerund and the object (ሆን_ኦ). They are peeled when Level
+#   4's stem is a verb. See VERB_INFLECTIONAL_SUFFIXES.
+_DERIVATION_LOOKALIKES = {"ኤ", "ኣ"}
+_VERB_LOOKALIKES = {"ኦ", "ኣት"}
 INFLECTIONAL_SUFFIXES = tuple(
     dict.fromkeys(
-        normalize(s.morpheme) for s in SUFFIX_TABLE if s.morpheme not in _DERIVATION_LOOKALIKES
+        normalize(s.morpheme)
+        for s in SUFFIX_TABLE
+        if s.morpheme not in _DERIVATION_LOOKALIKES | _VERB_LOOKALIKES
     )
+)
+VERB_INFLECTIONAL_SUFFIXES = INFLECTIONAL_SUFFIXES + tuple(
+    normalize(m) for m in sorted(_VERB_LOOKALIKES)
 )
 
 
@@ -255,7 +266,8 @@ def affixes_agree(
     True if a Level 4 analysis has the reading's inflectional affixes.
 
     Both sides are normalized, so Level 4's label ኣቸው matches the
-    reference's አቸው. The stems are not compared, because the
+    reference's አቸው. With the default inventory, a verb stem also peels
+    the gerunds and the object (VERB_INFLECTIONAL_SUFFIXES). The stems are not compared, because the
     reference's core may still carry derivation.
 
     Args:
@@ -270,6 +282,8 @@ def affixes_agree(
         >>> affixes_agree(ours, parse_annotation("ቤት_አቸው")[0])
         True
     """
+    if segmentation.category == "verb" and suffixes is INFLECTIONAL_SUFFIXES:
+        suffixes = VERB_INFLECTIONAL_SUFFIXES
     pre, _, suf = outer_affixes(analysis, prefixes, suffixes)
     return pre == tuple(normalize(p) for p in segmentation.prefixes) and suf == tuple(
         normalize(s) for s in segmentation.suffixes
