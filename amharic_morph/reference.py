@@ -52,7 +52,12 @@ from amharic_morph.levels import (
     is_labiovelar,
     consonant_skeleton,
 )
-from amharic_morph.morphology import DEFAULT_PLAIN_SUFFIXES, DEFAULT_PREFIXES
+from amharic_morph.morphology import (
+    DEFAULT_PREFIXES,
+    NEGATIVE_PREFIX,
+    NEGATIVE_SUFFIX,
+    SUFFIX_TABLE,
+)
 from amharic_morph.normalizer import normalize
 
 REFERENCE_DIR = Path(__file__).parent.parent / "resource" / "irit"
@@ -73,17 +78,18 @@ _ANALYSIS = f"{_MORPHEME}(?:_{_MORPHEME})*"
 _ANNOTATION = re.compile(f"{_ANALYSIS}(?:\\[{_ANALYSIS}\\])*")
 _ALTERNATIVE = re.compile(f"\\[({_ANALYSIS})\\]")
 
-# Inflectional suffixes as the reference writes them after Layer 0. The
-# plain suffixes and the definite ኡ are what Level 4 produces today. The
-# plural possessives are not yet in the Level 4 inventory, so a word
-# carrying one counts as a disagreement until they are added.
+# Inflectional suffixes as the reference writes them after Layer 0: the
+# Level 4 suffix table's morphemes, normalized.
 #
-# The bare vowels ኣ (normalized to አ), ኤ and ኢ are left out. The reference
-# uses them for derivation as well (ከተም_ኣ, ጥያቅ_ኤ, መር_ኢ), so peeling them
-# off would charge Level 4 for derivational splits.
+# Left out are the suffixes whose letters the reference also uses for
+# derivation: the bare vowels ኣ (normalized to አ), ኤ and ኦ (ከተም_ኣ,
+# ጥያቅ_ኤ), and the verb object ኣት, which normalizes to the reference's
+# nominal አት (አመት_አት, ልም_አት). Peeling them off would charge Level 4
+# for derivational splits.
+_DERIVATION_LOOKALIKES = {"ኣ", "ኤ", "ኦ", "ኣት"}
 INFLECTIONAL_SUFFIXES = tuple(
     dict.fromkeys(
-        normalize(s) for s in (*DEFAULT_PLAIN_SUFFIXES, "ኡ", "ኣችን", "ኣችሁ", "ኣቸው")
+        normalize(s.morpheme) for s in SUFFIX_TABLE if s.morpheme not in _DERIVATION_LOOKALIKES
     )
 )
 
@@ -206,7 +212,8 @@ def outer_affixes(
     inflectional suffixes.
 
     Prefixes are peeled from the left and suffixes from the right for as
-    long as they are in the given inventories. At least one morpheme
+    long as they are in the given inventories. The negative አል counts
+    as a prefix only when ም follows it in the same reading. At least one morpheme
     always stays in the core, because a word has exactly one independent
     morpheme. Whatever derivation the annotation marks stays inside the
     core, which is what makes the result comparable with Level 4.
@@ -228,6 +235,10 @@ def outer_affixes(
     m = analysis.morphemes
     start, end = 0, len(m)
     while start < end - 1 and m[start] in prefixes:
+        # አል is the negative only when ም follows it, as Level 4 requires.
+        # In አል_ኧ (አለ) it is the verb stem.
+        if m[start] == NEGATIVE_PREFIX and NEGATIVE_SUFFIX not in m[start + 1:]:
+            break
         start += 1
     while end - 1 > start and m[end - 1] in suffixes:
         end -= 1

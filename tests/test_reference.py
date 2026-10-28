@@ -192,6 +192,24 @@ class TestOuterAffixes:
         assert prefixes == ("በየ",)
         assert core == ("አመት",)
 
+    def test_al_is_the_negative_prefix_only_with_m(self):
+        # አለ is annotated አል_ኧ: there አል is the verb stem, not the
+        # negative, which Level 4 accepts only paired with ም.
+        prefixes, core, _ = outer_affixes(ReferenceAnalysis(("አል", "ኧ"), ()))
+        assert prefixes == ()
+        assert core == ("አል", "ኧ")
+
+    def test_negative_al_is_peeled_when_m_follows(self):
+        prefixes, core, suffixes = outer_affixes(ReferenceAnalysis(("አል", "ሆን", "ኧ", "ም"), ()))
+        assert prefixes == ("አል",)
+        assert suffixes == ("ም",)
+
+    def test_derivational_at_is_not_peeled(self):
+        # አመታት is አመት_አት, a Ge'ez plural, not the verb object ኣት.
+        _, core, suffixes = outer_affixes(ReferenceAnalysis(("አመት", "አት"), ()))
+        assert core == ("አመት", "አት")
+        assert suffixes == ()
+
     def test_inventories_are_parameters(self):
         _, core, suffixes = outer_affixes(
             ReferenceAnalysis(("ቤት", "ኦች"), ()), prefixes=(), suffixes=()

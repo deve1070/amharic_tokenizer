@@ -31,6 +31,30 @@ So the inverter offers both readings and the lexicon chooses. This is
 the general shape of the module: generate every analysis the morphology
 allows, then let the lexicon and the ranking rules pick one.
 
+── One table of suffix shapes ───────────────────────────────────────────
+
+Every suffix is a row of SUFFIX_TABLE describing one written shape:
+plain (ስራ + ችን -> ስራችን), fused into the stem's last letter (ቤት + ኣችን
+-> ቤታችን, the carrier ት rewritten to ታ), or vowel-deleting (ሄደ + ኩ ->
+ሄድኩ, the carrier ደ rewritten to ድ). Fused and vowel-deleting rows are
+the same mechanism: a carrier at a given order, letters after it, and
+the orders the carrier may be restored to. One table is also what the
+inverse (joining morphemes back into a word) will read, so the two
+directions cannot drift apart the way three copies of the inversion
+once did.
+
+Each row also says what kind of stem it attaches to. A verb row needs a
+verb, a noun row a stem whose category is set and is not verb, and an
+any row attaches to everything. An entry whose category is still
+unset takes only the any rows. That gate is what stops the order-6 to
+order-1 restoration of the verb rows from inventing verb analyses for
+nouns: ቤትን inverts to ቤተ + ን (1pl) as well as ቤት + ን, and the first
+is refused unless ቤተ is a verb.
+
+The negative perfective is the one piece that is not a suffix. አል is a
+verb-only prefix, accepted only when ም is among the suffixes:
+አልሆነም is አል + ሆነ + ም.
+
 ── Choosing between analyses ────────────────────────────────────────────
 
 Ranked in this order:
@@ -79,7 +103,7 @@ choice, not a limitation of the search.
 
 from dataclasses import dataclass, field
 
-from amharic_morph.levels import fidel_order, to_order, to_order6
+from amharic_morph.levels import fidel_order, is_ethiopic, to_order, to_order6
 
 # Per CLAUDE.md, minus ም and ና. Both inventories are open questions, so
 # they are parameters rather than constants baked into the algorithm.
@@ -93,22 +117,19 @@ from amharic_morph.levels import fidel_order, to_order, to_order6
 # በየ is the distributive "each, every" (በየአመቱ "every year"), one
 # morpheme. Read as በ + የ the word would mean "in the year's". The IRIT
 # annotation writes it as one prefix too.
-DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "በየ", "የ", "በ", "ከ", "ለ")
+#
+# አል is the negative of the perfective verb (አልሆነም). It is gated: see
+# NEGATIVE_PREFIX.
+DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "በየ", "አል", "የ", "በ", "ከ", "ለ")
 
-# Suffixes that concatenate without changing the stem.
-DEFAULT_PLAIN_SUFFIXES = ("ን", "ም", "ና", "ች", "ው", "ዋ", "ዎ", "ዎች", "ኦች")
+# The negative perfective prefix and the suffix it pairs with. Without
+# the pairing, አል would strip the front off every word that happens to
+# start with those letters.
+NEGATIVE_PREFIX = "አል"
+NEGATIVE_SUFFIX = "ም"
 
 # The order an infix always surfaces at. See detach_infix().
 _INFIX_ORDER = 4
-
-# Vowel orders that a suffix can fuse onto a stem's final consonant.
-# Order 7 (ኦ) marks the plural before ች; order 2 (ኡ) and order 4 (ኣ)
-# mark the definite forms.
-_FUSED_PLURAL_ORDER = 7
-_FUSED_DEFINITE_ORDERS = (2, 4)
-
-# Morpheme names for the fused definite, by the order they surface at.
-_DEFINITE_MORPHEMES = {2: "ኡ", 4: "ኣ"}
 
 # Stem-final orders a fused suffix can be restored to. A fused vowel
 # OVERWRITES whatever vowel the stem's final fidel carried, so the
@@ -119,6 +140,10 @@ _DEFINITE_MORPHEMES = {2: "ኡ", 4: "ኣ"}
 # ወጡ -> ወጣ. Order 1 is where a verb's third person masculine
 # perfective ends, ሆኑ -> ሆነ and ሞቱ -> ሞተ.
 _CARRIER_ORDERS = (6, 4, 1)
+
+# Orders of a letter that ends in a vowel: everything but the bare
+# consonant.
+_VOWEL_ORDERS = (1, 2, 3, 4, 5, 7, 8)
 
 # ── Derivation rules ─────────────────────────────────────────────────────
 #
@@ -138,8 +163,100 @@ RULE_DEFINITE_FUSION = "definite_fusion"
 # ambiguity — no Amharic word ends that way by coincidence.
 RULE_AMBIGUOUS_FUSION = "ambiguous_fusion"
 
-# Rule naming each order a definite can fuse at.
-_DEFINITE_RULES = {2: RULE_DEFINITE_FUSION, 4: RULE_AMBIGUOUS_FUSION}
+# Every other fused row. derived_stems() puts its frequency guard on it,
+# because possessives run backwards over personal names (ጌታቸው, ተስፋዬ).
+RULE_FUSION = "fusion"
+
+# Stem kinds a suffix row may attach to.
+ANY = "any"
+NOUN = "noun"
+VERB = "verb"
+
+
+@dataclass(frozen=True)
+class SuffixShape:
+    """
+    One written shape of one suffix.
+
+    Attributes:
+        morpheme:       The morpheme's name. A fused suffix is named by its
+                        vowel-initial form (ኦች, ኣችን), a plain one by its
+                        written shape (ዎች, ችን). Always Amharic, so Levels
+                        3 and 2 can decompose it.
+        kind:           ANY, NOUN or VERB: the stems it attaches to.
+        tail:           The letters written after the carrier, or the
+                        whole suffix for a plain row.
+        carrier_order:  The order a fused row leaves on the stem's last
+                        letter. None for a plain row.
+        restore_orders: The orders the carrier may be returned to.
+        after_orders:   For a plain row, the orders the stem's last
+                        letter may have, or None for any.
+        rule:           RULE_* reported to the corpus analysis.
+    """
+
+    morpheme: str
+    kind: str
+    tail: str
+    carrier_order: int | None = None
+    restore_orders: tuple[int, ...] = ()
+    after_orders: tuple[int, ...] | None = None
+    rule: str = RULE_SUFFIX
+
+
+def _plain(morpheme, kind, after_orders=None):
+    return SuffixShape(morpheme, kind, morpheme, after_orders=after_orders)
+
+
+def _fused(morpheme, kind, carrier_order, tail, restore_orders, rule=RULE_FUSION):
+    return SuffixShape(morpheme, kind, tail, carrier_order, restore_orders, rule=rule)
+
+
+# The suffix inventory. Rows are tried in order; the lexicon and the
+# ranking choose among the analyses they produce.
+SUFFIX_TABLE = (
+    # Plain rows that were the whole inventory before the table.
+    *(_plain(m, ANY) for m in ("ን", "ም", "ና", "ች", "ው", "ዋ", "ዎ", "ዎች", "ኦች")),
+    # Possessives after a vowel-final stem: ስራዬ, ስራችን, ስራቸው.
+    _plain("ዬ", NOUN, _VOWEL_ORDERS),
+    _plain("ችን", NOUN, _VOWEL_ORDERS),
+    _plain("ችሁ", ANY, _VOWEL_ORDERS),
+    _plain("ቸው", ANY, _VOWEL_ORDERS),
+    # The same after ኢ or ኤ, with a ያ glide: ፓርቲያችን, ጥያቄያችን.
+    _plain("ያችን", NOUN, (3, 5)),
+    # Your (m, f), on any stem: ቤትህ, ቤትሽ; on a verb the subject or object.
+    _plain("ህ", ANY),
+    _plain("ሽ", ANY),
+    # The adjective ending after an ኣ-final noun: ጤናማ.
+    _plain("ማ", NOUN, (4,)),
+    # I, after an ኣ-final verb (ገባሁ); me, after any verb (ሰጠኝ).
+    _plain("ሁ", VERB, (4,)),
+    _plain("ኝ", VERB, _VOWEL_ORDERS),
+    # The plural: ቤት + ኦች -> ቤቶች, the ኦ riding on the stem's last letter.
+    _fused("ኦች", ANY, 7, "ች", _CARRIER_ORDERS, RULE_PLURAL_FUSION),
+    # The definite on a noun, 3pl agreement on a verb: ቤቱ, ሆኑ.
+    _fused("ኡ", ANY, 2, "", _CARRIER_ORDERS, RULE_DEFINITE_FUSION),
+    # Possessives after a consonant-final noun, ruled 2026-10-22: ኣ turns
+    # the order-6 letter into its order-4 form.
+    _fused("ኤ", NOUN, 5, "", (6,)),
+    _fused("ዋ", NOUN, 8, "", (6,)),
+    _fused("ኣችን", NOUN, 4, "ችን", (6,)),
+    _fused("ኣችሁ", ANY, 4, "ችሁ", (6, 1)),
+    _fused("ኣቸው", ANY, 4, "ቸው", (6, 1)),
+    # The adjective ending: ውጤት + ኣማ -> ውጤታማ.
+    _fused("ኣማ", NOUN, 4, "ማ", (6,)),
+    # Her, as an object: ሰጠ + ኣት -> ሰጣት.
+    _fused("ኣት", VERB, 4, "ት", (1,)),
+    # Perfective subjects delete the stem's last vowel: ሄደ + ኩ -> ሄድኩ.
+    *(_fused(m, VERB, 6, m, (1,)) for m in ("ኩ", "ክ", "ሽ", "ን")),
+    # Gerunds. Bare ኣ is the 3fs (ሆና), and on a noun ኣ is never a suffix
+    # of its own, so it restores only to a verb's order 1. ስራ is not the
+    # "definite" of ስር.
+    _fused("ኣ", VERB, 4, "", (1,), RULE_AMBIGUOUS_FUSION),
+    _fused("ኦ", VERB, 7, "", (1,)),
+    # After an ኣ-final verb the gerund is a separate letter: ገባ -> ገብቶ.
+    _fused("ቶ", VERB, 6, "ቶ", (4,)),
+    _fused("ታ", VERB, 6, "ታ", (4,)),
+)
 
 
 def strip_prefixes(word: str, prefixes=DEFAULT_PREFIXES) -> set[str]:
@@ -189,109 +306,126 @@ def detach_prefix(word: str, prefixes=DEFAULT_PREFIXES) -> list[tuple[str, str]]
     ]
 
 
-def detach_suffix(
-    word: str, suffixes=DEFAULT_PLAIN_SUFFIXES
-) -> list[tuple[str, str]]:
+def detach_suffix_shapes(
+    word: str, suffixes=SUFFIX_TABLE
+) -> list[tuple[str, SuffixShape]]:
     """
-    Suffixes removable from a surface form, with the remainder.
+    Every suffix row that inverts on a surface form, with the remainder.
 
-    Covers all three suffix shapes: plain concatenation, vowel fusion
-    followed by a consonant (the ኦች plural), and vowel fusion alone
-    (the ኡ and ኣ definites). Fused suffixes are reported by their
-    morpheme name, not by the characters that appear on the surface,
-    because those characters are shared with the stem.
+    The single implementation of suffix inversion. detach_suffix() and
+    detach_suffix_with_rule() are views of it; segmentation reads the
+    rows themselves, because the row's kind gates the analysis once the
+    stem's category is known.
 
-    A fused plural yields more than one remainder, since the carrier
-    does not record the stem's own final vowel. Both readings are
-    returned and the lexicon decides between them.
+    A fused row yields one remainder per restore order, since the
+    carrier does not record the stem's own final vowel. The lexicon
+    decides between them.
 
     Args:
         word:     Surface form.
-        suffixes: Plain suffix inventory.
+        suffixes: Suffix table.
+
+    Returns:
+        List of (remainder, row), without duplicates, in table order.
+
+    Examples:
+        >>> ("ቤት", "ኣችን") in [(s, r.morpheme) for s, r in detach_suffix_shapes("ቤታችን")]
+        True
+    """
+    found: list[tuple[str, SuffixShape]] = []
+    seen: set[tuple[str, SuffixShape]] = set()
+
+    def add(stem: str, shape: SuffixShape) -> None:
+        # Restoring a carrier to the order it already sits at is a no-op
+        # that would report the whole word as its own stem.
+        if stem and stem != word and (stem, shape) not in seen:
+            seen.add((stem, shape))
+            found.append((stem, shape))
+
+    for shape in suffixes:
+        if not word.endswith(shape.tail):
+            continue
+        rest = word[: len(word) - len(shape.tail)]
+        if shape.carrier_order is None:
+            if not rest:
+                continue
+            if shape.after_orders is None or fidel_order(rest[-1]) in shape.after_orders:
+                add(rest, shape)
+            continue
+        # A fused row needs the carrier and at least one letter before it.
+        if len(rest) < 2 or not is_ethiopic(rest[-1]):
+            continue
+        carrier = rest[-1]
+        if fidel_order(carrier) != shape.carrier_order:
+            continue
+        for order in shape.restore_orders:
+            try:
+                add(rest[:-1] + to_order(carrier, order), shape)
+            except ValueError:
+                # A labiovelar has no letter at some orders.
+                continue
+    return found
+
+
+def detach_suffix(word: str, suffixes=SUFFIX_TABLE) -> list[tuple[str, str]]:
+    """
+    Suffixes removable from a surface form, with the remainder.
+
+    Fused suffixes are reported by their morpheme name, not by the
+    characters that appear on the surface, because those characters
+    are shared with the stem.
+
+    Args:
+        word:     Surface form.
+        suffixes: Suffix table.
 
     Returns:
         List of (remainder, suffix morpheme), without duplicates.
 
     Examples:
         >>> detach_suffix("ቤቶች")
-        [('ቤት', 'ኦች'), ('ቤታ', 'ኦች')]
+        [('ቤቶ', 'ች'), ('ቤት', 'ኦች'), ('ቤታ', 'ኦች'), ('ቤተ', 'ኦች')]
         >>> detach_suffix("ቤቱ")
-        [('ቤት', 'ኡ')]
-        >>> detach_suffix("ቤትን")
-        [('ቤት', 'ን')]
+        [('ቤት', 'ኡ'), ('ቤታ', 'ኡ'), ('ቤተ', 'ኡ')]
     """
-    return [(stem, morpheme) for stem, morpheme, _ in detach_suffix_with_rule(word, suffixes)]
+    return list(dict.fromkeys((stem, s.morpheme) for stem, s in detach_suffix_shapes(word, suffixes)))
 
 
-def detach_suffix_with_rule(
-    word: str, suffixes=DEFAULT_PLAIN_SUFFIXES
-) -> list[tuple[str, str, str]]:
+def detach_suffix_with_rule(word: str, suffixes=SUFFIX_TABLE) -> list[tuple[str, str, str]]:
     """
     detach_suffix() with the rule that produced each remainder.
 
-    The single implementation of suffix inversion. Corpus analysis needs
-    the rule in order to weigh a derivation (frequency.derived_stems);
-    segmentation needs only the morpheme. Both read this.
+    Corpus analysis needs the rule in order to weigh a derivation
+    (frequency.derived_stems). It does not gate by category: the
+    candidates it works on have none.
 
     Args:
         word:     Surface form.
-        suffixes: Plain suffix inventory.
+        suffixes: Suffix table.
 
     Returns:
         List of (remainder, suffix morpheme, RULE_*), without duplicates.
 
     Examples:
-        >>> detach_suffix_with_rule("ቤቶች")[0]
-        ('ቤት', 'ኦች', 'plural_fusion')
+        >>> ("ቤት", "ኦች", "plural_fusion") in detach_suffix_with_rule("ቤቶች")
+        True
         >>> detach_suffix_with_rule("ቤትን")[0]
         ('ቤት', 'ን', 'suffix')
     """
-    found: list[tuple[str, str, str]] = []
-    seen: set[tuple[str, str]] = set()
-
-    def add(stem: str, morpheme: str, rule: str) -> None:
-        # Restoring a carrier to the order it already sits at is a no-op
-        # that would report the whole word as its own stem.
-        if stem == word:
-            return
-        if stem and (stem, morpheme) not in seen:
-            seen.add((stem, morpheme))
-            found.append((stem, morpheme, rule))
-
-    for suffix in suffixes:
-        if word.endswith(suffix) and len(word) > len(suffix):
-            add(word[: -len(suffix)], suffix, RULE_SUFFIX)
-
-    # Fusion + consonant: ቤቶች -> ቤት. The ኦ rides on the final consonant,
-    # which sits at order 7, and ች follows it.
-    if len(word) >= 3 and word.endswith("ች"):
-        carrier = word[-2]
-        if fidel_order(carrier) == _FUSED_PLURAL_ORDER:
-            for order in _CARRIER_ORDERS:
-                add(word[:-2] + to_order(carrier, order), "ኦች", RULE_PLURAL_FUSION)
-
-    # Fusion alone: ቤቱ -> ቤት, ቤታ -> ቤት.
-    if len(word) >= 2:
-        last = word[-1]
-        order = fidel_order(last)
-        if order in _FUSED_DEFINITE_ORDERS:
-            for restored in _CARRIER_ORDERS:
-                add(
-                    word[:-1] + to_order(last, restored),
-                    _DEFINITE_MORPHEMES[order],
-                    _DEFINITE_RULES[order],
-                )
-
-    return found
+    return list(
+        dict.fromkeys(
+            (stem, s.morpheme, s.rule) for stem, s in detach_suffix_shapes(word, suffixes)
+        )
+    )
 
 
-def strip_suffixes(word: str, suffixes=DEFAULT_PLAIN_SUFFIXES) -> set[str]:
+def strip_suffixes(word: str, suffixes=SUFFIX_TABLE) -> set[str]:
     """
     Candidate stems obtained by removing one suffix.
 
     Args:
         word:     Surface form.
-        suffixes: Plain suffix inventory.
+        suffixes: Suffix table.
 
     Returns:
         Set of candidate stems. Empty if no suffix applies.
@@ -511,6 +645,26 @@ class _Node:
     infix: str | None = None
     depth_prefix: int = 0
     depth_suffix: int = 0
+    # The kind of each suffix row, parallel to suffixes.
+    kinds: tuple[str, ...] = ()
+
+
+def _kind_allows(kind: str, category: str | None) -> bool:
+    """Whether a row of this kind attaches to a stem of this category."""
+    if kind == ANY:
+        return True
+    if category is None:
+        return False
+    return (category == VERB) == (kind == VERB)
+
+
+def _compatible(node: _Node, category: str | None) -> bool:
+    """Whether every affix of a finished analysis fits its stem."""
+    if not all(_kind_allows(k, category) for k in node.kinds):
+        return False
+    if NEGATIVE_PREFIX in node.prefixes:
+        return category == VERB and NEGATIVE_SUFFIX in node.suffixes
+    return True
 
 
 def _analyses(
@@ -521,29 +675,31 @@ def _analyses(
     prefixes,
     suffixes,
 ) -> list[Segmentation]:
-    """Every analysis whose stem is a lexicon entry."""
-    found: list[Segmentation] = []
+    """Every analysis whose stem is a lexicon entry and whose affixes fit it."""
+    found: dict[Segmentation, None] = {}
     seen: set[tuple] = set()
     queue = [_Node(word)]
 
     while queue:
         node = queue.pop()
-        key = (node.text, node.prefixes, node.suffixes, node.infix)
+        key = (node.text, node.prefixes, node.suffixes, node.infix, node.kinds)
         if key in seen:
             continue
         seen.add(key)
 
         if node.text in lexicon:
-            found.append(
-                Segmentation(
-                    word=word,
-                    stem=node.text,
-                    prefixes=node.prefixes,
-                    suffixes=node.suffixes,
-                    infix=node.infix,
-                    category=lexicon[node.text].get("category"),
+            category = lexicon[node.text].get("category")
+            if _compatible(node, category):
+                found.setdefault(
+                    Segmentation(
+                        word=word,
+                        stem=node.text,
+                        prefixes=node.prefixes,
+                        suffixes=node.suffixes,
+                        infix=node.infix,
+                        category=category,
+                    )
                 )
-            )
 
         if node.depth_prefix < max_prefixes:
             for rest, prefix in detach_prefix(node.text, prefixes):
@@ -555,19 +711,21 @@ def _analyses(
                         node.infix,
                         node.depth_prefix + 1,
                         node.depth_suffix,
+                        node.kinds,
                     )
                 )
 
         if node.depth_suffix < max_suffixes:
-            for rest, suffix in detach_suffix(node.text, suffixes):
+            for rest, shape in detach_suffix_shapes(node.text, suffixes):
                 queue.append(
                     _Node(
                         rest,
                         node.prefixes,
-                        (suffix,) + node.suffixes,
+                        (shape.morpheme,) + node.suffixes,
                         node.infix,
                         node.depth_prefix,
                         node.depth_suffix + 1,
+                        (shape.kind,) + node.kinds,
                     )
                 )
 
@@ -583,10 +741,11 @@ def _analyses(
                         infix,
                         node.depth_prefix,
                         node.depth_suffix,
+                        node.kinds,
                     )
                 )
 
-    return found
+    return list(found)
 
 
 def _attested(analysis: Segmentation, lexicon: dict) -> bool:
@@ -635,7 +794,7 @@ def segment_word(
     max_prefixes: int = 2,
     max_suffixes: int = 3,
     prefixes=DEFAULT_PREFIXES,
-    suffixes=DEFAULT_PLAIN_SUFFIXES,
+    suffixes=SUFFIX_TABLE,
 ) -> Segmentation:
     """
     Level 4: split a surface word into its morphemes.
@@ -650,7 +809,7 @@ def segment_word(
         max_prefixes: Most prefixes to strip from one word.
         max_suffixes: Most suffixes to strip from one word.
         prefixes:     Prefix inventory.
-        suffixes:     Plain suffix inventory.
+        suffixes:     Suffix table.
 
     Returns:
         The best Segmentation. When no analysis has a stem in the
@@ -658,7 +817,7 @@ def segment_word(
         false.
 
     Examples:
-        >>> lex = {"ቤት": {"allows_suffix": ["ኦች"]}}
+        >>> lex = {"ቤት": {"category": "noun", "allows_suffix": ["ኦች"]}}
         >>> segment_word("ቤቶች", lex).morphemes
         ['ቤት', 'ኦች']
         >>> segment_word("ቤት", lex).morphemes
@@ -683,7 +842,7 @@ def segment_all(
     max_prefixes: int = 2,
     max_suffixes: int = 3,
     prefixes=DEFAULT_PREFIXES,
-    suffixes=DEFAULT_PLAIN_SUFFIXES,
+    suffixes=SUFFIX_TABLE,
 ) -> list[Segmentation]:
     """
     Every Level 4 analysis of a word, best first.
@@ -697,7 +856,7 @@ def segment_all(
         max_prefixes: Most prefixes to strip from one word.
         max_suffixes: Most suffixes to strip from one word.
         prefixes:     Prefix inventory.
-        suffixes:     Plain suffix inventory.
+        suffixes:     Suffix table.
 
     Returns:
         Ranked analyses. Empty when the word has no lexicon anchor.

@@ -305,9 +305,14 @@ class TestDerivationRules:
     def test_plural_fusion_rule(self):
         assert candidate_stems_with_rules("ቤቶች")["ቤት"] == RULE_PLURAL_FUSION
 
-    def test_order4_is_marked_ambiguous(self):
-        # ስር -> ስራ is the shape that produces false positives.
-        assert candidate_stems_with_rules("ስራ")["ስር"] == RULE_AMBIGUOUS_FUSION
+    def test_bare_a_is_marked_ambiguous(self):
+        # Bare ኣ restores only to a verb's order 1 (ሆና = ሆነ + ኣ), and the
+        # shape still produces false positives, so it is marked ambiguous.
+        assert candidate_stems_with_rules("ስራ")["ስረ"] == RULE_AMBIGUOUS_FUSION
+
+    def test_bare_a_does_not_reach_a_consonant_final_stem(self):
+        # Ruled 2026-10-22: ኣ is not a noun suffix, so ስራ is not ስር + ኣ.
+        assert "ስር" not in candidate_stems_with_rules("ስራ")
 
 
 class TestStandaloneRatio:
@@ -340,8 +345,8 @@ class TestStandaloneRatio:
 
 class TestAmbiguousFusionGuard:
     """
-    Order-4 fusion only counts when the derived form is much rarer than
-    the stem, as a real definite form would be.
+    Bare ኣ only counts when the derived form is much rarer than the
+    stem, as a real gerund would be.
     """
 
     def test_frequent_lookalike_rejected(self):
@@ -350,10 +355,10 @@ class TestAmbiguousFusionGuard:
         candidates = {c["stem"]: c for c in generate_candidates(counts)}
         assert "ስራ" not in candidates.get("ስር", {}).get("forms", [])
 
-    def test_rare_definite_accepted(self):
-        counts = Counter({"ቤት": 100_000, "ቤታ": 2_000, "ቤቶች": 30_000})
+    def test_rare_gerund_accepted(self):
+        counts = Counter({"ሆነ": 100_000, "ሆና": 2_000, "ሆኑ": 30_000})
         candidates = {c["stem"]: c for c in generate_candidates(counts)}
-        assert "ቤታ" in candidates["ቤት"]["forms"]
+        assert "ሆና" in candidates["ሆነ"]["forms"]
 
     def test_unambiguous_plural_not_guarded(self):
         # The plural rule is exempt: no word ends in order-7 + ች by chance.

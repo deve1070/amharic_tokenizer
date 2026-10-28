@@ -84,8 +84,10 @@ class TestStripSuffixesFused:
     def test_definite_fusion(self):
         assert "ቤት" in strip_suffixes("ቤቱ")
 
-    def test_feminine_definite_fusion(self):
-        assert "ቤት" in strip_suffixes("ቤታ")
+    def test_bare_a_is_not_a_noun_suffix(self):
+        # Ruled 2026-10-22: on a noun ኣ is only the first sound of ኣችን,
+        # ኣቸው, ኣችሁ and ኣማ. ቤታ does not reduce to ቤት.
+        assert "ቤት" not in strip_suffixes("ቤታ")
 
     def test_plural_fusion_other_family(self):
         # ልጅ + ኦች -> ልጆች
@@ -168,8 +170,11 @@ class TestDetachSuffix:
     def test_fused_definite_names_the_morpheme(self):
         assert ("ቤት", "ኡ") in detach_suffix("ቤቱ")
 
-    def test_feminine_definite(self):
-        assert ("ቤት", "ኣ") in detach_suffix("ቤታ")
+    def test_bare_a_restores_only_a_verb_stem(self):
+        # Bare ኣ is the 3fs gerund, ሆና = ሆነ + ኣ, so the carrier goes back
+        # to order 1, where a 3ms perfective ends.
+        assert ("ቤተ", "ኣ") in detach_suffix("ቤታ")
+        assert ("ቤት", "ኣ") not in detach_suffix("ቤታ")
 
     def test_no_suffix(self):
         assert detach_suffix("ቤት") == []
@@ -325,7 +330,12 @@ class TestLexiconIsTheAuthority:
         assert result.morphemes == ["ስራ"]
 
     def test_without_the_entry_the_parse_is_taken(self):
-        assert segment_word("ስራ", lexicon("ስር")).morphemes == ["ስር", "ኣ"]
+        assert segment_word("ቤቶች", lexicon("ቤት")).morphemes == ["ቤት", "ኦች"]
+
+    def test_ser_plus_a_is_not_a_parse(self):
+        # Bare ኣ is not a noun suffix, so without ስራ in the lexicon the
+        # word is unknown rather than ስር + ኣ.
+        assert segment_word("ስራ", lexicon("ስር")).known is False
 
 
 class TestRanking:
@@ -369,16 +379,12 @@ class TestSegmentAll:
 
     def test_lists_every_analysis(self):
         analyses = segment_all("ቤቶች", lexicon("ቤት", "ቤታ"))
-        assert {tuple(a.morphemes) for a in analyses} == {
-            ("ቤት", "ኦች"),
-            ("ቤታ", "ኦች"),
-            # Stacking reaches ቤታ and then strips its ኣ as well.
-            ("ቤት", "ኣ", "ኦች"),
-        }
+        assert {tuple(a.morphemes) for a in analyses} == {("ቤት", "ኦች"), ("ቤታ", "ኦች")}
 
     def test_the_extra_analyses_rank_below_the_short_ones(self):
-        analyses = segment_all("ቤቶች", lexicon("ቤት", "ቤታ"))
-        assert analyses[-1].morphemes == ["ቤት", "ኣ", "ኦች"]
+        analyses = segment_all("ቤቶችን", lexicon("ቤት", "ቤቶች"))
+        assert analyses[0].morphemes == ["ቤቶች", "ን"]
+        assert analyses[-1].morphemes == ["ቤት", "ኦች", "ን"]
 
     def test_empty_when_no_anchor(self):
         assert segment_all("ኮምፒውተር", lexicon("ቤት")) == []
@@ -489,6 +495,7 @@ class TestFunctionsInASegmentation:
 from amharic_morph.morphology import (  # noqa: E402
     RULE_AMBIGUOUS_FUSION,
     RULE_DEFINITE_FUSION,
+    RULE_FUSION,
     RULE_PLURAL_FUSION,
     RULE_SUFFIX,
     detach_suffix_with_rule,
@@ -507,9 +514,15 @@ class TestDetachSuffixWithRule:
     def test_order2_definite_is_unambiguous(self):
         assert ("ቤት", "ኡ", RULE_DEFINITE_FUSION) in detach_suffix_with_rule("ቤቱ")
 
-    def test_order4_definite_is_ambiguous(self):
-        # ስራ is a word in its own right, not the definite of ስር.
-        assert ("ስር", "ኣ", RULE_AMBIGUOUS_FUSION) in detach_suffix_with_rule("ስራ")
+    def test_bare_a_is_ambiguous(self):
+        # ስራ is a word in its own right. Bare ኣ now restores only to the
+        # verb's order 1, and still never counts as a derivation.
+        assert ("ስረ", "ኣ", RULE_AMBIGUOUS_FUSION) in detach_suffix_with_rule("ስራ")
+        assert ("ስር", "ኣ", RULE_AMBIGUOUS_FUSION) not in detach_suffix_with_rule("ስራ")
+
+    def test_new_fused_rows_use_the_guarded_rule(self):
+        assert ("ቤት", "ኣችን", RULE_FUSION) in detach_suffix_with_rule("ቤታችን")
+        assert ("ሄደ", "ኩ", RULE_FUSION) in detach_suffix_with_rule("ሄድኩ")
 
     def test_reaches_a_verb_stem_at_order1(self):
         # ሆኑ is ሆነ + ኡ. Restoring the carrier to order 6 alone gives ሆን,
@@ -527,3 +540,192 @@ class TestDetachSuffixWithRule:
             assert detach_suffix(word) == [
                 (stem, morpheme) for stem, morpheme, _ in detach_suffix_with_rule(word)
             ]
+
+
+# ── The suffix table ─────────────────────────────────────────────────────────
+
+from amharic_morph.levels import is_ethiopic  # noqa: E402
+from amharic_morph.morphology import (  # noqa: E402
+    ANY,
+    NOUN,
+    SUFFIX_TABLE,
+    VERB,
+    SuffixShape,
+)
+
+
+class TestSuffixTable:
+    """
+    Every row inverts its own written shape. Detachment does not gate by
+    category; segmentation does, once the stem is known.
+    """
+
+    def test_possessive_after_a_consonant(self):
+        # ህዝብ + ኣችን -> ህዝባችን: ኣ turns ብ into ባ.
+        assert ("ህዝብ", "ኣችን") in detach_suffix("ህዝባችን")
+
+    def test_possessive_after_a_vowel(self):
+        assert ("ስራ", "ችን") in detach_suffix("ስራችን")
+
+    def test_possessive_glide_after_i_or_e(self):
+        assert ("ፓርቲ", "ያችን") in detach_suffix("ፓርቲያችን")
+
+    def test_plain_possessive_needs_a_vowel_before_it(self):
+        assert ("ቤት", "ችን") not in detach_suffix("ቤትችን")
+
+    def test_first_person_singular(self):
+        assert ("ቤት", "ኤ") in detach_suffix("ቤቴ")
+        assert ("ስራ", "ዬ") in detach_suffix("ስራዬ")
+
+    def test_her(self):
+        assert ("ቤት", "ዋ") in detach_suffix("ቤቷ")
+        assert ("ከተማ", "ዋ") in detach_suffix("ከተማዋ")
+
+    def test_their_on_a_noun_and_a_verb(self):
+        assert ("ቤት", "ኣቸው") in detach_suffix("ቤታቸው")
+        assert ("ሰጠ", "ኣቸው") in detach_suffix("ሰጣቸው")
+        assert ("ስራ", "ቸው") in detach_suffix("ስራቸው")
+
+    def test_your_plural(self):
+        assert ("ቤት", "ኣችሁ") in detach_suffix("ቤታችሁ")
+
+    def test_adjective_ama(self):
+        assert ("ውጤት", "ኣማ") in detach_suffix("ውጤታማ")
+        assert ("ጤና", "ማ") in detach_suffix("ጤናማ")
+
+    def test_plain_ma_follows_only_an_a_final_stem(self):
+        assert ("ቤት", "ማ") not in detach_suffix("ቤትማ")
+
+    def test_perfective_subjects_delete_the_stem_vowel(self):
+        assert ("ሄደ", "ኩ") in detach_suffix("ሄድኩ")
+        assert ("ሄደ", "ክ") in detach_suffix("ሄድክ")
+        assert ("ሄደ", "ሽ") in detach_suffix("ሄድሽ")
+        assert ("ሄደ", "ን") in detach_suffix("ሄድን")
+
+    def test_first_person_after_an_a_final_verb(self):
+        assert ("ገባ", "ሁ") in detach_suffix("ገባሁ")
+
+    def test_object_me(self):
+        assert ("ሰጠ", "ኝ") in detach_suffix("ሰጠኝ")
+
+    def test_object_her(self):
+        assert ("ሰጠ", "ኣት") in detach_suffix("ሰጣት")
+
+    def test_gerunds(self):
+        assert ("ሆነ", "ኦ") in detach_suffix("ሆኖ")
+        assert ("ሆነ", "ኣ") in detach_suffix("ሆና")
+        assert ("ገባ", "ቶ") in detach_suffix("ገብቶ")
+        assert ("ገባ", "ታ") in detach_suffix("ገብታ")
+
+    def test_gerund_o_is_not_the_plural(self):
+        # Both leave the carrier at order 7; the plural needs ች after it.
+        assert ("ቤት", "ኦ") not in detach_suffix("ቤቶች")
+
+    def test_every_morpheme_is_written_in_ethiopic(self):
+        # Levels 3 and 2 decompose morphemes, so a name must be Amharic.
+        for shape in SUFFIX_TABLE:
+            assert shape.morpheme and all(is_ethiopic(c) for c in shape.morpheme)
+
+    def test_every_kind_is_known(self):
+        assert {s.kind for s in SUFFIX_TABLE} <= {ANY, NOUN, VERB}
+
+    def test_fused_rows_restore_to_an_order_the_carrier_can_leave(self):
+        for shape in SUFFIX_TABLE:
+            if shape.carrier_order is not None:
+                assert shape.restore_orders
+                assert shape.carrier_order not in shape.restore_orders
+
+    def test_a_custom_table_replaces_the_default(self):
+        only_n = (SuffixShape("ን", ANY, "ን"),)
+        assert detach_suffix("ቤቶች", only_n) == []
+        assert detach_suffix("ቤትን", only_n) == [("ቤት", "ን")]
+
+
+def typed(**categories):
+    """Lexicon index with a category per word."""
+    return {w: {"word": w, "category": c, "allows_prefix": [], "allows_suffix": []}
+            for w, c in categories.items()}
+
+
+class TestCategoryGating:
+    """
+    A noun row needs a non-verb stem, a verb row a verb, and an entry
+    whose category is not yet set accepts only the rows marked any.
+    """
+
+    def test_verb_suffix_on_a_verb(self):
+        assert segment_word("ሄድኩ", typed(ሄደ="verb")).morphemes == ["ሄደ", "ኩ"]
+
+    def test_verb_suffix_on_an_unset_category_is_refused(self):
+        assert segment_word("ሄድኩ", typed(ሄደ=None)).known is False
+
+    def test_unset_category_still_takes_shared_suffixes(self):
+        assert segment_word("ሄደን", typed(ሄደ=None)).morphemes == ["ሄደ", "ን"]
+        assert segment_word("ቤታቸው", typed(ቤት=None)).morphemes == ["ቤት", "ኣቸው"]
+
+    def test_order1_restoration_does_not_make_a_noun_a_verb(self):
+        # ቤትን could invert to ቤተ + ን (1pl); ቤተ is not a verb.
+        result = segment_word("ቤትን", typed(ቤት="noun", ቤተ="noun"))
+        assert result.morphemes == ["ቤት", "ን"]
+
+    def test_possessive_on_a_noun(self):
+        assert segment_word("ህዝባችን", typed(ህዝብ="noun")).morphemes == ["ህዝብ", "ኣችን"]
+
+    def test_possessive_on_an_unset_category_is_refused(self):
+        assert segment_word("ህዝባችን", typed(ህዝብ=None)).known is False
+
+    def test_possessive_is_refused_on_a_verb(self):
+        assert segment_word("ቤቴ", typed(ቤት="verb")).known is False
+
+    def test_gerunds_on_a_verb(self):
+        lex = typed(ሆነ="verb", ገባ="verb")
+        assert segment_word("ሆና", lex).morphemes == ["ሆነ", "ኣ"]
+        assert segment_word("ሆኖ", lex).morphemes == ["ሆነ", "ኦ"]
+        assert segment_word("ገብቶ", lex).morphemes == ["ገባ", "ቶ"]
+
+    def test_gerunds_are_refused_on_a_noun(self):
+        lex = typed(ሆነ="noun")
+        assert segment_word("ሆና", lex).known is False
+        assert segment_word("ሆኖ", lex).known is False
+
+    def test_bare_a_no_longer_splits_a_noun(self):
+        # ነጋ used to be ነገ + ኣ.
+        assert segment_word("ነጋ", typed(ነገ="noun")).known is False
+
+    def test_ama_and_the_words_that_end_like_it(self):
+        lex = typed(ውጤት="noun", ድር="noun", ድራማ="noun")
+        assert segment_word("ውጤታማ", lex).morphemes == ["ውጤት", "ኣማ"]
+        assert segment_word("ድራማ", lex).morphemes == ["ድራማ"]
+
+    def test_possessive_beats_the_false_infix(self):
+        # ጓደኞቻችን is ጓደኛ + ኦች + ኣችን. Without ኣችን the search took ቻ as
+        # an infix: ጓደኛ + ቻ + ኦች + ን.
+        result = segment_word("ጓደኞቻችን", typed(ጓደኛ="noun"))
+        assert result.morphemes == ["ጓደኛ", "ኦች", "ኣችን"]
+
+
+class TestNegativePerfective:
+    """አል ... ም: a prefix accepted only on a verb that also carries ም"""
+
+    def lex(self):
+        return typed(ሆነ="verb", ሄደ="verb", ቤት="noun")
+
+    def test_negative(self):
+        assert segment_word("አልሆነም", self.lex()).morphemes == ["አል", "ሆነ", "ም"]
+
+    def test_negative_with_a_subject(self):
+        assert segment_word("አልሄድኩም", self.lex()).morphemes == ["አል", "ሄደ", "ኩ", "ም"]
+
+    def test_a_conjunction_may_follow_the_negative_m(self):
+        # አልሆነምና "since it did not become".
+        result = segment_word("አልሆነምና", self.lex())
+        assert result.morphemes == ["አል", "ሆነ", "ም", "ና"]
+
+    def test_al_without_m_is_refused(self):
+        assert segment_word("አልሆነ", self.lex()).known is False
+
+    def test_al_on_a_noun_is_refused(self):
+        assert segment_word("አልቤትም", self.lex()).known is False
+
+    def test_al_on_an_unset_category_is_refused(self):
+        assert segment_word("አልሆነም", typed(ሆነ=None)).known is False

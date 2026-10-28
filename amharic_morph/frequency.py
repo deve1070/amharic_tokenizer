@@ -55,11 +55,11 @@ from amharic_morph.levels import (
 )
 from amharic_morph.lexicon_builder import ROOT_SOURCE_SKELETON
 from amharic_morph.morphology import (
-    DEFAULT_PLAIN_SUFFIXES,
     DEFAULT_PREFIXES,
     RULE_AMBIGUOUS_FUSION,
     RULE_PLURAL_FUSION,
     RULE_PREFIX,
+    SUFFIX_TABLE,
     detach_prefix,
     detach_suffix,
     detach_suffix_with_rule,
@@ -148,7 +148,7 @@ def coverage_curve(
 
 
 def candidate_stems_with_rules(
-    word: str, prefixes=DEFAULT_PREFIXES, suffixes=DEFAULT_PLAIN_SUFFIXES
+    word: str, prefixes=DEFAULT_PREFIXES, suffixes=SUFFIX_TABLE
 ) -> dict[str, str]:
     """
     Stems reachable from a surface form, tagged with the rule that
@@ -160,7 +160,7 @@ def candidate_stems_with_rules(
     Args:
         word:     Surface form.
         prefixes: Prefix inventory.
-        suffixes: Plain suffix inventory.
+        suffixes: Suffix table.
 
     Returns:
         Dict mapping candidate stem to the RULE_* that derived it.
@@ -178,7 +178,7 @@ def candidate_stems_with_rules(
 
 
 def candidate_stems(
-    word: str, prefixes=DEFAULT_PREFIXES, suffixes=DEFAULT_PLAIN_SUFFIXES
+    word: str, prefixes=DEFAULT_PREFIXES, suffixes=SUFFIX_TABLE
 ) -> set[str]:
     """
     All stems reachable from a surface form by removing one affix.
@@ -189,7 +189,7 @@ def candidate_stems(
     Args:
         word:     Surface form.
         prefixes: Prefix inventory.
-        suffixes: Plain suffix inventory.
+        suffixes: Suffix table.
 
     Returns:
         Set of candidate stems, excluding the word itself.
@@ -264,7 +264,7 @@ def derived_lexicon_entries(
     words,
     counts: Counter,
     prefixes=DEFAULT_PREFIXES,
-    suffixes=DEFAULT_PLAIN_SUFFIXES,
+    suffixes=SUFFIX_TABLE,
 ) -> dict[str, tuple[str, str]]:
     """
     Lexicon entries that are an inflection of another lexicon entry.
@@ -287,7 +287,7 @@ def derived_lexicon_entries(
         counts:   Frequency table, read for the standalone counts that
                   weigh the rules other than plural fusion.
         prefixes: Prefix inventory.
-        suffixes: Plain suffix inventory.
+        suffixes: Suffix table.
 
     Returns:
         Dict mapping each entry to discard to the (base, rule) pair
@@ -317,7 +317,7 @@ def generate_candidates(
     max_ambiguous_inflection_ratio: float = 0.5,
     min_stem_length: int = 2,
     prefixes=DEFAULT_PREFIXES,
-    suffixes=DEFAULT_PLAIN_SUFFIXES,
+    suffixes=SUFFIX_TABLE,
 ) -> list[dict]:
     """
     Rank independent word candidates by morphological productivity.
@@ -368,7 +368,7 @@ def generate_candidates(
                                to the stem.
         min_stem_length:       Minimum fidels in a stem.
         prefixes:              Prefix inventory.
-        suffixes:              Plain suffix inventory.
+        suffixes:              Suffix table.
 
     Returns:
         List of dicts sorted by distinct form count then total

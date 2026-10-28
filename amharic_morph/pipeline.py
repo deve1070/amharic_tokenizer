@@ -56,7 +56,7 @@ def process_line(line: str) -> list[str]:
 
     Examples:
         >>> process_line("ሐሙስ ነው፡፡ ደህና ነህ?")
-        ['ሀሙስ ነው።', 'ደህና ነህ?']
+        ['ሀሙስ ነው ።', 'ደህና ነህ ?']
     """
     normalized = normalize(line)
     punctuated = normalize_punctuation(normalized)
