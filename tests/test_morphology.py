@@ -784,3 +784,18 @@ class TestSuffixPositions:
     def test_every_row_has_a_position(self):
         for shape in SUFFIX_TABLE:
             assert isinstance(shape.slot, int)
+
+
+class TestFourSuffixes:
+    """
+    A noun can fill four positions after the stem: plural, possessive or
+    definite, case, and a particle.
+    """
+
+    def test_four_suffixes_by_default(self):
+        result = segment_word("ልጆቹንም", typed(ልጅ="noun"))
+        assert result.morphemes == ["ልጅ", "ኦች", "ኡ", "ን", "ም"]
+
+    def test_with_a_possessive(self):
+        result = segment_word("ልጆቻቸውንና", typed(ልጅ="noun"))
+        assert result.morphemes == ["ልጅ", "ኦች", "ኣቸው", "ን", "ና"]

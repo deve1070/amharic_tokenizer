@@ -846,7 +846,7 @@ def segment_word(
     word: str,
     lexicon: dict,
     max_prefixes: int = 2,
-    max_suffixes: int = 3,
+    max_suffixes: int = 4,
     prefixes=DEFAULT_PREFIXES,
     suffixes=SUFFIX_TABLE,
 ) -> Segmentation:
@@ -894,7 +894,7 @@ def segment_all(
     word: str,
     lexicon: dict,
     max_prefixes: int = 2,
-    max_suffixes: int = 3,
+    max_suffixes: int = 4,
     prefixes=DEFAULT_PREFIXES,
     suffixes=SUFFIX_TABLE,
 ) -> list[Segmentation]:
