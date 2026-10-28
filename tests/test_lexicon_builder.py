@@ -13,9 +13,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from amharic_morph.lexicon_builder import (  # noqa: E402
-    REVIEW_COLUMNS,
+    CATEGORY_REVIEW_COLUMNS,
+    ROOT_REVIEW_COLUMNS,
     SCHEMA_FIELDS,
     ReviewDecision,
+    RootDecision,
     add_entries,
     annotation_gaps,
     apply_category_review,
@@ -23,6 +25,7 @@ from amharic_morph.lexicon_builder import (  # noqa: E402
     lexicon_index,
     load_lexicon,
     read_category_review,
+    read_root_review,
     refresh_derived_fields,
     remove_entries,
     save_lexicon,
@@ -32,7 +35,7 @@ from amharic_morph.lexicon_builder import (  # noqa: E402
     validate_lexicon,
     validated_entries,
     validation_status,
-    write_category_review,
+    write_review,
 )
 
 
@@ -452,7 +455,7 @@ class TestRemoveEntries:
 
 
 def review_row(word="ሆነ", status="entry", proposed="verb", reviewed="", **kwargs):
-    row = {column: "" for column in REVIEW_COLUMNS}
+    row = {column: "" for column in CATEGORY_REVIEW_COLUMNS}
     row.update(word=word, status=status, proposed=proposed, reviewed=reviewed)
     row.update(kwargs)
     return row
@@ -460,7 +463,7 @@ def review_row(word="ሆነ", status="entry", proposed="verb", reviewed="", **kw
 
 def round_trip(tmp_path, rows):
     path = tmp_path / "review.tsv"
-    write_category_review(rows, str(path))
+    write_review(rows, str(path), CATEGORY_REVIEW_COLUMNS)
     return read_category_review(str(path))
 
 
@@ -536,6 +539,104 @@ class TestReadCategoryReview:
         row = review_row(reviewed="ok", gloss='"to become"', notes="a\tb")
         decision = round_trip(tmp_path, [row])[0]
         assert decision.notes == "a\tb"
+
+
+
+class TestWriteReview:
+    """One writer for every review file; the columns are a parameter"""
+
+    def test_writes_the_given_columns_in_order(self, tmp_path):
+        path = tmp_path / "review.tsv"
+        write_review([{"word": "ቤት", "b": "2"}], str(path), ("word", "b"))
+        assert path.read_text(encoding="utf-8").splitlines() == ["word\tb", "ቤት\t2"]
+
+    def test_missing_columns_are_empty_and_extras_dropped(self, tmp_path):
+        path = tmp_path / "review.tsv"
+        write_review([{"word": "ቤት", "extra": "x"}], str(path), ("word", "b"))
+        assert path.read_text(encoding="utf-8").splitlines()[1] == "ቤት\t"
+
+    def test_returns_row_count(self, tmp_path):
+        assert write_review([{}, {}], str(tmp_path / "r.tsv"), ("word",)) == 2
+
+
+# ── Root review ──────────────────────────────────────────────────────────────
+
+
+def root_row(word="ሆነ", proposed="ህ-ው-ን", reviewed="", **kwargs):
+    row = {column: "" for column in ROOT_REVIEW_COLUMNS}
+    row.update(word=word, proposed=proposed, reviewed=reviewed)
+    row.update(kwargs)
+    return row
+
+
+def root_round_trip(tmp_path, rows):
+    path = tmp_path / "roots.tsv"
+    write_review(rows, str(path), ROOT_REVIEW_COLUMNS)
+    return read_root_review(str(path))
+
+
+class TestReadRootReview:
+    def test_unreviewed_rows_are_not_returned(self, tmp_path):
+        assert root_round_trip(tmp_path, [root_row()]) == []
+
+    def test_ok_accepts_the_proposal(self, tmp_path):
+        decisions = root_round_trip(tmp_path, [root_row(reviewed="ok")])
+        assert decisions == [RootDecision("ሆነ", ["ህ", "ው", "ን"], "")]
+
+    def test_a_root_overrides_the_proposal(self, tmp_path):
+        decisions = root_round_trip(tmp_path, [root_row(proposed="ህ-ን", reviewed="ህ-ው-ን")])
+        assert decisions[0].root == ["ህ", "ው", "ን"]
+
+    def test_spaces_around_radicals_are_ignored(self, tmp_path):
+        decisions = root_round_trip(tmp_path, [root_row(reviewed=" ህ - ው - ን ")])
+        assert decisions[0].root == ["ህ", "ው", "ን"]
+
+    def test_none_means_no_root(self, tmp_path):
+        decisions = root_round_trip(tmp_path, [root_row("ላይ", reviewed="none")])
+        assert decisions[0].root is None
+
+    def test_none_is_case_insensitive(self, tmp_path):
+        assert root_round_trip(tmp_path, [root_row(reviewed=" None ")])[0].root is None
+
+    def test_ok_on_a_none_proposal(self, tmp_path):
+        decisions = root_round_trip(tmp_path, [root_row("እና", proposed="none", reviewed="ok")])
+        assert decisions[0].root is None
+
+    def test_carries_reviewer_notes(self, tmp_path):
+        row = root_row(reviewed="ok", notes="as in ሆነ")
+        assert root_round_trip(tmp_path, [row])[0].notes == "as in ሆነ"
+
+    def test_a_radical_with_a_vowel_raises(self, tmp_path):
+        # Radicals are bare consonants; ሆ carries the vowel ኦ.
+        raises_value_error(
+            lambda: root_round_trip(tmp_path, [root_row(reviewed="ሆ-ን")]), "ሆነ", "ሆ"
+        )
+
+    def test_a_labiovelar_radical_raises(self, tmp_path):
+        # Q5: ቋ is ቅ at Level 1, so ቍ is never a radical.
+        raises_value_error(lambda: root_round_trip(tmp_path, [root_row(reviewed="ቍ-ም")]), "ቍ")
+
+    def test_a_radical_of_two_letters_raises(self, tmp_path):
+        raises_value_error(lambda: root_round_trip(tmp_path, [root_row(reviewed="ህው-ን")]), "ህው")
+
+    def test_an_empty_radical_raises(self, tmp_path):
+        raises_value_error(lambda: root_round_trip(tmp_path, [root_row(reviewed="ህ--ን")]), "ሆነ")
+
+    def test_a_latin_mark_raises(self, tmp_path):
+        raises_value_error(lambda: root_round_trip(tmp_path, [root_row(reviewed="yes")]), "yes")
+
+    def test_ok_on_an_empty_proposal_raises(self, tmp_path):
+        raises_value_error(
+            lambda: root_round_trip(tmp_path, [root_row(proposed="", reviewed="ok")]), "ሆነ"
+        )
+
+    def test_error_names_the_line(self, tmp_path):
+        rows = [root_row("ቤት", proposed="ብ-ት", reviewed="ok"), root_row(reviewed="ሆ-ን")]
+        raises_value_error(lambda: root_round_trip(tmp_path, rows), "line 3")
+
+    def test_preserves_file_order(self, tmp_path):
+        rows = [root_row(reviewed="ok"), root_row("ቤት", proposed="ብ-ት", reviewed="ok")]
+        assert [d.word for d in root_round_trip(tmp_path, rows)] == ["ሆነ", "ቤት"]
 
 
 class TestAddEntries:

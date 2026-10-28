@@ -7,6 +7,7 @@ rather than guess at what they meant.
 """
 
 import sys
+from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -15,6 +16,9 @@ from amharic_morph.morphology import Segmentation  # noqa: E402
 from amharic_morph.reference import (  # noqa: E402
     ReferenceAnalysis,
     inflection_agreement,
+    propose_root,
+    root_review_rows,
+    root_votes,
     is_well_formed_root,
     load_reference,
     outer_affixes,
@@ -251,3 +255,171 @@ class TestInflectionAgreement:
 
     def test_rate_with_nothing_compared_is_none(self):
         assert inflection_agreement(segmenter({}), {}, {}).rate is None
+
+
+# ── Root proposals ────────────────────────────────────────────────────────────
+
+
+def rooted(*radicals, morphemes=None):
+    return ReferenceAnalysis(morphemes or ("-".join(radicals),), (tuple(radicals),))
+
+
+class TestRootVotes:
+    """Every inflected form of an entry votes for its root"""
+
+    def test_votes_are_pooled_by_stem_and_weighted_by_corpus_count(self):
+        reference = {
+            "ሞቱ": (rooted("ም", "ው", "ት", morphemes=("ም-ው-ት", "ኡ")),),
+            "ሞት": (rooted("ም", "ው", "ት"),),
+        }
+        segment = segmenter({
+            "ሞቱ": Segmentation("ሞቱ", "ሞት", suffixes=("ኡ",)),
+            "ሞት": Segmentation("ሞት", "ሞት"),
+        })
+        votes = root_votes(segment, reference, {"ሞቱ": 3, "ሞት": 5})
+        assert votes["ሞት"][("ም", "ው", "ት")] == 8
+
+    def test_a_form_absent_from_the_corpus_still_counts_once(self):
+        reference = {"ሞቱ": (rooted("ም", "ው", "ት", morphemes=("ም-ው-ት", "ኡ")),)}
+        segment = segmenter({"ሞቱ": Segmentation("ሞቱ", "ሞት", suffixes=("ኡ",))})
+        assert root_votes(segment, reference, {})["ሞት"][("ም", "ው", "ት")] == 1
+
+    def test_a_form_with_no_root_votes_none(self):
+        reference = {"ሀገሩ": (ReferenceAnalysis(("ሀገር", "ኡ")),)}
+        segment = segmenter({"ሀገሩ": Segmentation("ሀገሩ", "ሀገር", suffixes=("ኡ",))})
+        assert root_votes(segment, reference, {"ሀገሩ": 2})["ሀገር"] == {None: 2}
+
+    def test_unknown_words_do_not_vote(self):
+        assert root_votes(segmenter({}), {"ሆስፒታል": (rooted("ህ", "ስ"),)}, {}) == {}
+
+    def test_only_the_primary_reading_votes(self):
+        # ላይ is annotated ላይ[ለ_አይ]. The alternative reads the string as
+        # ለ + አየ "to see", a different word; its root is not ላይ's.
+        reference = {"ላይ": (ReferenceAnalysis(("ላይ",)), rooted("እ", "ይ", morphemes=("ለ", "እ-ይ")))}
+        segment = segmenter({"ላይ": Segmentation("ላይ", "ላይ")})
+        assert root_votes(segment, reference, {"ላይ": 4})["ላይ"] == {None: 4}
+
+    def test_a_form_whose_affixes_disagree_does_not_vote(self):
+        # Level 4 reads የለምና as የ + ለ + ምን + ኣ; the reference reads it as
+        # የ + ል-ም + ና, so the two disagree on what the stem is.
+        reference = {"የለምና": (rooted("ል", "ም", morphemes=("የ", "ል-ም", "ና")),)}
+        segment = segmenter({
+            "የለምና": Segmentation("የለምና", "ምን", prefixes=("የ", "ለ"), suffixes=("ኣ",)),
+        })
+        assert root_votes(segment, reference, {"የለምና": 814}) == {}
+
+    def test_a_form_with_an_infix_does_not_vote(self):
+        # The reference does not mark the infix, so the vote cannot be
+        # checked against it.
+        reference = {"አባባሎች": (rooted("እ", "ል", morphemes=("አ", "ባ", "ብ", "እ-ል", "ኦች")),)}
+        segment = segmenter({
+            "አባባሎች": Segmentation("አባባሎች", "አባል", suffixes=("ኦች",), infix="ባ"),
+        })
+        assert root_votes(segment, reference, {}) == {}
+
+    def test_malformed_root_does_not_vote_for_itself(self):
+        reference = {"ከተማ": (rooted("ክ", "ት", "ምከተማ"),)}
+        segment = segmenter({"ከተማ": Segmentation("ከተማ", "ከተማ")})
+        assert root_votes(segment, reference, {})["ከተማ"] == {None: 1}
+
+    def test_labiovelar_radical_becomes_its_plain_consonant(self):
+        # Q5: ቋ is ቅ at Level 1, so IRIT's ቍ is read as ቅ.
+        reference = {"አቋም": (rooted("እ", "ቍ", "ም"),)}
+        segment = segmenter({"አቋም": Segmentation("አቋም", "አቋም")})
+        assert ("እ", "ቅ", "ም") in root_votes(segment, reference, {})["አቋም"]
+
+
+class TestProposeRoot:
+    def test_unanimous_vote_is_proposed(self):
+        proposal = propose_root("ሞት", Counter({("ም", "ው", "ት"): 9}))
+        assert proposal.root == ("ም", "ው", "ት")
+        assert proposal.share == 1.0
+
+    def test_winner_by_weight(self):
+        proposal = propose_root("ሙሉ", Counter({("ም", "ል"): 86, ("ም", "ው", "ል"): 14}))
+        assert proposal.root == ("ም", "ል")
+        assert proposal.share == 0.86
+
+    def test_none_votes_do_not_dilute_the_share(self):
+        # IRIT leaves many forms unanalysed; that says nothing against the
+        # root the analysed forms agree on.
+        proposal = propose_root("ሞት", Counter({("ም", "ው", "ት"): 4, None: 96}))
+        assert proposal.share == 1.0
+
+    def test_no_root_votes_falls_back_to_the_skeleton(self):
+        proposal = propose_root("ሀገር", Counter({None: 5}))
+        assert proposal.root == ("ህ", "ግ", "ር")
+        assert "no IRIT root" in proposal.checks
+
+    def test_no_votes_at_all_falls_back_to_the_skeleton(self):
+        assert propose_root("ቤት", Counter()).root == ("ብ", "ት")
+
+    def test_split_vote_is_flagged(self):
+        proposal = propose_root("ሙሉ", Counter({("ም", "ል"): 60, ("ም", "ው", "ል"): 40}))
+        assert "split vote" in proposal.checks
+
+    def test_clear_majority_is_not_split(self):
+        proposal = propose_root("ሙሉ", Counter({("ም", "ል"): 80, ("ም", "ው", "ል"): 20}))
+        assert "split vote" not in proposal.checks
+
+    def test_difference_from_skeleton_is_flagged(self):
+        proposal = propose_root("መሆን", Counter({("ህ", "ን"): 3}))
+        assert "differs from skeleton" in proposal.checks
+
+    def test_agreement_with_skeleton_is_not_flagged(self):
+        assert propose_root("ፍቅር", Counter({("ፍ", "ቅ", "ር"): 3})).checks == ()
+
+    def test_hidden_w_is_flagged_when_the_root_lacks_it(self):
+        # Q2: ሆነ is ህ-ው-ን. ሆ carries ኦ, the vowel a hidden ው leaves.
+        proposal = propose_root("ሆነ", Counter({("ህ", "ን"): 3}))
+        assert "hidden ው?" in proposal.checks
+
+    def test_hidden_w_is_not_flagged_when_the_root_has_it(self):
+        proposal = propose_root("ሞት", Counter({("ም", "ው", "ት"): 3}))
+        assert "hidden ው?" not in proposal.checks
+
+    def test_hidden_y_is_flagged_on_e_and_i_vowels(self):
+        assert "hidden ይ?" in propose_root("ቤት", Counter()).checks
+
+    def test_glide_of_a_labiovelar_is_not_a_hidden_radical(self):
+        # Q5: the ዋ of ቋ is dropped, so ቋንቋ is not asked about ው.
+        assert "hidden ው?" not in propose_root("ቋንቋ", Counter()).checks
+
+
+class TestRootReviewRows:
+    def rows(self):
+        votes = {
+            "ፍቅር": Counter({("ፍ", "ቅ", "ር"): 50}),
+            "መሆን": Counter({("ህ", "ን"): 900}),
+            "ሙሉ": Counter({("ም", "ል"): 60, ("ም", "ው", "ል"): 40}),
+            "ሀገር": Counter({None: 70}),
+        }
+        return root_review_rows(["ፍቅር", "መሆን", "ሙሉ", "ሀገር", "ቤት"], votes)
+
+    def test_one_row_per_entry(self):
+        assert sorted(r["word"] for r in self.rows()) == ["ሀገር", "መሆን", "ሙሉ", "ቤት", "ፍቅር"]
+
+    def test_rows_needing_a_decision_come_first(self):
+        # split vote, then differs from skeleton, then no IRIT root, then
+        # plain agreement.
+        assert [r["word"] for r in self.rows()] == ["ሙሉ", "መሆን", "ሀገር", "ቤት", "ፍቅር"]
+
+    def test_row_fields_are_written_out(self):
+        row = next(r for r in self.rows() if r["word"] == "ሙሉ")
+        assert row["proposed"] == "ም-ል"
+        assert row["skeleton"] == "ም-ል"
+        assert row["irit"] == "ም-ል 60%; ም-ው-ል 40%"
+        assert "split vote" in row["check"]
+        assert row["reviewed"] == ""
+
+    def test_no_root_is_reported(self):
+        row = next(r for r in self.rows() if r["word"] == "ሀገር")
+        assert row["irit"] == "no root given"
+
+    def test_unanalysed_share_is_reported_next_to_the_roots(self):
+        rows = root_review_rows(["ሞት"], {"ሞት": Counter({("ም", "ው", "ት"): 30, None: 10})})
+        assert rows[0]["irit"] == "ም-ው-ት 100%; no root on 25%"
+
+    def test_shares_that_round_to_zero_are_left_out(self):
+        votes = {"ሞት": Counter({("ም", "ው", "ት"): 999, ("ም", "ት"): 1, None: 1})}
+        assert root_review_rows(["ሞት"], votes)[0]["irit"] == "ም-ው-ት 100%"

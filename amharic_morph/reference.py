@@ -45,6 +45,13 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from amharic_morph.levels import (
+    bare_consonant,
+    fidel_order,
+    is_glottal,
+    is_labiovelar,
+    level1_root,
+)
 from amharic_morph.morphology import DEFAULT_PLAIN_SUFFIXES, DEFAULT_PREFIXES
 from amharic_morph.normalizer import normalize
 
@@ -227,6 +234,37 @@ def outer_affixes(
     return m[:start], m[start:end], m[end:]
 
 
+def affixes_agree(
+    segmentation,
+    analysis: ReferenceAnalysis,
+    prefixes=DEFAULT_PREFIXES,
+    suffixes=INFLECTIONAL_SUFFIXES,
+) -> bool:
+    """
+    True if a Level 4 analysis has the reading's inflectional affixes.
+
+    Both sides are normalized, so Level 4's label ኣቸው matches the
+    reference's አቸው. The stems are not compared, because the
+    reference's core may still carry derivation.
+
+    Args:
+        segmentation: A Level 4 Segmentation.
+        analysis:     One reference reading of the same word.
+        prefixes:     Inflectional prefixes, in normalized spelling.
+        suffixes:     Inflectional suffixes, in normalized spelling.
+
+    Examples:
+        >>> from amharic_morph.morphology import Segmentation
+        >>> ours = Segmentation("ቤታቸው", "ቤት", suffixes=("ኣቸው",))
+        >>> affixes_agree(ours, parse_annotation("ቤት_አቸው")[0])
+        True
+    """
+    pre, _, suf = outer_affixes(analysis, prefixes, suffixes)
+    return pre == tuple(normalize(p) for p in segmentation.prefixes) and suf == tuple(
+        normalize(s) for s in segmentation.suffixes
+    )
+
+
 @dataclass(frozen=True)
 class Agreement:
     """
@@ -291,15 +329,187 @@ def inflection_agreement(
         if not ours.known:
             continue
         compared += count
-        affixes = (
-            tuple(normalize(p) for p in ours.prefixes),
-            tuple(normalize(s) for s in ours.suffixes),
-        )
-        if any(
-            (pre, suf) == affixes
-            for pre, _, suf in (outer_affixes(a, prefixes, suffixes) for a in analyses)
-        ):
+        if any(affixes_agree(ours, a, prefixes, suffixes) for a in analyses):
             agreeing += count
         else:
             disagreements[word] = count
     return Agreement(compared, agreeing, disagreements)
+
+
+# ── Root proposals ────────────────────────────────────────────────────────────
+#
+# Level 1 reads a reviewed root from each lexicon entry (see
+# docs/dev_plans/level1_root_redesign.md). The proposal for an entry is a
+# vote: every reference word that Level 4 maps onto the entry casts its
+# annotated root, weighted by its corpus frequency. Pooling the forms
+# outvotes a typo on any one of them.
+
+# Below this share of the root-carrying votes, the winner is flagged.
+SPLIT_SHARE = 0.8
+
+CHECK_SPLIT = "split vote"
+CHECK_DIFFERS = "differs from skeleton"
+CHECK_NO_ROOT = "no IRIT root"
+CHECK_HIDDEN_W = "hidden ው?"
+CHECK_HIDDEN_Y = "hidden ይ?"
+
+# Vowel orders that a hidden weak radical leaves behind: ው surfaces as
+# the ኡ or ኦ of its neighbour (ሞት, ም-ው-ት), ይ as its ኢ or ኤ.
+_HIDDEN_RADICALS = ((CHECK_HIDDEN_W, "ው", (2, 7)), (CHECK_HIDDEN_Y, "ይ", (3, 5)))
+
+# Review order: rows needing a decision first.
+_CHECK_PRIORITY = (CHECK_SPLIT, CHECK_DIFFERS, CHECK_NO_ROOT)
+
+
+def root_votes(segment, reference, counts) -> dict[str, Counter]:
+    """
+    Pool the reference roots of every word onto its Level 4 stem.
+
+    Only a word whose Level 4 analysis the reference supports votes:
+    its affixes must agree with the primary reading (affixes_agree), and
+    it must have no infix, which the reference does not mark. Otherwise
+    a Level 4 error sends the vote to the wrong entry: Level 4 reads
+    የለምና as የ + ለ + ምን + ኣ, and its root ል-ም would land on ምን.
+
+    A word votes with the root of its primary reading, or votes None when
+    that reading has no single well-formed root. Alternatives do not
+    vote: ላይ[ለ_አይ] reads the same string as ለ + አየ "to see", a
+    different word, and its root is not ላይ's. Radicals are reduced
+    to their bare consonant, so the reference's labiovelar ቍ is read as
+    ቅ, per the Level 1 ruling on labiovelars.
+
+    Args:
+        segment:   Callable from a word to its Level 4 Segmentation.
+        reference: A root-based reference, as returned by load_reference().
+        counts:    Corpus frequency table. A word absent from it votes
+                   with weight 1, since the reference was annotated on
+                   other text.
+
+    Returns:
+        Dict mapping each stem to a Counter of radical tuples, None among
+        them for forms that give no root.
+    """
+    votes: dict[str, Counter] = {}
+    for word, analyses in reference.items():
+        analysis = segment(word)
+        if not analysis.known or analysis.infix or not affixes_agree(analysis, analyses[0]):
+            continue
+        root = analyses[0].root
+        if root is not None and is_well_formed_root(root):
+            root = tuple(bare_consonant(r) for r in root)
+        else:
+            root = None
+        votes.setdefault(analysis.stem, Counter())[root] += counts.get(word, 0) or 1
+    return votes
+
+
+@dataclass(frozen=True)
+class RootProposal:
+    """
+    The proposed root of one entry.
+
+    Attributes:
+        root:   Proposed radicals.
+        share:  The winner's share of the root-carrying votes, or None
+                when the proposal is the skeleton.
+        checks: Reasons the reviewer should look closely, from the
+                CHECK_* constants.
+    """
+
+    root: tuple[str, ...]
+    share: float | None
+    checks: tuple[str, ...]
+
+
+def propose_root(word: str, votes: Counter) -> RootProposal:
+    """
+    Propose a root for a lexicon entry from its votes.
+
+    The heaviest root wins. Forms the reference left unanalysed (None)
+    do not count against it: the reference has no root on half the
+    entries, and silence says nothing about which root is right. With no
+    root votes at all, the proposal is the consonant skeleton.
+
+    Args:
+        word:  The entry.
+        votes: Its Counter from root_votes(), possibly empty.
+
+    Returns:
+        A RootProposal.
+
+    Examples:
+        >>> propose_root("መሆን", Counter({("ህ", "ን"): 3})).checks
+        ('differs from skeleton', 'hidden ው?')
+    """
+    skeleton = tuple(level1_root(word) or ())
+    rooted = Counter({r: w for r, w in votes.items() if r is not None})
+    checks = []
+    if rooted:
+        root, weight = max(rooted.items(), key=lambda item: (item[1], item[0]))
+        share = round(weight / sum(rooted.values()), 4)
+        if share < SPLIT_SHARE:
+            checks.append(CHECK_SPLIT)
+        if root != skeleton:
+            checks.append(CHECK_DIFFERS)
+    else:
+        root, share = skeleton, None
+        checks.append(CHECK_NO_ROOT)
+
+    orders = {fidel_order(c) for c in word if not is_glottal(c) and not is_labiovelar(c)}
+    for check, radical, vowel_orders in _HIDDEN_RADICALS:
+        if orders & set(vowel_orders) and radical not in root:
+            checks.append(check)
+    return RootProposal(root, share, tuple(checks))
+
+
+def _vote_summary(votes: Counter) -> str:
+    rooted = Counter({r: w for r, w in votes.items() if r is not None})
+    if not rooted:
+        return "no root given"
+    total = sum(rooted.values())
+    parts = [
+        f"{RADICAL_SEPARATOR.join(r)} {w / total:.0%}"
+        for r, w in sorted(rooted.items(), key=lambda item: (-item[1], item[0]))[:4]
+        if round(w / total, 2)
+    ]
+    unanalysed = votes.get(None, 0) / sum(votes.values())
+    if round(unanalysed, 2):
+        parts.append(f"no root on {unanalysed:.0%}")
+    return "; ".join(parts)
+
+
+def root_review_rows(words, votes: dict[str, Counter]) -> list[dict]:
+    """
+    Rows for the root review file, decisions first.
+
+    Rows are ordered by their first check in _CHECK_PRIORITY (split
+    vote, then a vote that differs from the skeleton, then no reference
+    root, then plain agreement) and, within a group, by vote weight.
+
+    Args:
+        words: The lexicon entries' words.
+        votes: As returned by root_votes().
+
+    Returns:
+        Dicts keyed by lexicon_builder.ROOT_REVIEW_COLUMNS, reviewed
+        and notes left empty.
+    """
+    keyed = []
+    for word in words:
+        entry_votes = votes.get(word, Counter())
+        proposal = propose_root(word, entry_votes)
+        group = next(
+            (i for i, c in enumerate(_CHECK_PRIORITY) if c in proposal.checks),
+            len(_CHECK_PRIORITY),
+        )
+        row = {
+            "word": word,
+            "proposed": RADICAL_SEPARATOR.join(proposal.root),
+            "skeleton": RADICAL_SEPARATOR.join(level1_root(word) or ()),
+            "irit": _vote_summary(entry_votes),
+            "check": "; ".join(proposal.checks),
+            "reviewed": "",
+            "notes": "",
+        }
+        keyed.append(((group, -sum(entry_votes.values()), word), row))
+    return [row for _, row in sorted(keyed, key=lambda item: item[0])]

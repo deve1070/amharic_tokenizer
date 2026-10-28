@@ -227,6 +227,7 @@ __marimo__/
 # The deliverable is lexicon.json, which stays tracked.
 amharic_morph/lexicon/candidates.json
 amharic_morph/lexicon/category_review.tsv
+amharic_morph/lexicon/root_review.tsv
 commit_msg.txt
 
 # Verb-detection working file: regenerable from the corpus.

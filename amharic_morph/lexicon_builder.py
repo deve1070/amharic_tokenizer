@@ -58,7 +58,7 @@ import csv
 import json
 from dataclasses import dataclass
 
-from amharic_morph.levels import level1_root
+from amharic_morph.levels import bare_consonant, is_ethiopic, level1_root
 
 # Spec section 3.3 field order.
 SCHEMA_FIELDS = (
@@ -413,10 +413,68 @@ def validate_lexicon(entries: list[dict]) -> dict[str, list[str]]:
     return report
 
 
+# ── Review files ─────────────────────────────────────────────────────────────
+#
+# A review file is a TSV drafted for a native speaker, one row per entry,
+# with a proposed value, its evidence, and an empty reviewed column. Only
+# a row the reviewer has marked is read back, so a draft value can never
+# reach the lexicon by default. The category review and the root review
+# share the file handling below and differ only in their columns and in
+# what a mark means.
+
+# Marks common to every review, besides a value written out in full.
+REVIEW_ACCEPT = "ok"
+REVIEW_REJECT = "reject"
+
+# Source recorded on an entry the reviewer added by hand. Spec section 3.3.
+SOURCE_NATIVE_SPEAKER = "native_speaker"
+
+
+def write_review(
+    rows: list[dict], path: str, columns: tuple[str, ...], encoding: str = "utf-8"
+) -> int:
+    """
+    Write a review file.
+
+    Args:
+        rows:     Dicts keyed by column name. Missing columns are written
+                  empty and keys outside columns are dropped.
+        path:     Destination TSV.
+        columns:  Column order, e.g. CATEGORY_REVIEW_COLUMNS.
+        encoding: File encoding.
+
+    Returns:
+        Number of rows written.
+    """
+    with open(path, "w", encoding=encoding, newline="") as f:
+        writer = csv.DictWriter(
+            f, fieldnames=columns, delimiter="\t", extrasaction="ignore"
+        )
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({column: row.get(column, "") for column in columns})
+    return len(rows)
+
+
+def _reviewed_rows(path: str, encoding: str):
+    """
+    (line, row) for every row whose reviewed column is filled in.
+
+    Values are stripped, and the reviewed mark is lowercased so that ok,
+    OK and Ok read the same. line is the file line, header included,
+    for error messages.
+    """
+    with open(path, "r", encoding=encoding, newline="") as f:
+        for line, row in enumerate(csv.DictReader(f, delimiter="\t"), start=2):
+            row = {k: (v or "").strip() for k, v in row.items()}
+            row["reviewed"] = row["reviewed"].lower()
+            if row["reviewed"]:
+                yield line, row
+
+
 # ── Category review ──────────────────────────────────────────────────────────
 
-# Column order of the review file.
-REVIEW_COLUMNS = (
+CATEGORY_REVIEW_COLUMNS = (
     "word",
     "status",
     "proposed",
@@ -430,13 +488,6 @@ REVIEW_COLUMNS = (
 # status: an entry already in the lexicon, or a word proposed for it.
 REVIEW_ENTRY = "entry"
 REVIEW_NEW = "new"
-
-# Marks the reviewer writes in the reviewed column, besides a category.
-REVIEW_ACCEPT = "ok"
-REVIEW_REJECT = "reject"
-
-# Source recorded on an entry the reviewer added by hand. Spec section 3.3.
-SOURCE_NATIVE_SPEAKER = "native_speaker"
 
 
 @dataclass(frozen=True)
@@ -457,29 +508,6 @@ class ReviewDecision:
     new: bool
 
 
-def write_category_review(rows: list[dict], path: str, encoding: str = "utf-8") -> int:
-    """
-    Write a category review file.
-
-    Args:
-        rows:     Dicts keyed by REVIEW_COLUMNS. Missing columns are
-                  written empty.
-        path:     Destination TSV.
-        encoding: File encoding.
-
-    Returns:
-        Number of rows written.
-    """
-    with open(path, "w", encoding=encoding, newline="") as f:
-        writer = csv.DictWriter(
-            f, fieldnames=REVIEW_COLUMNS, delimiter="\t", extrasaction="ignore"
-        )
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({column: row.get(column, "") for column in REVIEW_COLUMNS})
-    return len(rows)
-
-
 def read_category_review(path: str, encoding: str = "utf-8") -> list[ReviewDecision]:
     """
     The reviewer's decisions from a category review file.
@@ -490,7 +518,7 @@ def read_category_review(path: str, encoding: str = "utf-8") -> list[ReviewDecis
     read case-insensitively.
 
     Args:
-        path:     Review TSV, as written by write_category_review().
+        path:     Review TSV with CATEGORY_REVIEW_COLUMNS.
         encoding: File encoding.
 
     Returns:
@@ -503,32 +531,127 @@ def read_category_review(path: str, encoding: str = "utf-8") -> list[ReviewDecis
                     through remove_entries(), where the reason is kept.
     """
     decisions = []
-    with open(path, "r", encoding=encoding, newline="") as f:
-        for line, row in enumerate(csv.DictReader(f, delimiter="\t"), start=2):
-            word = row["word"].strip()
-            mark = row["reviewed"].strip().lower()
-            status = row["status"].strip()
-            if not mark:
-                continue
-            if status not in (REVIEW_ENTRY, REVIEW_NEW):
-                raise ValueError(f"line {line}, {word}: status not recognised: {status!r}")
+    for line, row in _reviewed_rows(path, encoding):
+        word, mark, status = row["word"], row["reviewed"], row["status"]
+        if status not in (REVIEW_ENTRY, REVIEW_NEW):
+            raise ValueError(f"line {line}, {word}: status not recognised: {status!r}")
 
-            if mark == REVIEW_REJECT:
-                if status == REVIEW_ENTRY:
-                    raise ValueError(
-                        f"line {line}, {word}: reject applies to new words only; "
-                        "use remove_entries() to drop an existing entry"
-                    )
-                continue
-
-            category = row["proposed"].strip() if mark == REVIEW_ACCEPT else mark
-            if category not in VALID_CATEGORIES:
+        if mark == REVIEW_REJECT:
+            if status == REVIEW_ENTRY:
                 raise ValueError(
-                    f"line {line}, {word}: category not recognised: {category!r}"
+                    f"line {line}, {word}: reject applies to new words only; "
+                    "use remove_entries() to drop an existing entry"
                 )
-            decisions.append(
-                ReviewDecision(word, category, row["notes"].strip(), status == REVIEW_NEW)
-            )
+            continue
+
+        category = row["proposed"] if mark == REVIEW_ACCEPT else mark
+        if category not in VALID_CATEGORIES:
+            raise ValueError(f"line {line}, {word}: category not recognised: {category!r}")
+        decisions.append(ReviewDecision(word, category, row["notes"], status == REVIEW_NEW))
+    return decisions
+
+
+# ── Root review ──────────────────────────────────────────────────────────────
+#
+# root_consonants is a ruling, not an observation (see
+# docs/dev_plans/level1_root_redesign.md). The proposal comes from the
+# IRIT root lexicon through reference.root_review_rows(); the reviewer
+# accepts it, writes the root out with hyphens (ህ-ው-ን), or writes none
+# for a word that has no root.
+
+ROOT_REVIEW_COLUMNS = (
+    "word",
+    "proposed",
+    "skeleton",
+    "irit",
+    "check",
+    "reviewed",
+    "notes",
+)
+
+# The mark, and the proposal, for a word with no root: a loanword or a
+# function word (spec section 2.2).
+ROOT_NONE = "none"
+
+ROOT_SEPARATOR = "-"
+
+
+@dataclass(frozen=True)
+class RootDecision:
+    """
+    One reviewed row of the root review file.
+
+    Attributes:
+        word:  The entry.
+        root:  Its radicals, or None for a word with no root.
+        notes: The reviewer's notes, possibly empty.
+    """
+
+    word: str
+    root: list[str] | None
+    notes: str
+
+
+def parse_root(text: str) -> list[str] | None:
+    """
+    Read a root written with hyphens, or none.
+
+    Each radical must be one bare consonant: the order-6 form, or the
+    plain consonant of a labiovelar. ሆ carries a vowel and ቍ is a
+    labiovelar, so neither is a radical.
+
+    Args:
+        text: E.g. "ህ-ው-ን", or "none".
+
+    Returns:
+        The radicals, or None for none.
+
+    Raises:
+        ValueError: If a radical is not a single bare consonant.
+
+    Examples:
+        >>> parse_root("ህ - ው - ን")
+        ['ህ', 'ው', 'ን']
+        >>> parse_root("none") is None
+        True
+    """
+    if text.strip().lower() == ROOT_NONE:
+        return None
+    radicals = [r.strip() for r in text.split(ROOT_SEPARATOR)]
+    for radical in radicals:
+        if len(radical) != 1 or not is_ethiopic(radical) or bare_consonant(radical) != radical:
+            raise ValueError(f"not a bare consonant: {radical!r} in {text!r}")
+    return radicals
+
+
+def read_root_review(path: str, encoding: str = "utf-8") -> list[RootDecision]:
+    """
+    The reviewer's decisions from a root review file.
+
+    A row with an empty reviewed column is skipped. ok accepts the
+    proposed root, a hyphenated root replaces it, and none records that
+    the word has no root.
+
+    Args:
+        path:     Review TSV with ROOT_REVIEW_COLUMNS.
+        encoding: File encoding.
+
+    Returns:
+        Decisions in file order.
+
+    Raises:
+        ValueError: With the line and word, when the accepted or written
+                    root is not well formed.
+    """
+    decisions = []
+    for line, row in _reviewed_rows(path, encoding):
+        word, mark = row["word"], row["reviewed"]
+        text = row["proposed"] if mark == REVIEW_ACCEPT else mark
+        try:
+            root = parse_root(text)
+        except ValueError as e:
+            raise ValueError(f"line {line}, {word}: {e}") from None
+        decisions.append(RootDecision(word, root, row["notes"]))
     return decisions
 
 
