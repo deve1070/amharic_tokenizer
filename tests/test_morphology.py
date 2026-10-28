@@ -23,7 +23,7 @@ from amharic_morph.morphology import (  # noqa: E402
     segment_word,
     strip_prefixes,
     strip_suffixes,
-    suffix_function,
+    suffix_readings,
 )
 
 
@@ -424,70 +424,114 @@ class TestSegmentationShape:
 # ── One suffix, two functions ────────────────────────────────────────────────
 
 
-class TestSuffixFunction:
+class TestSuffixReadings:
     """
-    ኡ attaches the same way to a noun and a verb and Level 4 finds the
-    same boundary, but it is not the same morpheme. The stem's category
-    is what decides.
+    A suffix carries a tuple of readings, chosen by the stem's category:
+    ኡ is the definite or "his" on a noun and the 3pl subject on a verb.
+    The table is the one the native speaker reviewed 2026-10-29.
     """
 
-    def test_definite_on_a_noun(self):
-        assert suffix_function("ኡ", "noun") == "definite"
+    def seg(self, stem, category, suffixes=(), prefixes=()):
+        return Segmentation("w", stem, prefixes=prefixes, suffixes=suffixes, category=category)
 
-    def test_agreement_on_a_verb(self):
-        assert suffix_function("ኡ", "verb") == "subject_3pl"
+    def test_u_on_a_noun(self):
+        assert suffix_readings(self.seg("ቤት", "noun", ("ኡ",)), "ኡ") == ("definite", "possessive_3ms")
 
-    def test_w_splits_the_same_way(self):
-        assert suffix_function("ው", "noun") == "definite"
-        assert suffix_function("ው", "verb") == "subject_3ms"
+    def test_u_on_a_verb(self):
+        assert suffix_readings(self.seg("ሆነ", "verb", ("ኡ",)), "ኡ") == ("subject_3pl",)
+
+    def test_w_on_a_verb_has_three_readings(self):
+        readings = suffix_readings(self.seg("ሰጠ", "verb", ("ው",)), "ው")
+        assert readings == ("object_3ms", "subject_3pl", "definite")
+
+    def test_adjectives_read_as_non_verbs(self):
+        assert suffix_readings(self.seg("ትልቅ", "adjective", ("ኡ",)), "ኡ")[0] == "definite"
 
     def test_unfilled_category_is_not_guessed(self):
         # A guess would put a definite article on a verb.
-        assert suffix_function("ኡ", None) is None
+        assert suffix_readings(self.seg("ቤት", None, ("ኡ",)), "ኡ") is None
 
-    def test_unambiguous_suffix_gets_no_gloss(self):
-        assert suffix_function("ኦች", "noun") is None
+    def test_every_suffix_has_readings(self):
+        # Even unambiguous suffixes, so "no meaning recorded" never looks
+        # like "meaning unknown".
+        assert suffix_readings(self.seg("ቤት", "noun", ("ኦች",)), "ኦች") == ("plural",)
+        assert suffix_readings(self.seg("ሄደ", "verb", ("ኩ",)), "ኩ") == ("subject_1s",)
 
-    def test_adjectives_take_the_definite_reading(self):
-        assert suffix_function("ኡ", "adjective") == "definite"
+    def test_n_on_a_noun_and_a_verb(self):
+        assert suffix_readings(self.seg("ቤት", "noun", ("ን",)), "ን") == ("accusative",)
+        assert suffix_readings(self.seg("ሰጠ", "verb", ("ን",)), "ን") == ("subject_1pl", "object_1pl")
+
+    def test_m_is_negative_only_with_al(self):
+        negative = self.seg("ሆነ", "verb", ("ም",), ("አል",))
+        assert suffix_readings(negative, "ም") == ("negative",)
+        assert suffix_readings(self.seg("ሆነ", "verb", ("ኦ", "ም")), "ም") == ("also",)
+        assert suffix_readings(self.seg("ቤት", "noun", ("ም",)), "ም") == ("also",)
+
+    def test_every_table_row_has_readings_for_its_kind(self):
+        for shape in SUFFIX_TABLE:
+            if shape.kind in (NOUN, ANY) and shape.kind != ANY:
+                assert suffix_readings(self.seg("x", "noun", (shape.morpheme,)), shape.morpheme)
+            if shape.kind == VERB:
+                assert suffix_readings(self.seg("x", "verb", (shape.morpheme,)), shape.morpheme)
+            if shape.kind == ANY:
+                assert (suffix_readings(self.seg("x", "noun", (shape.morpheme,)), shape.morpheme)
+                        or suffix_readings(self.seg("x", "verb", (shape.morpheme,)), shape.morpheme))
 
 
-class TestFunctionsInASegmentation:
+class TestReadingsInASegmentation:
     def test_noun_definite(self):
-        index = {"ቤት": {"category": "noun", "allows_suffix": ["ኡ"]}}
-        parts = segment_word("ቤቱ", index).parts
-        assert [(p.text, p.function) for p in parts] == [
+        parts = segment_word("ቤቱ", typed(ቤት="noun")).parts
+        assert [(p.text, p.readings) for p in parts] == [
             ("ቤት", None),
-            ("ኡ", "definite"),
+            ("ኡ", ("definite", "possessive_3ms")),
         ]
 
     def test_verb_plural(self):
-        index = {"ሆነ": {"category": "verb", "allows_suffix": ["ኡ"]}}
-        parts = segment_word("ሆኑ", index).parts
-        assert [(p.text, p.function) for p in parts] == [
+        parts = segment_word("ሆኑ", typed(ሆነ="verb")).parts
+        assert [(p.text, p.readings) for p in parts] == [("ሆነ", None), ("ኡ", ("subject_3pl",))]
+
+    def test_negative_prefix_and_suffix(self):
+        parts = segment_word("አልሆነም", typed(ሆነ="verb")).parts
+        assert [(p.text, p.readings) for p in parts] == [
+            ("አል", ("negative",)),
             ("ሆነ", None),
-            ("ኡ", "subject_3pl"),
+            ("ም", ("negative",)),
         ]
 
+    def test_other_prefixes_carry_no_readings(self):
+        # The reviewed table covers suffixes and the negative prefix only.
+        assert segment_word("የቤቶች", typed(ቤት="noun")).parts[0].readings is None
+
     def test_same_boundary_either_way(self):
-        noun = segment_word("ቤቱ", {"ቤት": {"category": "noun"}})
-        verb = segment_word("ሆኑ", {"ሆነ": {"category": "verb"}})
+        noun = segment_word("ቤቱ", typed(ቤት="noun"))
+        verb = segment_word("ሆኑ", typed(ሆነ="verb"))
         assert noun.suffixes == verb.suffixes == ("ኡ",)
 
     def test_morphemes_stay_amharic_strings(self):
-        # The function lives beside the morpheme, not inside it, so
-        # Levels 3, 2 and 1 can still decompose the text.
-        index = {"ቤት": {"category": "noun"}}
-        assert segment_word("ቤቱ", index).morphemes == ["ቤት", "ኡ"]
+        # The readings live beside the morpheme, not inside it, so Levels
+        # 3, 2 and 1 can still decompose the text.
+        assert segment_word("ቤቱ", typed(ቤት="noun")).morphemes == ["ቤት", "ኡ"]
 
     def test_kinds_are_reported(self):
-        index = {"ቤት": {"category": "noun"}}
-        parts = segment_word("የቤቶች", index).parts
+        parts = segment_word("የቤቶች", typed(ቤት="noun")).parts
         assert [p.kind for p in parts] == [PREFIX, INDEPENDENT, SUFFIX]
 
     def test_unknown_word_has_one_independent_part(self):
         parts = segment_word("ኮምፒውተር", {}).parts
         assert [(p.text, p.kind) for p in parts] == [("ኮምፒውተር", INDEPENDENT)]
+
+
+class TestPlainChIsVerbOnly:
+    """
+    Plain ች is the 3fs subject (ሄደች). On a non-verb it produced only
+    wrong analyses: አይቼ -> አይ + ች + ኤ, ማርች -> ማር + ች.
+    """
+
+    def test_on_a_verb(self):
+        assert segment_word("ሄደች", typed(ሄደ="verb")).morphemes == ["ሄደ", "ች"]
+
+    def test_refused_on_a_noun(self):
+        assert segment_word("ማርች", typed(ማር="noun")).known is False
 
 
 # ── One implementation of suffix inversion ───────────────────────────────────

@@ -272,15 +272,15 @@ class TestLevelNames:
             assert isinstance(tok.tokenize("ቤቶች", level=level), list)
 
 
-# ── Suffix functions surface through the API ─────────────────────────────────
+# ── Suffix readings surface through the API ──────────────────────────────────
 
 
-class TestSuffixFunctionThroughTheAPI:
+class TestSuffixReadingsThroughTheAPI:
     def test_definite_on_a_noun(self, small):
         parts = small.segment("ቤቱ").parts
-        assert [(p.text, p.function) for p in parts] == [
+        assert [(p.text, p.readings) for p in parts] == [
             ("ቤት", None),
-            ("ኡ", "definite"),
+            ("ኡ", ("definite", "possessive_3ms")),
         ]
 
 

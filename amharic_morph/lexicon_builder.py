@@ -345,7 +345,7 @@ def set_categories(entries: list[dict], categories: dict[str, str]) -> list[dict
     Fill in `category` on the named entries.
 
     This is the write path for the annotation pass that annotation_gaps()
-    tracks. It matters most for verbs: morphology.suffix_function reads
+    tracks. It matters most for verbs: morphology.suffix_readings reads
     category to decide whether ኡ on a stem is the definite article
     (ቤት + ኡ, "the house") or third person plural agreement (ሆነ + ኡ,
     "they became"), and returns None while the field is unfilled rather

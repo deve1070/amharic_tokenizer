@@ -431,7 +431,7 @@ def generate_candidates(
 # ── Verb detection ────────────────────────────────────────────────────────────
 #
 # The lexicon's `category` field switches on the ኡ/ው distinction in
-# morphology.suffix_function: ቤት + ኡ is the definite article, ሆነ + ኡ is third
+# morphology.suffix_readings: ቤት + ኡ is the definite article, ሆነ + ኡ is third
 # person plural agreement. Only the verb branch matters, so the question the
 # corpus has to answer is narrow — which stems are verbs.
 #

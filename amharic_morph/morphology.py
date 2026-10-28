@@ -91,9 +91,11 @@ same boundary in both, but it is not the same morpheme:
 
 The fidel arithmetic cannot tell them apart, because nothing in the
 surface form differs. What decides is the part of speech of the stem,
-which is why suffix_function() reads the entry's category and returns
+which is why suffix_readings() reads the entry's category and returns
 None when that field is still unfilled. An unlabelled morpheme is
-honest; a guessed one would put a definite article on a verb.
+honest; a guessed one would put a definite article on a verb. A suffix
+that stays ambiguous on one kind of stem carries every reading (ው on a
+verb: object_3ms, subject_3pl, definite), and context decides.
 
 ── Unknown words ────────────────────────────────────────────────────────
 
@@ -255,8 +257,9 @@ SUFFIX_TABLE = (
     _plain("ን", ANY, CASE, OBJECT),
     _plain("ም", ANY, ALSO),
     _plain("ና", ANY, AND),
-    # The plural after a vowel on a noun, 3fs on a verb (ሄደች).
-    _plain("ች", ANY, PLURAL, SUBJECT),
+    # The 3fs subject (ሄደች). On a non-verb it produced only wrong
+    # analyses (ማርች -> ማር + ች), so it is verb-only.
+    _plain("ች", VERB, PLURAL, SUBJECT),
     _plain("ው", ANY, POSSESSIVE, OBJECT),
     _plain("ዋ", ANY, POSSESSIVE, OBJECT),
     _plain("ዎ", ANY, POSSESSIVE, OBJECT),
@@ -548,70 +551,104 @@ INDEPENDENT = "independent"
 INFIX = "infix"
 SUFFIX = "suffix"
 
-# Categories whose members take the definite article. Anything that is
-# not a verb does; the split is verb against the rest.
-_VERB = "verb"
-
-# Suffixes that mean one thing on a verb and another on everything else.
-# Keyed suffix -> (function on a non-verb, function on a verb).
-_SUFFIX_FUNCTIONS = {
-    "ኡ": ("definite", "subject_3pl"),
-    "ው": ("definite", "subject_3ms"),
+# What each suffix means, as (readings after a non-verb, readings after a
+# verb). Reviewed by the native speaker 2026-10-29. Every suffix has an
+# entry, unambiguous ones included, so "no meaning recorded" never looks
+# like "meaning unknown". An empty tuple means the suffix does not attach
+# to that kind of stem.
+_READINGS = {
+    "ኡ": (("definite", "possessive_3ms"), ("subject_3pl",)),
+    "ው": (("definite", "possessive_3ms"), ("object_3ms", "subject_3pl", "definite")),
+    "ኣ": ((), ("gerund_3fs",)),
+    "ኦ": ((), ("gerund_3ms",)),
+    "ቶ": ((), ("gerund_3ms",)),
+    "ታ": ((), ("gerund_3fs",)),
+    "ኣማ": (("adjectivizer",), ()),
+    "ማ": (("adjectivizer", "topic"), ()),
+    "ዋ": (("definite_f", "possessive_3fs"), ()),
+    "ኤ": (("possessive_1s",), ()),
+    "ዬ": (("possessive_1s",), ()),
+    "ህ": (("possessive_2ms",), ("subject_2ms", "object_2ms")),
+    "ሽ": (("possessive_2fs",), ("subject_2fs", "object_2fs")),
+    "ዎ": (("possessive_2polite",), ("object_2polite",)),
+    "ኣችን": (("possessive_1pl",), ()),
+    "ችን": (("possessive_1pl",), ()),
+    "ያችን": (("possessive_1pl",), ()),
+    "ኣችሁ": (("possessive_2pl",), ("subject_2pl", "object_2pl")),
+    "ችሁ": (("possessive_2pl",), ("subject_2pl", "object_2pl")),
+    "ኣቸው": (("possessive_3pl",), ("object_3pl",)),
+    "ቸው": (("possessive_3pl",), ("object_3pl",)),
+    "ኩ": ((), ("subject_1s",)),
+    "ሁ": ((), ("subject_1s",)),
+    "ክ": ((), ("subject_2ms",)),
+    "ኝ": ((), ("object_1s",)),
+    "ኣት": ((), ("object_3fs",)),
+    "ን": (("accusative",), ("subject_1pl", "object_1pl")),
+    "ች": ((), ("subject_3fs",)),
+    "ኦች": (("plural",), ()),
+    "ዎች": (("plural",), ()),
+    "ም": (("also",), ("also",)),
+    "ና": (("and",), ("and",)),
 }
 
+# The negative prefix's reading, and the one ም takes beside it.
+_NEGATIVE = ("negative",)
 
-def suffix_function(suffix: str, category: str | None) -> str | None:
+
+def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...] | None:
     """
-    What a suffix does, given the part of speech of its stem.
+    What a suffix means in a given analysis.
 
-    Only the suffixes with two readings are listed. Everything else has
-    one function and needs no disambiguation, so it returns None rather
-    than a gloss invented here.
+    The stem's category picks the column: ኡ is the definite or "his" on a
+    noun and the 3pl subject on a verb. ም needs the whole analysis, since
+    it is the negative only on a verb that also carries the prefix አል.
 
     Args:
-        suffix:   A suffix morpheme.
-        category: The stem entry's category, or None if unfilled.
+        segmentation: The analysis the suffix belongs to.
+        suffix:       One of its suffixes.
 
     Returns:
-        The function name, or None when the suffix is unambiguous or the
-        stem's category is unknown.
+        The readings, or None when the stem's category is unknown.
 
     Examples:
-        >>> suffix_function("ኡ", "noun")
-        'definite'
-        >>> suffix_function("ኡ", "verb")
-        'subject_3pl'
-        >>> suffix_function("ኡ", None) is None
-        True
-        >>> suffix_function("ኦች", "noun") is None
+        >>> suffix_readings(Segmentation("ቤቱ", "ቤት", suffixes=("ኡ",), category="noun"), "ኡ")
+        ('definite', 'possessive_3ms')
+        >>> suffix_readings(Segmentation("ሆኑ", "ሆነ", suffixes=("ኡ",), category="verb"), "ኡ")
+        ('subject_3pl',)
+        >>> suffix_readings(Segmentation("ቤቱ", "ቤት", suffixes=("ኡ",)), "ኡ") is None
         True
     """
-    readings = _SUFFIX_FUNCTIONS.get(suffix)
-    if readings is None or category is None:
+    category = segmentation.category
+    if category is None:
         return None
-    return readings[1] if category == _VERB else readings[0]
+    is_verb = category == VERB
+    if is_verb and suffix == NEGATIVE_SUFFIX and NEGATIVE_PREFIX in segmentation.prefixes:
+        return _NEGATIVE
+    return _READINGS[suffix][1 if is_verb else 0]
 
 
 @dataclass(frozen=True)
 class Morpheme:
     """
-    One morpheme with its position and, where it matters, its function.
+    One morpheme with its position and its readings.
 
     text is always a real Amharic string, so Levels 3, 2 and 1 and the
-    BPE layer can consume it directly. The grammatical function is kept
-    beside it rather than folded into the string, because ኡ-def would
-    not be decomposable as Amharic.
+    BPE layer can consume it directly. The readings are kept beside it
+    rather than folded into the string, because ኡ-def would not be
+    decomposable as Amharic.
 
     Attributes:
         text:     The morpheme.
         kind:     PREFIX, INDEPENDENT, INFIX or SUFFIX.
-        function: What it does, when the morpheme has more than one
-                  reading and the stem's category resolves it.
+        readings: What it can mean here, from suffix_readings() for a
+                  suffix and ("negative",) for the prefix አል. None for
+                  the stem, the infix, the other prefixes, and any
+                  suffix whose stem has no category yet.
     """
 
     text: str
     kind: str
-    function: str | None = None
+    readings: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -630,8 +667,8 @@ class Segmentation:
         infix:    Infix morpheme, or None.
         known:    Whether stem was found in the lexicon. False means the
                   word was returned whole, not that it was guessed at.
-        category: The stem entry's category, which is what resolves a
-                  suffix with two readings. None when unfilled.
+        category: The stem entry's category, which picks each suffix's
+                  readings. None when unfilled.
     """
 
     word: str
@@ -645,20 +682,22 @@ class Segmentation:
     @property
     def parts(self) -> list[Morpheme]:
         """
-        All morphemes with their position and function, in order.
+        All morphemes with their position and readings, in order.
 
         Examples:
             >>> seg = Segmentation("ቤቱ", "ቤት", suffixes=("ኡ",), category="noun")
-            >>> [(p.text, p.function) for p in seg.parts]
-            [('ቤት', None), ('ኡ', 'definite')]
+            >>> [(p.text, p.readings) for p in seg.parts]
+            [('ቤት', None), ('ኡ', ('definite', 'possessive_3ms'))]
         """
-        parts = [Morpheme(p, PREFIX) for p in self.prefixes]
+        parts = [
+            Morpheme(p, PREFIX, _NEGATIVE if p == NEGATIVE_PREFIX and self.category == VERB else None)
+            for p in self.prefixes
+        ]
         parts.append(Morpheme(self.stem, INDEPENDENT))
         if self.infix:
             parts.append(Morpheme(self.infix, INFIX))
         parts.extend(
-            Morpheme(s, SUFFIX, suffix_function(s, self.category))
-            for s in self.suffixes
+            Morpheme(s, SUFFIX, suffix_readings(self, s)) for s in self.suffixes
         )
         return parts
 
