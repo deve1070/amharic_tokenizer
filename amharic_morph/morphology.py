@@ -89,7 +89,11 @@ from amharic_morph.levels import fidel_order, to_order, to_order6
 # off ordinary words: ምግብ (food) -> ግብ, ምድር (earth) -> ድር, ናት -> ት, ምን
 # -> ን. In Amharic both are conjunctions or suffixes (ና "and", ም "also"),
 # which is consistent with the corpus evidence.
-DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "የ", "በ", "ከ", "ለ")
+#
+# በየ is the distributive "each, every" (በየአመቱ "every year"), one
+# morpheme. Read as በ + የ the word would mean "in the year's". The IRIT
+# annotation writes it as one prefix too.
+DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "በየ", "የ", "በ", "ከ", "ለ")
 
 # Suffixes that concatenate without changing the stem.
 DEFAULT_PLAIN_SUFFIXES = ("ን", "ም", "ና", "ች", "ው", "ዋ", "ዎ", "ዎች", "ኦች")

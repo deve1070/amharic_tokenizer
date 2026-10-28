@@ -223,3 +223,36 @@ class TestSuffixFunctionThroughTheAPI:
             ("ቤት", None),
             ("ኡ", "definite"),
         ]
+
+
+# ── Per-word cache ───────────────────────────────────────────────────────────
+#
+# A cache hit hands back the Segmentation object computed the first time; a
+# miss builds a new one. Identity therefore shows which of the two happened.
+
+
+class TestSegmentCache:
+    def test_repeated_word_is_served_from_the_cache(self, tok):
+        assert tok.segment("ቤቶች") is tok.segment("ቤቶች")
+
+    def test_size_zero_disables_it(self):
+        tok = AmharicTokenizer(cache_size=0)
+        first, second = tok.segment("ቤቶች"), tok.segment("ቤቶች")
+        assert first == second
+        assert first is not second
+
+    def test_least_recently_used_word_is_evicted(self):
+        tok = AmharicTokenizer(cache_size=1)
+        first = tok.segment("ቤቶች")
+        tok.segment("ቤቱ")
+        assert tok.segment("ቤቶች") is not first
+
+    def test_cached_output_matches_uncached(self, tok):
+        text = "ቤቶች ቤቱ ቤቶች ናቸው። ቤቶች ኮምፒውተር ቤቱ"
+        uncached = AmharicTokenizer(cache_size=0)
+        for level in ("morpheme", "root"):
+            assert tok.tokenize(text, level=level) == uncached.tokenize(text, level=level)
+
+    def test_negative_size_raises(self):
+        with pytest.raises(ValueError):
+            AmharicTokenizer(cache_size=-1)

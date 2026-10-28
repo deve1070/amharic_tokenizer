@@ -42,9 +42,23 @@ so the usual Level 4 dependency does not apply).
 
 category, gender and allows_infix need a native speaker. They are null
 rather than guessed, so that an unfilled field is visibly unfilled.
+
+── The category review ──────────────────────────────────────────────────
+
+category is filled through a review file: a TSV, one row per entry,
+carrying a drafted category, a gloss and the corpus evidence. The draft
+is a proposal and nothing more. Only a row the reviewer has marked — ok,
+or a corrected category — is read back, so an unreviewed draft value can
+never reach the lexicon. The same file proposes new entries (status new):
+words that a suffix rule would otherwise split wrongly, such as ድራማ
+against the adjective suffix ኣማ.
 """
 
+import csv
 import json
+from dataclasses import dataclass
+
+from amharic_morph.levels import level1_root
 
 # Spec section 3.3 field order.
 SCHEMA_FIELDS = (
@@ -397,3 +411,220 @@ def validate_lexicon(entries: list[dict]) -> dict[str, list[str]]:
         if problems:
             report[entry.get("word") or f"<entry {index}>"] = problems
     return report
+
+
+# ── Category review ──────────────────────────────────────────────────────────
+
+# Column order of the review file.
+REVIEW_COLUMNS = (
+    "word",
+    "status",
+    "proposed",
+    "gloss",
+    "final_order",
+    "verb_evidence",
+    "reviewed",
+    "notes",
+)
+
+# status: an entry already in the lexicon, or a word proposed for it.
+REVIEW_ENTRY = "entry"
+REVIEW_NEW = "new"
+
+# Marks the reviewer writes in the reviewed column, besides a category.
+REVIEW_ACCEPT = "ok"
+REVIEW_REJECT = "reject"
+
+# Source recorded on an entry the reviewer added by hand. Spec section 3.3.
+SOURCE_NATIVE_SPEAKER = "native_speaker"
+
+
+@dataclass(frozen=True)
+class ReviewDecision:
+    """
+    One reviewed row of the category review file.
+
+    Attributes:
+        word:     The word.
+        category: The category the reviewer settled on.
+        notes:    The reviewer's notes, possibly empty.
+        new:      True if the word is to be added to the lexicon.
+    """
+
+    word: str
+    category: str
+    notes: str
+    new: bool
+
+
+def write_category_review(rows: list[dict], path: str, encoding: str = "utf-8") -> int:
+    """
+    Write a category review file.
+
+    Args:
+        rows:     Dicts keyed by REVIEW_COLUMNS. Missing columns are
+                  written empty.
+        path:     Destination TSV.
+        encoding: File encoding.
+
+    Returns:
+        Number of rows written.
+    """
+    with open(path, "w", encoding=encoding, newline="") as f:
+        writer = csv.DictWriter(
+            f, fieldnames=REVIEW_COLUMNS, delimiter="\t", extrasaction="ignore"
+        )
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({column: row.get(column, "") for column in REVIEW_COLUMNS})
+    return len(rows)
+
+
+def read_category_review(path: str, encoding: str = "utf-8") -> list[ReviewDecision]:
+    """
+    The reviewer's decisions from a category review file.
+
+    A row with an empty reviewed column is skipped, because its category
+    is still only a draft. ok accepts the proposed category; a category
+    name replaces it; reject declines a proposed new entry. Marks are
+    read case-insensitively.
+
+    Args:
+        path:     Review TSV, as written by write_category_review().
+        encoding: File encoding.
+
+    Returns:
+        Decisions in file order, rejected new rows left out.
+
+    Raises:
+        ValueError: On an unrecognised mark or status, on ok against a
+                    proposal that is not a valid category, and on reject
+                    against an existing entry. Removing an entry goes
+                    through remove_entries(), where the reason is kept.
+    """
+    decisions = []
+    with open(path, "r", encoding=encoding, newline="") as f:
+        for line, row in enumerate(csv.DictReader(f, delimiter="\t"), start=2):
+            word = row["word"].strip()
+            mark = row["reviewed"].strip().lower()
+            status = row["status"].strip()
+            if not mark:
+                continue
+            if status not in (REVIEW_ENTRY, REVIEW_NEW):
+                raise ValueError(f"line {line}, {word}: status not recognised: {status!r}")
+
+            if mark == REVIEW_REJECT:
+                if status == REVIEW_ENTRY:
+                    raise ValueError(
+                        f"line {line}, {word}: reject applies to new words only; "
+                        "use remove_entries() to drop an existing entry"
+                    )
+                continue
+
+            category = row["proposed"].strip() if mark == REVIEW_ACCEPT else mark
+            if category not in VALID_CATEGORIES:
+                raise ValueError(
+                    f"line {line}, {word}: category not recognised: {category!r}"
+                )
+            decisions.append(
+                ReviewDecision(word, category, row["notes"].strip(), status == REVIEW_NEW)
+            )
+    return decisions
+
+
+def add_entries(entries: list[dict], categories: dict[str, str]) -> list[dict]:
+    """
+    Add words to the lexicon on a native speaker's authority.
+
+    The write path for a word missing from the corpus candidates whose
+    absence makes a suffix rule split it wrongly: without ድራማ as an
+    entry, ድራማ ("drama") segments as ድር + ኣማ. The entry is validated
+    at once and its source recorded as native_speaker. allows_prefix
+    and allows_suffix start empty, since they are corpus observations
+    that refresh_derived_fields() fills in later; the root is Level 1
+    over the word, which is valid because an entry is an independent
+    morpheme.
+
+    Args:
+        entries:    Lexicon entries.
+        categories: Dict mapping each new word to its category.
+
+    Returns:
+        New list with the words appended in the given order. The input
+        is not modified.
+
+    Raises:
+        ValueError: If a category is not recognised, or a word is
+                    already in the lexicon.
+    """
+    unknown_category = {c for c in categories.values() if c not in VALID_CATEGORIES}
+    if unknown_category:
+        raise ValueError(f"category not recognised: {sorted(unknown_category)}")
+
+    present = sorted(set(categories) & {e.get("word") for e in entries})
+    if present:
+        raise ValueError(f"already in the lexicon: {present}")
+
+    added = [
+        {
+            "word": word,
+            "category": category,
+            "gender": None,
+            "allows_prefix": [],
+            "allows_suffix": [],
+            "allows_infix": None,
+            "root_consonants": level1_root(word) or [],
+            "source": SOURCE_NATIVE_SPEAKER,
+            "validated": True,
+            "notes": "",
+        }
+        for word, category in categories.items()
+    ]
+    return [dict(e) for e in entries] + added
+
+
+def _with_note(notes: str, note: str) -> str:
+    """notes with note appended, unless it is empty or already there."""
+    if not note or note in notes.split("; "):
+        return notes
+    return f"{notes}; {note}" if notes else note
+
+
+def apply_category_review(
+    entries: list[dict], decisions: list[ReviewDecision]
+) -> list[dict]:
+    """
+    Write a category review into the lexicon.
+
+    Existing entries get their category through set_categories(), and
+    the reviewer's notes are appended to the entry's notes. New words
+    are appended through add_entries().
+
+    Args:
+        entries:   Lexicon entries.
+        decisions: Output of read_category_review().
+
+    Returns:
+        A new list of entries. The input is not modified.
+
+    Raises:
+        ValueError: As set_categories() and add_entries() do.
+    """
+    existing = [d for d in decisions if not d.new]
+    new = [d for d in decisions if d.new]
+
+    result = set_categories(entries, {d.word: d.category for d in existing})
+    notes = {d.word: d.notes for d in existing}
+    result = [
+        {**e, "notes": _with_note(e.get("notes") or "", notes[e["word"]])}
+        if e.get("word") in notes
+        else e
+        for e in result
+    ]
+
+    result = add_entries(result, {d.word: d.category for d in new})
+    new_notes = {d.word: d.notes for d in new}
+    return [
+        {**e, "notes": new_notes[e["word"]]} if e.get("word") in new_notes else e
+        for e in result
+    ]

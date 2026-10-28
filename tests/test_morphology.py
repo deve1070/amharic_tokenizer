@@ -120,6 +120,23 @@ class TestPrefixInventory:
     def test_can_be_reenabled_explicitly(self):
         assert "ግብ" in strip_prefixes("ምግብ", prefixes=("ም",))
 
+    def test_distributive_beye_is_one_prefix(self):
+        # በየአመቱ "every year" is በየ + አመት + ኡ. Read as በ + የ it would
+        # be "in the year's", a different word.
+        result = segment_word("በየአመቱ", lexicon("አመት"))
+        assert result.prefixes == ("በየ",)
+        assert result.morphemes == ["በየ", "አመት", "ኡ"]
+
+    def test_be_and_ye_still_attach_alone(self):
+        assert segment_word("በቤት", lexicon("ቤት")).prefixes == ("በ",)
+        assert segment_word("የቤት", lexicon("ቤት")).prefixes == ("የ",)
+
+    def test_beye_does_not_cut_into_a_stem_starting_with_ye(self):
+        # በየትኛው is በ + የትኛው "in which". With የትኛው an entry and ትኛው
+        # not one, the lexicon keeps የ inside the stem.
+        result = segment_word("በየትኛው", lexicon("የትኛው"))
+        assert result.morphemes == ["በ", "የትኛው"]
+
 
 # ── Affix removal with the morpheme named ────────────────────────────────────
 

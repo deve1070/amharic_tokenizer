@@ -121,6 +121,7 @@ ipython_config.py
 # pdm.toml
 .pdm-python
 .pdm-build/
+.claude
 
 # pixi
 #   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
@@ -225,7 +226,13 @@ __marimo__/
 # Lexicon working file: regenerable, carries evidence blocks.
 # The deliverable is lexicon.json, which stays tracked.
 amharic_morph/lexicon/candidates.json
+amharic_morph/lexicon/category_review.tsv
 commit_msg.txt
 
 # Verb-detection working file: regenerable from the corpus.
 verb_candidates.json
+
+# IRIT reference lexicons (Yeshambel, Mothe, Assabie, SIGIR 2021). Used
+# with the authors' permission for evaluation; downloaded, not committed.
+# Links in resource/resouce.txt.
+resource/irit/

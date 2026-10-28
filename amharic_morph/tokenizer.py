@@ -35,6 +35,7 @@ and its root is None. Levels 3 and 2 still work on it, since they need
 no lexicon. See morphology.segment_word() for why nothing is guessed.
 """
 
+from functools import lru_cache, partial
 from pathlib import Path
 
 from amharic_morph.levels import level1_root, level2_sound, level3_fidel
@@ -54,6 +55,11 @@ LEVELS = (MORPHEME, FIDEL, SOUND, ROOT, BPE)
 
 DEFAULT_LEXICON = Path(__file__).parent / "lexicon" / "lexicon.json"
 
+# Distinct words whose Level 4 analysis is kept. Running text repeats a
+# small vocabulary: the corpus has 42.9M tokens over 1.6M types, and a
+# cache of this size holds the head of that distribution.
+DEFAULT_CACHE_SIZE = 200_000
+
 
 class AmharicTokenizer:
     """
@@ -71,6 +77,7 @@ class AmharicTokenizer:
         self,
         lexicon_path: str | None = None,
         validated_only: bool = True,
+        cache_size: int = DEFAULT_CACHE_SIZE,
     ):
         """
         Args:
@@ -80,9 +87,25 @@ class AmharicTokenizer:
                             Default true — an unvalidated entry is a
                             corpus statistic, and segmenting against one
                             propagates its errors.
+            cache_size:     Distinct words whose Level 4 analysis is
+                            kept, least recently used evicted first. 0
+                            disables the cache.
+
+        Raises:
+            ValueError: If cache_size is negative.
+
+        The cache assumes the lexicon is not modified after construction.
+        Build a new tokenizer to segment against a changed lexicon.
         """
+        if cache_size < 0:
+            raise ValueError(f"cache_size must be >= 0, got {cache_size}")
         path = str(lexicon_path or DEFAULT_LEXICON)
         self.lexicon = lexicon_index(load_lexicon(path), validated_only)
+        # Segmentation is frozen, so one cached object can be handed to
+        # every caller.
+        self._segment = lru_cache(maxsize=cache_size)(
+            partial(segment_word, lexicon=self.lexicon)
+        )
 
     def words(self, text: str) -> list[str]:
         """
@@ -120,7 +143,7 @@ class AmharicTokenizer:
             >>> AmharicTokenizer().segment("ቤቶች").morphemes
             ['ቤት', 'ኦች']
         """
-        return segment_word(word, self.lexicon)
+        return self._segment(word)
 
     def root(self, word: str) -> list[str] | None:
         """

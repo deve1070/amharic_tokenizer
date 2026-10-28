@@ -13,11 +13,16 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from amharic_morph.lexicon_builder import (  # noqa: E402
+    REVIEW_COLUMNS,
     SCHEMA_FIELDS,
+    ReviewDecision,
+    add_entries,
     annotation_gaps,
+    apply_category_review,
     build_lexicon,
     lexicon_index,
     load_lexicon,
+    read_category_review,
     refresh_derived_fields,
     remove_entries,
     save_lexicon,
@@ -27,6 +32,7 @@ from amharic_morph.lexicon_builder import (  # noqa: E402
     validate_lexicon,
     validated_entries,
     validation_status,
+    write_category_review,
 )
 
 
@@ -436,3 +442,170 @@ class TestRemoveEntries:
 
     def test_empty(self):
         assert remove_entries([], []) == []
+
+
+# ── Category review ──────────────────────────────────────────────────────────
+#
+# The review file is a draft written for a native speaker. Only rows the
+# reviewer has marked may reach the lexicon, so a drafted category can never
+# be applied by default.
+
+
+def review_row(word="ሆነ", status="entry", proposed="verb", reviewed="", **kwargs):
+    row = {column: "" for column in REVIEW_COLUMNS}
+    row.update(word=word, status=status, proposed=proposed, reviewed=reviewed)
+    row.update(kwargs)
+    return row
+
+
+def round_trip(tmp_path, rows):
+    path = tmp_path / "review.tsv"
+    write_category_review(rows, str(path))
+    return read_category_review(str(path))
+
+
+def raises_value_error(call, *fragments):
+    try:
+        call()
+    except ValueError as e:
+        for fragment in fragments:
+            assert fragment in str(e)
+        return
+    raise AssertionError("expected ValueError")
+
+
+class TestReadCategoryReview:
+    def test_unreviewed_rows_are_not_returned(self, tmp_path):
+        assert round_trip(tmp_path, [review_row()]) == []
+
+    def test_ok_accepts_the_proposal(self, tmp_path):
+        decisions = round_trip(tmp_path, [review_row(reviewed="ok")])
+        assert decisions == [ReviewDecision("ሆነ", "verb", "", False)]
+
+    def test_a_category_overrides_the_proposal(self, tmp_path):
+        decisions = round_trip(tmp_path, [review_row("ስራ", reviewed="noun")])
+        assert decisions[0].category == "noun"
+
+    def test_marks_are_case_and_space_insensitive(self, tmp_path):
+        decisions = round_trip(tmp_path, [review_row(reviewed=" OK ")])
+        assert decisions[0].category == "verb"
+
+    def test_carries_reviewer_notes(self, tmp_path):
+        row = review_row("ዋጋ", proposed="noun", reviewed="ok", notes="also ተዋጋ")
+        assert round_trip(tmp_path, [row])[0].notes == "also ተዋጋ"
+
+    def test_new_row_is_flagged_new(self, tmp_path):
+        row = review_row("ድራማ", status="new", proposed="noun", reviewed="ok")
+        assert round_trip(tmp_path, [row])[0].new is True
+
+    def test_rejected_new_row_is_not_returned(self, tmp_path):
+        row = review_row("ድራማ", status="new", proposed="noun", reviewed="reject")
+        assert round_trip(tmp_path, [row]) == []
+
+    def test_rejecting_an_existing_entry_raises(self, tmp_path):
+        # Removing an entry goes through remove_entries, where the reason
+        # is recorded; a category review cannot do it silently.
+        raises_value_error(
+            lambda: round_trip(tmp_path, [review_row(reviewed="reject")]), "ሆነ"
+        )
+
+    def test_unrecognised_mark_raises_with_the_word(self, tmp_path):
+        raises_value_error(
+            lambda: round_trip(tmp_path, [review_row(reviewed="action")]),
+            "ሆነ",
+            "action",
+        )
+
+    def test_ok_on_an_invalid_proposal_raises(self, tmp_path):
+        raises_value_error(
+            lambda: round_trip(tmp_path, [review_row(proposed="", reviewed="ok")]),
+            "ሆነ",
+        )
+
+    def test_unknown_status_raises(self, tmp_path):
+        raises_value_error(
+            lambda: round_trip(tmp_path, [review_row(status="maybe", reviewed="ok")]),
+            "maybe",
+        )
+
+    def test_preserves_file_order(self, tmp_path):
+        rows = [review_row("ሆነ", reviewed="ok"), review_row("ቤት", proposed="noun", reviewed="ok")]
+        assert [d.word for d in round_trip(tmp_path, rows)] == ["ሆነ", "ቤት"]
+
+    def test_text_with_quotes_survives(self, tmp_path):
+        row = review_row(reviewed="ok", gloss='"to become"', notes="a\tb")
+        decision = round_trip(tmp_path, [row])[0]
+        assert decision.notes == "a\tb"
+
+
+class TestAddEntries:
+    def test_adds_a_validated_native_speaker_entry(self):
+        result = add_entries([entry("ቤት")], {"ድራማ": "noun"})
+        added = result[-1]
+        assert added["word"] == "ድራማ"
+        assert added["category"] == "noun"
+        assert added["validated"] is True
+        assert added["source"] == "native_speaker"
+
+    def test_computes_the_root(self):
+        assert add_entries([], {"ፈጠራ": "noun"})[0]["root_consonants"] == ["ፍ", "ጥ", "ር"]
+
+    def test_affix_fields_start_empty(self):
+        added = add_entries([], {"ድራማ": "noun"})[0]
+        assert added["allows_prefix"] == [] and added["allows_suffix"] == []
+
+    def test_output_is_schema_clean(self):
+        assert schema_errors(add_entries([], {"ድራማ": "noun"})[0]) == []
+
+    def test_rejects_a_word_already_present(self):
+        raises_value_error(lambda: add_entries([entry("ቤት")], {"ቤት": "noun"}), "ቤት")
+
+    def test_rejects_an_unknown_category(self):
+        raises_value_error(lambda: add_entries([], {"ድራማ": "thing"}), "thing")
+
+    def test_does_not_mutate_the_input(self):
+        entries = [entry("ቤት")]
+        add_entries(entries, {"ድራማ": "noun"})
+        assert len(entries) == 1
+
+
+class TestApplyCategoryReview:
+    def test_sets_categories(self):
+        result = apply_category_review(
+            [entry("ሆነ", validated=True)], [ReviewDecision("ሆነ", "verb", "", False)]
+        )
+        assert result[0]["category"] == "verb"
+
+    def test_appends_notes_to_existing_ones(self):
+        result = apply_category_review(
+            [entry("ዋጋ", notes="frequent")],
+            [ReviewDecision("ዋጋ", "noun", "also ተዋጋ", False)],
+        )
+        assert result[0]["notes"] == "frequent; also ተዋጋ"
+
+    def test_does_not_repeat_a_note_already_recorded(self):
+        decision = ReviewDecision("ዋጋ", "noun", "also ተዋጋ", False)
+        once = apply_category_review([entry("ዋጋ")], [decision])
+        assert apply_category_review(once, [decision])[0]["notes"] == "also ተዋጋ"
+
+    def test_adds_new_entries_at_the_end(self):
+        result = apply_category_review(
+            [entry("ቤት")], [ReviewDecision("ድራማ", "noun", "loanword", True)]
+        )
+        assert [e["word"] for e in result] == ["ቤት", "ድራማ"]
+        assert result[-1]["notes"] == "loanword"
+
+    def test_unknown_existing_word_raises(self):
+        raises_value_error(
+            lambda: apply_category_review([entry("ቤት")], [ReviewDecision("ሆኑ", "verb", "", False)]),
+            "ሆኑ",
+        )
+
+    def test_does_not_mutate_the_input(self):
+        entries = [entry("ሆነ")]
+        apply_category_review(entries, [ReviewDecision("ሆነ", "verb", "", False)])
+        assert entries[0]["category"] is None
+
+    def test_no_decisions_is_a_copy(self):
+        entries = [entry("ሆነ")]
+        assert apply_category_review(entries, []) == entries
