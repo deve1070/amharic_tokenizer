@@ -259,9 +259,14 @@ class TestLevelNames:
         with pytest.raises(ValueError, match="unknown level"):
             tok.tokenize("ቤቶች", level="syllable")
 
-    def test_bpe_says_why_it_is_unavailable(self, tok):
-        with pytest.raises(NotImplementedError, match="not trained yet"):
+    def test_bpe_without_a_model_names_the_missing_file(self, tmp_path):
+        tok = AmharicTokenizer(subword_model=tmp_path / "missing.model")
+        with pytest.raises(FileNotFoundError, match="missing.model"):
             tok.tokenize("ቤቶች", level="bpe")
+
+    def test_other_levels_never_load_the_subword_model(self, tmp_path):
+        tok = AmharicTokenizer(subword_model=tmp_path / "missing.model")
+        assert tok.tokenize("ቤቶች") == ["ቤት", "ኦች"]
 
     def test_every_advertised_level_is_reachable(self, tok):
         for level in LEVELS:

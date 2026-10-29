@@ -48,3 +48,5 @@ include = ["src/amharic_morph", "tests", "README.md", "LICENSE", "pyproject.toml
 testpaths = ["tests"]
 markers = ["packaging: builds and installs the wheel; run with -m packaging"]
 addopts = "-m 'not packaging'"
+# sentencepiece's compiled bindings warn on import under Python 3.12+.
+filterwarnings = ["ignore:builtin type swigvarlink has no __module__:DeprecationWarning"]

@@ -94,17 +94,22 @@ class TestTrainingLine:
 
 
 @pytest.fixture(scope="module")
-def models(tok, tmp_path_factory):
+def model_files(tok, tmp_path_factory):
     pytest.importorskip("sentencepiece")
     out = tmp_path_factory.mktemp("models")
-    built = {}
+    files = {}
     for morphemes in (True, False):
         text = out / f"{morphemes}.txt"
         text.write_text("\n".join(training_line(l, tok, morphemes) for l in LINES * 50) + "\n", encoding="utf-8")
         prefix = out / ("morph" if morphemes else "plain")
         train(text, prefix, vocab_size=400)
-        built[morphemes] = SubwordModel(f"{prefix}.model", tok, morphemes=morphemes)
-    return built
+        files[morphemes] = f"{prefix}.model"
+    return files
+
+
+@pytest.fixture(scope="module")
+def models(tok, model_files):
+    return {m: SubwordModel(path, tok, morphemes=m) for m, path in model_files.items()}
 
 
 class TestSubwordModel:
@@ -145,3 +150,27 @@ class TestSubwordModel:
 
     def test_latin_tag_is_one_piece(self, models):
         assert "<LATIN>" in models[True].encode("<LATIN>mast</LATIN>")
+
+
+class TestTokenizerSubwordLevel:
+    """level="bpe", encode() and decode() on AmharicTokenizer."""
+
+    @pytest.fixture(scope="class")
+    def sub_tok(self, model_files):
+        return AmharicTokenizer(subword_model=model_files[True])
+
+    def test_bpe_level_gives_readable_pieces(self, sub_tok):
+        pieces = sub_tok.tokenize("ቤቶቹን አየሁ።", level="bpe")
+        assert pieces[0].startswith("▁")
+        assert "".join(pieces).replace("▁", "") == "".join(SubwordModel.readable(
+            sub_tok.subword_model.encode("ቤቶቹን አየሁ ።")
+        )).replace("▁", "")
+
+    def test_encode_decode_round_trip(self, sub_tok):
+        # The text comes back in its normalized form, words joined by one
+        # space and punctuation padded, as tokenize() sees it.
+        text = "ቤቶቹን አየሁ ። ይሆናል ብሎ ነበር ።"
+        assert sub_tok.decode(sub_tok.encode(text)) == text
+
+    def test_encode_normalizes_first(self, sub_tok):
+        assert sub_tok.decode(sub_tok.encode("ቤቶቹን አየሁ።")) == "ቤቶቹን አየሁ ።"

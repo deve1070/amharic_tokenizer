@@ -32,6 +32,14 @@ corpus pipeline first — normalize, punctuation, script classification —
 because every level below assumes normalized input. Without Layer 0 the
 same word in two spellings gives two different roots.
 
+── The subword level ───────────────────────────────────────────────────
+
+level="bpe" runs a SentencePiece unigram model over lossless sound text,
+cut at Level 4's morpheme boundaries (see bpe.py). No piece crosses a
+morpheme boundary, and decode(encode(text)) gives the normalized text
+back exactly. The model is loaded on first use, so the other levels never
+need sentencepiece, which is the optional extra amharic-morph[bpe].
+
 ── Unknown words ────────────────────────────────────────────────────────
 
 A word with no lexicon anchor is returned whole at the morpheme level
@@ -58,6 +66,7 @@ BPE = "bpe"
 LEVELS = (MORPHEME, FIDEL, SOUND, ROOT, BPE)
 
 DEFAULT_LEXICON = Path(__file__).parent / "lexicon" / "lexicon.json"
+DEFAULT_SUBWORD_MODEL = Path(__file__).parent / "models" / "morph_16k.model"
 
 # Distinct words whose Level 4 analysis is kept. Running text repeats a
 # small vocabulary: the corpus has 42.9M tokens over 1.6M types, and a
@@ -82,6 +91,8 @@ class AmharicTokenizer:
         lexicon_path: str | None = None,
         validated_only: bool = True,
         cache_size: int = DEFAULT_CACHE_SIZE,
+        subword_model: str | Path | None = None,
+        subword_morphemes: bool = True,
     ):
         """
         Args:
@@ -94,6 +105,11 @@ class AmharicTokenizer:
             cache_size:     Distinct words whose Level 4 analysis is
                             kept, least recently used evicted first. 0
                             disables the cache.
+            subword_model:  SentencePiece model for level="bpe", encode()
+                            and decode(). Defaults to the one packaged
+                            with the library.
+            subword_morphemes: Whether that model was trained
+                            morpheme-aware. False for a plain model.
 
         Raises:
             ValueError: If cache_size is negative.
@@ -103,6 +119,9 @@ class AmharicTokenizer:
         """
         if cache_size < 0:
             raise ValueError(f"cache_size must be >= 0, got {cache_size}")
+        self._subword_path = Path(subword_model or DEFAULT_SUBWORD_MODEL)
+        self._subword_morphemes = subword_morphemes
+        self._subword = None
         path = str(lexicon_path or DEFAULT_LEXICON)
         self.lexicon = lexicon_index(load_lexicon(path), validated_only)
         # Segmentation is frozen, so one cached object can be handed to
@@ -116,6 +135,47 @@ class AmharicTokenizer:
                 starts=anchor_starts(self.lexicon, stems),
             )
         )
+
+    @property
+    def subword_model(self):
+        """
+        The subword model, loaded on first use.
+
+        Raises:
+            FileNotFoundError: If the model file does not exist.
+            ImportError:       If sentencepiece is not installed.
+        """
+        if self._subword is None:
+            if not self._subword_path.exists():
+                raise FileNotFoundError(f"no subword model at {self._subword_path}")
+            from amharic_morph.bpe import SubwordModel
+            self._subword = SubwordModel(self._subword_path, self, morphemes=self._subword_morphemes)
+        return self._subword
+
+    def encode(self, text: str) -> list[int]:
+        """
+        The text as subword vocabulary ids.
+
+        Args:
+            text: A word, a sentence, or a passage.
+
+        Returns:
+            Ids of the pieces of every word, in order.
+        """
+        return self.subword_model.encode_ids(" ".join(self.words(text)))
+
+    def decode(self, ids: list[int]) -> str:
+        """
+        The text that encode() was given, in its normalized form.
+
+        Args:
+            ids: Vocabulary ids from encode().
+
+        Returns:
+            The words joined by single spaces, punctuation padded, as
+            words() gives them.
+        """
+        return self.subword_model.decode_ids(ids)
 
     def words(self, text: str) -> list[str]:
         """
@@ -219,9 +279,9 @@ class AmharicTokenizer:
             root of None is not a token.
 
         Raises:
-            ValueError:          If level is not a known level.
-            NotImplementedError: For bpe, until a SentencePiece model
-                                 is trained.
+            ValueError:        If level is not a known level.
+            FileNotFoundError: For bpe, if the subword model is missing.
+            ImportError:       For bpe, if sentencepiece is not installed.
 
         Examples:
             >>> tok = AmharicTokenizer()
@@ -230,11 +290,6 @@ class AmharicTokenizer:
             >>> tok.tokenize("ቤቶች", level="fidel")
             ['ቤ', 'ቶ', 'ች']
         """
-        if level == BPE:
-            raise NotImplementedError(
-                "The SentencePiece model is not trained yet. Train it on "
-                "morpheme-segmented output first — see spec section 5.2."
-            )
         if level not in LEVELS:
             raise ValueError(
                 f"unknown level: {level!r}. Expected one of {', '.join(LEVELS)}"
@@ -250,4 +305,7 @@ class AmharicTokenizer:
                 tokens.extend(level2_sound(word))
             elif level == ROOT:
                 tokens.extend(self.root(word) or ())
+            elif level == BPE:
+                model = self.subword_model
+                tokens.extend(model.readable(model.encode_word(word)))
         return tokens
