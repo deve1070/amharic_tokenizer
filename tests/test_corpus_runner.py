@@ -11,6 +11,7 @@ import json
 
 from amharic_morph.corpus_runner import (
     _dedup_digest,
+    read_records,
     run_corpus,
 )
 
@@ -184,6 +185,54 @@ class TestStreaming:
 
 
 # ── Dedup digest ──────────────────────────────────────────────────────────────
+
+
+class TestReadRecords:
+    """
+    A corpus may come as unbroken text, one gigabyte on a single line.
+    Records are bounded: an over-long line is cut after a sentence end.
+    """
+
+    def test_short_lines_pass_through(self, tmp_path):
+        path = write_corpus(tmp_path, [GOOD_A, GOOD_B])
+        with open(path, encoding="utf-8") as f:
+            assert [r.rstrip("\n") for r in read_records(f, max_chars=1000)] == [GOOD_A, GOOD_B]
+
+    def test_long_line_is_cut_after_a_sentence_end(self, tmp_path):
+        path = tmp_path / "one_line.txt"
+        path.write_text(" ".join([GOOD_A, GOOD_B, GOOD_C] * 20), encoding="utf-8")
+        with open(path, encoding="utf-8") as f:
+            records = list(read_records(f, max_chars=100, chunk_chars=37))
+        assert all(len(r) <= 100 for r in records)
+        assert all(r.rstrip().endswith("።") for r in records[:-1])
+        assert "".join(records) == path.read_text(encoding="utf-8")
+
+    def test_no_sentence_end_falls_back_to_a_space(self, tmp_path):
+        path = tmp_path / "no_end.txt"
+        path.write_text("ቤት " * 200, encoding="utf-8")
+        with open(path, encoding="utf-8") as f:
+            records = list(read_records(f, max_chars=50, chunk_chars=13))
+        assert all(len(r) <= 50 for r in records)
+        assert "".join(records) == path.read_text(encoding="utf-8")
+
+    def test_unbroken_text_runs_through_the_pipeline(self, tmp_path):
+        src = tmp_path / "one_line.txt"
+        src.write_text(f"{GOOD_A} {GOOD_B} {GOOD_C}", encoding="utf-8")
+        out = tmp_path / "corpus.txt"
+        run_corpus(str(src), output_path=str(out), metadata_path=None, statistics_path=None,
+                   progress_stream=False)
+        assert len(out.read_text(encoding="utf-8").splitlines()) == 3
+
+
+class TestDedupAgainst:
+    """Sentences already in another corpus are dropped as duplicates."""
+
+    def test_drops_sentences_of_an_existing_corpus(self, tmp_path):
+        existing = write_corpus(tmp_path, [GOOD_A], name="existing.txt")
+        report, out, _, _ = run(tmp_path, [GOOD_A, GOOD_B], dedup_against=[existing])
+        kept = out.read_text(encoding="utf-8").splitlines()
+        assert len(kept) == 1 and kept[0].startswith("አዲስ አበባ")
+        assert report["run"]["dedup_against"] == [existing]
 
 
 class TestDedupDigest:
