@@ -1426,7 +1426,14 @@
       "ን"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሆን",
+      "jussive": "ሁን",
+      "gerund": "ሆን",
+      "imperfective_palatal": "ሆኝ",
+      "jussive_palatal": "ሁኝ",
+      "gerund_palatal": "ሆኝ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1578,7 +1585,13 @@
       "ል"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ል",
+      "jussive": "በል",
+      "gerund": "ብል",
+      "jussive_palatal": "በይ",
+      "gerund_palatal": "ብይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "two verbs share this form; negative is irregular (የለም)"
@@ -3141,7 +3154,13 @@
       "ብ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ገብ",
+      "jussive": "ግብ",
+      "gerund": "ገብ",
+      "imperfective_palatal": "ገብ",
+      "jussive_palatal": "ግብ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3365,7 +3384,13 @@
       "ር"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሰር",
+      "jussive": "ስር",
+      "gerund": "ሰር",
+      "imperfective_palatal": "ሰር",
+      "jussive_palatal": "ስር"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5332,7 +5357,13 @@
       "ስ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ነስ",
+      "jussive": "ነስ",
+      "gerund": "ተነስ",
+      "imperfective_palatal": "ነሽ",
+      "jussive_palatal": "ነሽ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5671,7 +5702,14 @@
       "ል"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ባል",
+      "jussive": "ባል",
+      "gerund": "ተብል",
+      "imperfective_palatal": "ባይ",
+      "jussive_palatal": "ባይ",
+      "gerund_palatal": "ተብይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5775,7 +5813,13 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "መጥ",
+      "jussive": "ምጥ",
+      "gerund": "መጥ",
+      "imperfective_palatal": "መጭ",
+      "jussive_palatal": "ምጭ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6348,7 +6392,13 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ወጥ",
+      "jussive": "ውጥ",
+      "gerund": "ወጥ",
+      "imperfective_palatal": "ወጭ",
+      "jussive_palatal": "ውጭ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6782,7 +6832,14 @@
       "ድ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሄድ",
+      "jussive": "ሂድ",
+      "gerund": "ሄድ",
+      "imperfective_palatal": "ሄጅ",
+      "jussive_palatal": "ሂጅ",
+      "gerund_palatal": "ሄጅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6926,7 +6983,14 @@
       "ስ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ደርስ",
+      "jussive": "ድረስ",
+      "gerund": "ደርስ",
+      "imperfective_palatal": "ደርሽ",
+      "jussive_palatal": "ድረሽ",
+      "gerund_palatal": "ደርሽ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6999,7 +7063,13 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ገኝ",
+      "jussive": "ገኝ",
+      "gerund": "ተገኝ",
+      "imperfective_palatal": "ገኝ",
+      "jussive_palatal": "ገኝ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7272,7 +7342,13 @@
       "ል"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሞል",
+      "jussive": "ሙል",
+      "gerund": "ሞል",
+      "imperfective_palatal": "ሞይ",
+      "jussive_palatal": "ሙይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7559,7 +7635,14 @@
       "ር"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ኖር",
+      "jussive": "ኑር",
+      "gerund": "ኑር",
+      "imperfective_palatal": "ኖር",
+      "jussive_palatal": "ኑር",
+      "gerund_palatal": "ኑር"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7737,7 +7820,13 @@
       "ል"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "በል",
+      "jussive": "በል",
+      "gerund": "በል",
+      "imperfective_palatal": "በይ",
+      "jussive_palatal": "በይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9146,7 +9235,14 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "መለስ",
+      "jussive": "መልስ",
+      "gerund": "መልስ",
+      "imperfective_palatal": "መለሽ",
+      "jussive_palatal": "መልሽ",
+      "gerund_palatal": "መልሽ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13220,7 +13316,14 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ያዝ",
+      "jussive": "ያዝ",
+      "gerund": "ይዝ",
+      "imperfective_palatal": "ያዥ",
+      "jussive_palatal": "ይዥ",
+      "gerund_palatal": "ይዥ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13359,7 +13462,13 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ከፍ",
+      "jussive": "ክፍ",
+      "gerund": "ከፍ",
+      "imperfective_palatal": "ከፍ",
+      "jussive_palatal": "ከፍ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13827,7 +13936,13 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሰጥ",
+      "jussive": "ስጥ",
+      "gerund": "ሰጥ",
+      "imperfective_palatal": "ሰጭ",
+      "jussive_palatal": "ስጭ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13936,7 +14051,14 @@
       "ት"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሞት",
+      "jussive": "ሙት",
+      "gerund": "ሞት",
+      "imperfective_palatal": "ሞች",
+      "jussive_palatal": "ሙች",
+      "gerund_palatal": "ሞች"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15098,7 +15220,14 @@
       "ም"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሾም",
+      "jussive": "ሾም",
+      "gerund": "ተሹም",
+      "imperfective_palatal": "ሾም",
+      "jussive_palatal": "ሾም",
+      "gerund_palatal": "ተሹም"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also a personal name"
@@ -15232,7 +15361,14 @@
       "ግ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ፈልግ",
+      "jussive": "ፈልግ",
+      "gerund": "ፈልግ",
+      "imperfective_palatal": "ፈልግ",
+      "jussive_palatal": "ፍለግ",
+      "gerund_palatal": "ፈልግ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15680,7 +15816,14 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ወድቅ",
+      "jussive": "ውደቅ",
+      "gerund": "ወድቅ",
+      "imperfective_palatal": "ወድቅ",
+      "jussive_palatal": "ውደቅ",
+      "gerund_palatal": "ወድቅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15721,7 +15864,13 @@
       "ም"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሰም",
+      "jussive": "ስም",
+      "gerund": "ሰም",
+      "imperfective_palatal": "ሰም",
+      "jussive_palatal": "ሰም"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15880,7 +16029,14 @@
       "ን"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ወስን",
+      "jussive": "ወስን",
+      "gerund": "ወስን",
+      "imperfective_palatal": "ወስኝ",
+      "jussive_palatal": "ወስኝ",
+      "gerund_palatal": "ወስኝ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16207,7 +16363,14 @@
       "ድ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ወደድ",
+      "jussive": "ውደድ",
+      "gerund": "ወድ",
+      "imperfective_palatal": "ወደጅ",
+      "jussive_palatal": "ውደጅ",
+      "gerund_palatal": "ወድጅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19307,7 +19470,14 @@
       "ግ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ደረግ",
+      "jussive": "ደረግ",
+      "gerund": "ተደርግ",
+      "imperfective_palatal": "ደረግ",
+      "jussive_palatal": "ደረግ",
+      "gerund_palatal": "ተደርግ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20499,7 +20669,14 @@
       "ር"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ጀምር",
+      "jussive": "ጀምር",
+      "gerund": "ጀምር",
+      "imperfective_palatal": "ጀምር",
+      "jussive_palatal": "ጀምር",
+      "gerund_palatal": "ጀምር"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21987,7 +22164,13 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ሰጥ",
+      "jussive": "ሰጥ",
+      "gerund": "ተሰጥ",
+      "imperfective_palatal": "ሰጭ",
+      "jussive_palatal": "ሰጭ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22627,7 +22810,14 @@
       "ብ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ቀርብ",
+      "jussive": "ቅረብ",
+      "gerund": "ቀርብ",
+      "imperfective_palatal": "ቀርብ",
+      "jussive_palatal": "ቅረብ",
+      "gerund_palatal": "ቀርብ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22902,7 +23092,13 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "በዝ",
+      "jussive": "ብዝ",
+      "gerund": "በዝ",
+      "imperfective_palatal": "በዥ",
+      "jussive_palatal": "በዥ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23359,7 +23555,14 @@
       "ር"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ፈጠር",
+      "jussive": "ፈጠር",
+      "gerund": "ተፈጥር",
+      "imperfective_palatal": "ፈጠር",
+      "jussive_palatal": "ፈጠር",
+      "gerund_palatal": "ተፈጥር"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23733,7 +23936,14 @@
       "ም"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ቆም",
+      "jussive": "ቁም",
+      "gerund": "ቆም",
+      "imperfective_palatal": "ቆም",
+      "jussive_palatal": "ቁም",
+      "gerund_palatal": "ቆም"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23918,7 +24128,13 @@
       "ይ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ቆይ",
+      "jussive": "ቆይ",
+      "gerund": "ቆይ",
+      "imperfective_palatal": "ቆይ",
+      "jussive_palatal": "ቋይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25485,7 +25701,13 @@
       "ር"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ቀር",
+      "jussive": "ቅር",
+      "gerund": "ቀር",
+      "imperfective_palatal": "ቀር",
+      "jussive_palatal": "ቅር"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25669,7 +25891,14 @@
       "ል"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "መስል",
+      "jussive": "ምሰል",
+      "gerund": "መስል",
+      "imperfective_palatal": "መስይ",
+      "jussive_palatal": "ምሰይ",
+      "gerund_palatal": "መስይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26560,7 +26789,14 @@
       "ድ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ወርድ",
+      "jussive": "ውረድ",
+      "gerund": "ወረድ",
+      "imperfective_palatal": "ወርጅ",
+      "jussive_palatal": "ውረጅ",
+      "gerund_palatal": "ወረጅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26692,7 +26928,13 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ጠፍ",
+      "jussive": "ጥፋ",
+      "gerund": "ጠፍ",
+      "imperfective_palatal": "ጠፍ",
+      "jussive_palatal": "ጥፋ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26911,7 +27153,14 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ዘልቅ",
+      "jussive": "ዝለቅ",
+      "gerund": "ዘልቅ",
+      "imperfective_palatal": "ዘልቅ",
+      "jussive_palatal": "ዝለቅ",
+      "gerund_palatal": "ዘልቅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27762,7 +28011,14 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ጠይቅ",
+      "jussive": "ጠይቅ",
+      "gerund": "ጠይቅ",
+      "imperfective_palatal": "ጠይቅ",
+      "jussive_palatal": "ጠይቅ",
+      "gerund_palatal": "ጠይቅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27930,7 +28186,14 @@
       "ር"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ፈጥር",
+      "jussive": "ፍጠር",
+      "gerund": "ፈጠር",
+      "imperfective_palatal": "ፈጥር",
+      "jussive_palatal": "ፍጠር",
+      "gerund_palatal": "ፈጠር"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28027,7 +28290,13 @@
       "ይ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ታይ",
+      "jussive": "ታይ",
+      "gerund": "ታይ",
+      "imperfective_palatal": "ታይ",
+      "jussive_palatal": "ታይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28771,7 +29040,14 @@
       "ስ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "መለስ",
+      "jussive": "መልስ",
+      "gerund": "መልስ",
+      "imperfective_palatal": "መለሽ",
+      "jussive_palatal": "መልሽ",
+      "gerund_palatal": "መልሽ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -29412,7 +29688,14 @@
       "ድ"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ወስድ",
+      "jussive": "ውሰድ",
+      "gerund": "ወስድ",
+      "imperfective_palatal": "ወስጅ",
+      "jussive_palatal": "ውሰጅ",
+      "gerund_palatal": "ወስጅ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -29590,7 +29873,14 @@
       "ል"
     ],
     "root_source": "native_speaker",
-    "stems": {},
+    "stems": {
+      "imperfective": "ቀበል",
+      "jussive": "ቀበል",
+      "gerund": "ተቀብል",
+      "imperfective_palatal": "ቀበይ",
+      "jussive_palatal": "ቀበይ",
+      "gerund_palatal": "ተቀብይ"
+    },
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
