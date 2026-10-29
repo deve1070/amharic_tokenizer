@@ -30334,5 +30334,75 @@
     "source": "native_speaker",
     "validated": true,
     "notes": "personal name; not በዛ + ብህ"
+  },
+  {
+    "word": "ወደ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "written apart from the next word (ወደ ትምህርት ቤት); also the prefix ወደ"
+  },
+  {
+    "word": "ስለ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "written apart from the next word (ወደ ትምህርት ቤት); also the prefix ስለ"
+  },
+  {
+    "word": "እስከ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ስ",
+      "ክ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "written apart from the next word (ወደ ትምህርት ቤት); also the prefix እስከ"
+  },
+  {
+    "word": "እንደ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "written apart from the next word (ወደ ትምህርት ቤት); also the prefix እንደ"
   }
 ]
