@@ -867,6 +867,7 @@ def verbs():
         "ኖረ": verb("ኖረ", imperfective="ኖር"),
         "መሰለ": verb("መሰለ", imperfective="መስል"),
         "ደረሰ": verb("ደረሰ", imperfective="ደርስ", jussive="ድረስ"),
+        "አለ": verb("አለ", imperfective="ል", jussive="በል", gerund="ብል", gerund_palatal="ብይ"),
     }
     index["ቤት"] = {"word": "ቤት", "category": "noun", "allows_prefix": [], "allows_suffix": []}
     return index
@@ -989,6 +990,50 @@ class TestStemVowel:
 
     def test_gerund_a_keeps_its_reading(self):
         assert suffix_readings(seg("ሆና"), "ኣ") == ("gerund_3fs",)
+
+
+class TestSay:
+    """አለ "say": its written stems are ል, በል, ብል and ብይ."""
+
+    def test_one_letter_imperfective_stem(self):
+        assert seg("ይላል").morphemes == ["ይ", "አለ", "ኣል"]
+        assert seg("ሲል").morphemes == ["ሲ", "አለ"]
+        assert seg("የሚል").morphemes == ["የ", "ሚ", "አለ"]
+
+    def test_gerund(self):
+        assert seg("ብሎ").morphemes == ["አለ", "ኦ"]
+        assert seg("ብዬ").morphemes == ["አለ", "ኤ"]
+
+    def test_first_plural_after_a_subordinator_is_n(self):
+        assert seg("ስንል").morphemes == ["ስ", "ን", "አለ"]
+
+
+class TestFirstPersonPrefixIsWordInitial:
+    """
+    እ and እን are written only at the start of a verb. After a
+    subordinator the 1s has no prefix and the 1pl is ን (ስንል). IRIT has
+    no subordinator followed by እ.
+    """
+
+    def test_e_after_a_subordinator_is_refused(self):
+        # ስእል is "picture", not ስ + እ + ል.
+        assert seg("ስእል").known is False
+        assert seg("ልእልና").known is False
+
+    def test_e_alone_still_works(self):
+        assert seg("እላለሁ").morphemes == ["እ", "አለ", "ኣል", "ሁ"]
+
+
+class TestSubordinateClauseShape:
+    def test_no_auxiliary_after_a_subordinator(self):
+        # ቢላል is the name Bilal: ሲሆናል, ቢሆናል are not Amharic.
+        assert seg("ቢላል").known is False
+        assert seg("ሲሆናል").known is False
+
+    def test_negative_relative_needs_a_prefix_before_it(self):
+        # ማይል is "mile"; the negative relative is የማይል, እንደማይል.
+        assert seg("ማይል").known is False
+        assert seg("የማይል").morphemes == ["የ", "ማ", "ይ", "አለ"]
 
 
 class TestNegativeImperfective:

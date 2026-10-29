@@ -381,6 +381,11 @@ class PrefixShape:
         needs_person: True if a person prefix must follow (ስ in ስትሄድ).
         pairs_with:   A suffix the word must also carry (ም for አል, አይ).
         readings:     What it means, or None where nothing is recorded.
+        first_only:   True if it is written only as the word's first
+                      prefix. After a subordinator the 1s has no prefix
+                      and the 1pl is ን: ስንል, never ስእል or ስእንል.
+        not_first:    True if another prefix must come before it: the
+                      negative relative is የማይል, እንደማይል, never ማይል.
     """
 
     morpheme: str
@@ -391,15 +396,18 @@ class PrefixShape:
     needs_person: bool = False
     pairs_with: str | None = None
     readings: tuple[str, ...] | None = None
+    first_only: bool = False
+    not_first: bool = False
 
 
-def _sub(morpheme, reading, person):
+def _sub(morpheme, reading, person, not_first=False):
     return PrefixShape(morpheme, VERB, SUBORDINATOR, IMPERFECTIVE, person=person,
-                       needs_person=not person, readings=(reading,))
+                       needs_person=not person, readings=(reading,), not_first=not_first)
 
 
-def _person(morpheme, *readings, aspects=_IMPERFECTIVE_OR_JUSSIVE):
-    return PrefixShape(morpheme, VERB, PERSON, aspects, person=True, readings=readings)
+def _person(morpheme, *readings, aspects=_IMPERFECTIVE_OR_JUSSIVE, first_only=False):
+    return PrefixShape(morpheme, VERB, PERSON, aspects, person=True, readings=readings,
+                       first_only=first_only)
 
 
 # Prepositions attach to nouns and to verbs, a verb's perfective (የሆነ)
@@ -414,7 +422,7 @@ PREFIX_TABLE = (
     _sub("ቢ", "if", True),
     _sub("እንዲ", "so_that", True),
     _sub("ሳይ", "without", True),
-    _sub("ማ", "relative_negative", False),
+    _sub("ማ", "relative_negative", False, not_first=True),
     _sub("ስ", "when", False),
     _sub("ል", "purpose", False),
     _sub("ብ", "if", False),
@@ -425,8 +433,8 @@ PREFIX_TABLE = (
                 readings=("negative", "subject_3ms")),
     _person("ይ", "subject_3ms"),
     _person("ት", "subject_2ms", "subject_3fs"),
-    _person("እ", "subject_1s"),
-    _person("እን", "subject_1pl"),
+    _person("እ", "subject_1s", first_only=True),
+    _person("እን", "subject_1pl", first_only=True),
     _person("ን", "subject_1pl"),
     _person("ል", "subject_1s", aspects=JUSSIVE),
 )
@@ -953,6 +961,7 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
       except that prepositions may stack.
     - A bound suffix is followed by another, a prefix that needs a
       person is followed by one, and a paired prefix (አል, አይ) has its ም.
+      እ and እን come first; ማ never does.
     - Per aspect: an imperfective needs a person, and after a
       preposition a subordinator as well (የሚሆን, not የይሆናል). A jussive
       needs a person prefix and takes no other. A gerund takes no prefix
@@ -976,6 +985,10 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     slots = [p.slot for p in prefixes]
     if any(a > b or (a == b and a != PREPOSITION) for a, b in zip(slots, slots[1:])):
         return False
+    if any(p.first_only for p in prefixes[1:]):
+        return False
+    if prefixes and prefixes[0].not_first:
+        return False
     if shapes and shapes[-1].bound:
         return False
     for i, p in enumerate(prefixes):
@@ -998,6 +1011,11 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
             return False
     if aspect in IMPERFECTIVE:
         if not any(p.person for p in prefixes):
+            return False
+        # The auxiliary ends a main clause: ይሆናል, never ሲሆናል.
+        if any(p.slot == SUBORDINATOR for p in prefixes) and any(
+            s.position(category) == AUX for s in shapes
+        ):
             return False
         if any(p.slot == PREPOSITION for p in prefixes) and not any(p.slot == SUBORDINATOR for p in prefixes):
             return False
