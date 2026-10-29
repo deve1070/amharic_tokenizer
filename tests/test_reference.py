@@ -248,6 +248,22 @@ class TestInflectionAgreement:
         score = inflection_agreement(segment, reference, {"ቤታቸው": 1})
         assert score.agreeing_tokens == 1
 
+    def test_stem_vowel_is_compared_on_a_derived_verb_stem(self):
+        # የሚገባ is የ + ሚ + ገብ + ኣ on both sides.
+        reference = {"የሚገባ": (ReferenceAnalysis(("የ", "ሚ", "ገብ", "አ"), ()),)}
+        segment = segmenter({"የሚገባ": Segmentation(
+            "የሚገባ", "ገባ", prefixes=("የ", "ሚ"), suffixes=("ኣ",), category="verb",
+            aspect="imperfective")})
+        assert inflection_agreement(segment, reference, {"የሚገባ": 1}).agreeing_tokens == 1
+
+    def test_stem_vowel_stays_inside_a_perfective_entry(self):
+        # ገባው is ገባ + ው: the perfective entry ገባ already holds the ኣ
+        # that IRIT writes apart (ገብ_አ_ው).
+        reference = {"ገባው": (ReferenceAnalysis(("ገብ", "አ", "ው"), ()),)}
+        segment = segmenter({"ገባው": Segmentation(
+            "ገባው", "ገባ", suffixes=("ው",), category="verb", aspect="perfective")})
+        assert inflection_agreement(segment, reference, {"ገባው": 1}).agreeing_tokens == 1
+
     def test_any_alternative_may_agree(self):
         reference = {"በላይ": (
             ReferenceAnalysis(("በ", "ላይ"), ()),

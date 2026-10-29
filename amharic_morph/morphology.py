@@ -259,6 +259,18 @@ def _fused(morpheme, kind, slot, carrier_order, tail, restore_orders, verb_slot=
 _PERFECTIVE = (PERFECTIVE,)
 _IMPERFECTIVE_OR_JUSSIVE = IMPERFECTIVE + JUSSIVE
 
+# ኣ on a verb stem, fused onto its last letter. On the gerund stem it is
+# the 3fs (ሆን + ኣ -> ሆና). On the imperfective and jussive stem it is the
+# weak last radical of a verb whose perfective ends in ኣ (ገባ, ገ-ብ-ʔ), as
+# IRIT: የ + ሚ + ገብ + ኣ -> የሚገባ, ይ + ግብ + ኣ -> ይግባ. Ruled 2026-10-29.
+# One row serves both, so the search detaches the ኣ once. On a noun ኣ is
+# never a suffix of its own: ስራ is not the "definite" of ስር.
+STEM_VOWEL = "ኣ"
+_STEM_VOWEL_ROW = SuffixShape(
+    STEM_VOWEL, VERB, "", SUBJECT, carrier_order=4, restore_orders=(6,),
+    rule=RULE_AMBIGUOUS_FUSION, aspects=GERUND + (IMPERFECTIVE[0], JUSSIVE[0]),
+)
+
 
 # The suffix inventory. Rows are tried in order; the lexicon and the
 # ranking choose among the analyses they produce.
@@ -308,9 +320,8 @@ SUFFIX_TABLE = (
     # Perfective subjects delete the stem's last vowel: ሄደ + ኩ -> ሄድኩ.
     *(_fused(m, VERB, SUBJECT, 6, m, (1,), aspects=_PERFECTIVE) for m in ("ኩ", "ክ", "ሽ", "ን")),
     # Gerunds, on the reviewed gerund stem: ሆን + ኦ -> ሆኖ, ፈልግ + ኦ -> ፈልጎ,
-    # ሆን + ኣ -> ሆና (3fs), ሰጥ + ቶ -> ሰጥቶ. On a noun ኣ is never a suffix
-    # of its own: ስራ is not the "definite" of ስር.
-    _fused("ኣ", VERB, SUBJECT, 4, "", (6,), rule=RULE_AMBIGUOUS_FUSION, aspects=GERUND),
+    # ሆን + ኣ -> ሆና (3fs), ሰጥ + ቶ -> ሰጥቶ.
+    _STEM_VOWEL_ROW,
     _fused("ኦ", VERB, SUBJECT, 7, "", (6,), aspects=GERUND),
     _plain("ቶ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
     _plain("ታ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
@@ -760,6 +771,8 @@ _READINGS = {
 
 # The negative prefix's reading, and the one ም takes beside it.
 _NEGATIVE = ("negative",)
+# ኣ on the imperfective or jussive stem; on the gerund stem it is the 3fs.
+_STEM_VOWEL_READING = ("stem_vowel",)
 
 
 def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...] | None:
@@ -791,6 +804,8 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
     is_verb = category == VERB
     if is_verb and suffix == NEGATIVE_SUFFIX and NEGATIVE_PREFIX in segmentation.prefixes:
         return _NEGATIVE
+    if is_verb and suffix == STEM_VOWEL and segmentation.aspect in _IMPERFECTIVE_OR_JUSSIVE:
+        return _STEM_VOWEL_READING
     return _READINGS[suffix][1 if is_verb else 0]
 
 
@@ -928,7 +943,7 @@ def _kind_allows(kind: str, category: str | None) -> bool:
     return (category == VERB) == (kind == VERB)
 
 
-def _compatible(node: _Node, category: str | None, aspect: str | None) -> bool:
+def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None) -> bool:
     """
     Whether every affix of a finished analysis fits its stem.
 
@@ -942,6 +957,9 @@ def _compatible(node: _Node, category: str | None, aspect: str | None) -> bool:
       preposition a subordinator as well (የሚሆን, not የይሆናል). A jussive
       needs a person prefix and takes no other. A gerund takes no prefix
       and needs a verb ending (ሆኖ, not ሆን). No verb takes the infix.
+    - The stem vowel ኣ attaches only to a verb whose perfective ends in
+      ኣ, and that verb's imperfective or jussive stem never ends the
+      word: ይገባ, ይገባል, ይገቡ, never ይገብ.
     """
     shapes, prefixes = node.shapes, node.prefix_shapes
     is_verb = category == VERB
@@ -972,6 +990,12 @@ def _compatible(node: _Node, category: str | None, aspect: str | None) -> bool:
     # letters are the auxiliary: ይመስላል is ይ + መሰለ + ኣል.
     if node.infix:
         return False
+    if aspect in _IMPERFECTIVE_OR_JUSSIVE:
+        weak_final = fidel_order(stem[-1]) == 4
+        if not shapes and weak_final:
+            return False
+        if _STEM_VOWEL_ROW in shapes and not weak_final:
+            return False
     if aspect in IMPERFECTIVE:
         if not any(p.person for p in prefixes):
             return False
@@ -1081,7 +1105,7 @@ def _analyses(
         for verb, aspect in stems.get(node.text, ()):
             anchors.append((verb, VERB, aspect))
         for stem, category, aspect in anchors:
-            if _compatible(node, category, aspect):
+            if _compatible(node, stem, category, aspect):
                 found.setdefault(
                     Segmentation(
                         word=word,

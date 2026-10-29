@@ -862,7 +862,7 @@ def verbs():
         "ሄደ": verb("ሄደ", imperfective="ሄድ", jussive="ሂድ", gerund="ሄድ",
                    imperfective_palatal="ሄጅ", jussive_palatal="ሂጅ", gerund_palatal="ሄጅ"),
         "ፈለገ": verb("ፈለገ", imperfective="ፈልግ", jussive="ፈልግ", gerund="ፈልግ"),
-        "ገባ": verb("ገባ", imperfective="ገብ", gerund="ገብ"),
+        "ገባ": verb("ገባ", imperfective="ገብ", jussive="ግብ", gerund="ገብ"),
         "ሰጠ": verb("ሰጠ", gerund="ሰጥ"),
         "ኖረ": verb("ኖረ", imperfective="ኖር"),
         "መሰለ": verb("መሰለ", imperfective="መስል"),
@@ -944,6 +944,51 @@ class TestBoundImperfective:
 
     def test_imperfective_stem_alone_is_refused(self):
         assert seg("ሄድ").known is False
+
+
+class TestStemVowel:
+    """
+    A verb whose perfective ends in ኣ (ገባ) keeps that ኣ as its own
+    morpheme on the imperfective and jussive stem, as IRIT: የ_ሚ_ገብ_ኣ.
+    Ruled 2026-10-29: the stem is ገብ, and ኣ fuses onto its last letter.
+    """
+
+    def test_relative(self):
+        result = seg("የሚገባ")
+        assert result.morphemes == ["የ", "ሚ", "ገባ", "ኣ"]
+        assert result.aspect == "imperfective"
+
+    def test_subordinator(self):
+        assert seg("ሲገባ").morphemes == ["ሲ", "ገባ", "ኣ"]
+
+    def test_jussive(self):
+        result = seg("ይግባ")
+        assert result.morphemes == ["ይ", "ገባ", "ኣ"]
+        assert result.aspect == "jussive"
+
+    def test_object_follows_the_stem_vowel(self):
+        # IRIT ይ_ገብ_አ_ው_አል: the ው is the 3ms object, after the ኣ.
+        assert seg("ይገባዋል").morphemes == ["ይ", "ገባ", "ኣ", "ው", "ኣል"]
+
+    def test_negative(self):
+        assert seg("አይገባም").morphemes == ["አይ", "ገባ", "ኣ", "ም"]
+
+    def test_the_auxiliary_still_fuses_directly(self):
+        assert seg("ይገባል").morphemes == ["ይ", "ገባ", "ኣል"]
+
+    def test_bare_stem_is_refused(self):
+        # ይነስ is "let it be less", not a form of ተነሳ.
+        assert seg("ይገብ").known is False
+        assert seg("ሲገብ").known is False
+
+    def test_only_on_a_verb_whose_perfective_ends_in_a(self):
+        assert seg("ይሄዳ").known is False
+
+    def test_reading(self):
+        assert suffix_readings(seg("የሚገባ"), "ኣ") == ("stem_vowel",)
+
+    def test_gerund_a_keeps_its_reading(self):
+        assert suffix_readings(seg("ሆና"), "ኣ") == ("gerund_3fs",)
 
 
 class TestNegativeImperfective:

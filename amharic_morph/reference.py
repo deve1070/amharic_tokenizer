@@ -56,7 +56,9 @@ from amharic_morph.levels import (
 from amharic_morph.morphology import (
     CORPUS_PREFIXES,
     NEGATIVE_SUFFIX,
+    PERFECTIVE,
     PREFIX_TABLE,
+    STEM_VOWEL,
     SUFFIX_TABLE,
 )
 from amharic_morph.normalizer import normalize
@@ -112,6 +114,9 @@ INFLECTIONAL_SUFFIXES = tuple(
 VERB_INFLECTIONAL_SUFFIXES = INFLECTIONAL_SUFFIXES + tuple(
     normalize(m) for m in sorted(_VERB_LOOKALIKES)
 )
+# On a derived verb stem (ገብ) the ኣ is a morpheme of its own: የ_ሚ_ገብ_ኣ,
+# ሆን_ኣ. A perfective entry (ገባ) already holds it.
+DERIVED_STEM_SUFFIXES = VERB_INFLECTIONAL_SUFFIXES + (normalize(STEM_VOWEL),)
 
 
 @dataclass(frozen=True)
@@ -293,7 +298,8 @@ def affixes_agree(
         True
     """
     if segmentation.category == "verb" and suffixes is INFLECTIONAL_SUFFIXES:
-        suffixes = VERB_INFLECTIONAL_SUFFIXES
+        derived = segmentation.aspect not in (None, PERFECTIVE)
+        suffixes = DERIVED_STEM_SUFFIXES if derived else VERB_INFLECTIONAL_SUFFIXES
     if segmentation.category == "verb" and prefixes is CORPUS_PREFIXES:
         prefixes = VERB_PREFIXES
     pre, _, suf = outer_affixes(analysis, prefixes, suffixes)
