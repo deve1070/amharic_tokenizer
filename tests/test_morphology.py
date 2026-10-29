@@ -1111,6 +1111,35 @@ class TestApplicative:
         assert suffix_readings(seg("አለበት"), "በት") == ("applicative_3ms",)
 
 
+class TestRelativeM:
+    """
+    The relative ም, for subjects other than the 3rd person, as IRIT
+    writes it: የ_ም_ፈልግ_ኧ_ው "what I want", with no prefix of its own for
+    "I"; ት or ን follows for "you" and "we".
+    """
+
+    def test_first_person_singular_has_no_person_prefix(self):
+        result = seg("የምፈልገው")
+        assert result.morphemes == ["የ", "ም", "ፈለገ", "ው"]
+        assert result.aspect == "imperfective"
+
+    def test_first_person_plural(self):
+        assert seg("የምንሄድ").morphemes == ["የ", "ም", "ን", "ሄደ"]
+
+    def test_second_person(self):
+        assert seg("የምትሆኑ").morphemes == ["የ", "ም", "ት", "ሆነ", "ኡ"]
+
+    def test_after_another_preposition(self):
+        assert seg("እንደምንሄድ").morphemes == ["እንደ", "ም", "ን", "ሄደ"]
+
+    def test_needs_a_prefix_before_it(self):
+        # ም starts many ordinary words (ምን, ምግብ); alone it is not the relative.
+        assert seg("ምፈልገው").known is False
+
+    def test_reading(self):
+        assert [p.readings for p in seg("የምፈልገው").parts][1] == ("relative",)
+
+
 class TestNegativeImperfective:
     def test_ai_with_m(self):
         result = seg("አይሆንም")

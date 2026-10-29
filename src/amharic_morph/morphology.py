@@ -437,6 +437,10 @@ PREFIX_TABLE = (
     _sub("እንዲ", "so_that", True),
     _sub("ሳይ", "without", True),
     _sub("ማ", "relative_negative", False, not_first=True),
+    # The relative for subjects other than the 3rd person, as IRIT:
+    # የ_ም_ፈልግ_ኧ_ው "what I want". "I" has no prefix of its own, so ም
+    # counts as the person; ት or ን may follow (የምትሆኑ, የምንሄድ).
+    _sub("ም", "relative", True, not_first=True),
     _sub("ስ", "when", False),
     _sub("ል", "purpose", False),
     _sub("ብ", "if", False),
