@@ -42,7 +42,7 @@ path = "src/amharic_morph/__init__.py"
 packages = ["src/amharic_morph"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/amharic_morph", "tests", "README.md", "LICENSE", "pyproject.toml"]
+include = ["src/amharic_morph", "tests", "README.md", "CHANGELOG.md", "LICENSE", "pyproject.toml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
