@@ -80,6 +80,10 @@ _ORDER6 = 6
 
 _ETHIOPIC_FIRST = "ሀ"
 _ETHIOPIC_LAST = "፿"
+# The syllables proper: the regular families, ሀ to ፗ. After them come
+# ፘ ፙ ፚ, which belong to no family, then combining marks, punctuation
+# (። ፣) and numerals (፩ ፲). None of those has a vowel order.
+_SYLLABLE_LAST = "ፗ"
 
 # Vowel letter contributed by each order at Level 2. Order 6 is the bare
 # consonant and contributes nothing.
@@ -143,6 +147,24 @@ def is_ethiopic(char: str) -> bool:
 
 
 @lru_cache(maxsize=None)
+def is_syllable(char: str) -> bool:
+    """
+    True if char is an Ethiopic syllable of a regular family.
+
+    Punctuation, numerals and the three family-less letters ፘ ፙ ፚ are
+    Ethiopic but not syllables, so the fidel arithmetic does not apply to
+    them.
+
+    Examples:
+        >>> is_syllable("ቤ")
+        True
+        >>> is_syllable("።")
+        False
+    """
+    return is_ethiopic(char) and char <= _SYLLABLE_LAST
+
+
+@lru_cache(maxsize=None)
 def fidel_order(char: str) -> int:
     """
     Vowel order of an Ethiopic syllable, 1-8.
@@ -153,7 +175,7 @@ def fidel_order(char: str) -> int:
         char: A single character.
 
     Returns:
-        1-8, or 0 if the character is not Ethiopic.
+        1-8, or 0 if the character is not an Ethiopic syllable.
 
     Examples:
         >>> fidel_order("ቤ")
@@ -163,7 +185,7 @@ def fidel_order(char: str) -> int:
         >>> fidel_order("ቶ")
         7
     """
-    if not is_ethiopic(char):
+    if not is_syllable(char):
         return 0
     return ord(char) % _FAMILY_SIZE + 1
 
@@ -198,7 +220,8 @@ def to_order(char: str, order: int) -> str:
         order: Target vowel order, 1-8.
 
     Returns:
-        The character at that order, or unchanged if not Ethiopic.
+        The character at that order, or unchanged if not an Ethiopic
+        syllable.
 
     Raises:
         ValueError: If order is outside 1-8, or char is a labiovelar and
@@ -214,7 +237,7 @@ def to_order(char: str, order: int) -> str:
     """
     if not 1 <= order <= _FAMILY_SIZE:
         raise ValueError(f"vowel order must be 1-{_FAMILY_SIZE}, got {order}")
-    if not is_ethiopic(char):
+    if not is_syllable(char):
         return char
     if is_labiovelar(char) and order not in _LABIOVELAR_GLIDES:
         raise ValueError(f"{char} has no order-{order} form")
@@ -284,11 +307,12 @@ def decompose_fidel(char: str) -> tuple[str, str]:
     Split one fidel into its bare consonant and its vowel.
 
     Args:
-        char: A single Ethiopic character.
+        char: A single character.
 
     Returns:
         (consonant, vowel). The vowel is "" for order 6, which is the
-        bare consonant already.
+        bare consonant already, and for anything that is not a syllable,
+        which is returned whole as the consonant.
 
     Examples:
         >>> decompose_fidel("ቤ")
@@ -300,7 +324,7 @@ def decompose_fidel(char: str) -> tuple[str, str]:
         >>> decompose_fidel("ቋ")
         ('ቅ', 'ዋ')
     """
-    if not is_ethiopic(char):
+    if not is_syllable(char):
         return (char, "")
     if is_labiovelar(char):
         return (bare_consonant(char), _LABIOVELAR_GLIDES[fidel_order(char)])
@@ -355,6 +379,80 @@ def level2_sound(word: str) -> list[str]:
         if vowel:
             units.append(vowel)
     return units
+
+
+# ── Lossless sound text ──────────────────────────────────────────────────────
+#
+# Level 2 is a display level and loses two distinctions: ቍ and ቅው both
+# give ቅ ው, and ቋ and ቇ both give ቅ ዋ. The BPE level trains on sound text
+# and must give back exactly what it was given, so sound_text() writes a
+# labiovelar as its consonant, the marker ʷ, and its vowel: ቋ -> ቅʷኣ.
+#
+# Decoding is unambiguous because every syllable starts with its bare
+# consonant (an order-6 letter), and no vowel symbol is an order-6 letter.
+# A real glottal letter starts with its consonant too: ኡ is እ + ኡ.
+
+_LABIOVELAR_MARK = "ʷ"
+_VOWEL_ORDERS = {vowel: order for order, vowel in _ORDER_VOWELS.items() if vowel}
+_LABIOVELAR_BLOCKS = {consonant: base for base, consonant in _LABIOVELAR_CONSONANTS.items()}
+
+
+def sound_text(word: str) -> str:
+    """
+    The word as lossless sound text, for the BPE level.
+
+    As Level 2, except that a labiovelar's glide is written ʷ plus its
+    vowel, so that from_sound_text() can restore every word exactly.
+
+    Examples:
+        >>> sound_text("ቤቶች")
+        'ብኤትኦች'
+        >>> sound_text("ቋንቋ")
+        'ቅʷኣንቅʷኣ'
+    """
+    units = []
+    for char in word:
+        if is_labiovelar(char):
+            units.append(bare_consonant(char) + _LABIOVELAR_MARK + _ORDER_VOWELS[fidel_order(char)])
+        else:
+            units.extend(decompose_fidel(char))
+    return "".join(units)
+
+
+def from_sound_text(text: str) -> str:
+    """
+    Restore the written text from sound_text().
+
+    Examples:
+        >>> from_sound_text("ብኤትኦች")
+        'ቤቶች'
+        >>> from_sound_text("ቅʷኣንቅʷኣ")
+        'ቋንቋ'
+    """
+    out = []
+    i = 0
+    while i < len(text):
+        char = text[i]
+        i += 1
+        if not (is_syllable(char) and fidel_order(char) == _ORDER6 and not is_labiovelar(char)):
+            out.append(char)
+            continue
+        base = _block_base(char)
+        if i < len(text) and text[i] == _LABIOVELAR_MARK and char in _LABIOVELAR_BLOCKS:
+            base = _LABIOVELAR_BLOCKS[char]
+            i += 1
+            order = _ORDER6
+            if i < len(text) and text[i] in _VOWEL_ORDERS:
+                order = _VOWEL_ORDERS[text[i]]
+                i += 1
+            out.append(chr(base + order - 1))
+            continue
+        if i < len(text) and text[i] in _VOWEL_ORDERS:
+            out.append(chr(base + _VOWEL_ORDERS[text[i]] - 1))
+            i += 1
+        else:
+            out.append(char)
+    return "".join(out)
 
 
 # ── Consonant skeleton ───────────────────────────────────────────────────────

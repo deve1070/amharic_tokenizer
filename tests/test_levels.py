@@ -16,7 +16,10 @@ from amharic_morph.levels import (
     is_glottal,
     is_labiovelar,
     consonant_skeleton,
+    from_sound_text,
+    is_syllable,
     level2_sound,
+    sound_text,
     level3_fidel,
     to_order,
     to_order6,
@@ -241,6 +244,51 @@ class TestLabiovelars:
 
 
 # ── Level 3 ───────────────────────────────────────────────────────────────────
+
+
+class TestNonSyllables:
+    """Ethiopic punctuation and numerals are not syllables and pass through."""
+
+    def test_is_syllable(self):
+        assert is_syllable("ቤ") and is_syllable("ቋ")
+        assert not is_syllable("።") and not is_syllable("፩") and not is_syllable("a")
+
+    def test_no_vowel_order(self):
+        assert fidel_order("።") == 0
+        assert fidel_order("፩") == 0
+
+    def test_decomposition_passes_them_through(self):
+        assert decompose_fidel("።") == ("።", "")
+        assert level2_sound("፲፱") == ["፲", "፱"]
+
+
+class TestSoundText:
+    """
+    The lossless sound encoding the BPE level trains on: Level 2, with
+    the labiovelar glide marked, so every word comes back exactly.
+    """
+
+    def test_plain_word(self):
+        assert sound_text("ቤቶች") == "ብኤትኦች"
+
+    def test_labiovelar_is_marked(self):
+        assert sound_text("ቋንቋ") == "ቅʷኣንቅʷኣ"
+
+    def test_collisions_level2_has(self):
+        # Level 2 writes ቍ and ቅው alike, and ቋ and ቇ alike.
+        assert level2_sound("ቍ") == level2_sound("ቅው")
+        assert sound_text("ቍ") != sound_text("ቅው")
+        assert sound_text("ቋ") != sound_text("ቇ")
+
+    def test_round_trip(self):
+        for word in ("ቤቶች", "ቋንቋ", "ኢትዮጵያ", "ሏ", "ቍ", "ቅው", "ቇ", "ኡ", "እኔ", "፲፱", "COVID-19", "ቤት።"):
+            assert from_sound_text(sound_text(word)) == word
+
+    def test_every_syllable_round_trips(self):
+        for code in range(0x1200, 0x1380):
+            char = chr(code)
+            if is_ethiopic(char):
+                assert from_sound_text(sound_text(char)) == char, hex(code)
 
 
 class TestLevel3Fidel:
