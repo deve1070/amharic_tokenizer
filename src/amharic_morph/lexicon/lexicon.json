@@ -30955,5 +30955,142 @@
     "source": "native_speaker",
     "validated": true,
     "notes": "smell; not ጠራ + ን (whose 1pl gerund is ጠርተን)"
+  },
+  {
+    "word": "አወቀ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ው",
+      "ቅ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አውቅ",
+      "gerund": "አውቅ",
+      "imperfective_palatal": "አውቅ",
+      "gerund_palatal": "አውቅ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30; prefixes fuse with its initial አ (ያ..., የሚያ...)"
+  },
+  {
+    "word": "አየ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ይ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አይ",
+      "gerund": "አይ",
+      "imperfective_palatal": "አይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30; prefixes fuse with its initial አ (ያ..., የሚያ...)"
+  },
+  {
+    "word": "አሰበ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ስ",
+      "ብ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አስብ",
+      "jussive": "አስብ",
+      "gerund": "አስብ",
+      "imperfective_palatal": "አስብ",
+      "jussive_palatal": "አስብ",
+      "gerund_palatal": "አስብ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30; prefixes fuse with its initial አ (ያ..., የሚያ...)"
+  },
+  {
+    "word": "አቀረበ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ር",
+      "ብ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አቀርብ",
+      "jussive": "አቅርብ",
+      "gerund": "አቅርብ",
+      "imperfective_palatal": "አቀርብ",
+      "jussive_palatal": "አቅርብ",
+      "gerund_palatal": "አቅርብ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30; prefixes fuse with its initial አ (ያ..., የሚያ...)"
+  },
+  {
+    "word": "አደረገ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ር",
+      "ግ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አደርግ",
+      "jussive": "አድርግ",
+      "gerund": "አድርግ",
+      "imperfective_palatal": "አደርግ",
+      "jussive_palatal": "አድርግ",
+      "gerund_palatal": "አድርግ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30; prefixes fuse with its initial አ (ያ..., የሚያ...)"
+  },
+  {
+    "word": "አይን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ይ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "eye; not አየ + ን (አይናቸው = አይን + ኣቸው)"
   }
 ]

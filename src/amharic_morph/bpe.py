@@ -33,6 +33,16 @@ def _suffix_length(shape) -> int:
     return vowel + len(sound_text(shape.tail))
 
 
+def _prefix_sound(prefix: str, fused: bool) -> str:
+    """
+    A prefix's sound text as written. A fused prefix gives its last vowel
+    to the stem: ያለ = ይ | ኣልኧ, where the ኣ is the stem's absorbed አ.
+    """
+    if not fused:
+        return sound_text(prefix)
+    return sound_text(prefix[:-1] + to_order6(prefix[-1]))
+
+
 def _infix_index(stem_letters: str) -> int | None:
     """Where the infix sits among the stem's written letters (ትላልቅ -> 1)."""
     for i in range(1, len(stem_letters) - 1):
@@ -60,7 +70,8 @@ def sound_segments(segmentation: Segmentation) -> list[str]:
     if not segmentation.known:
         return [whole]
 
-    prefixes = [sound_text(p) for p in segmentation.prefixes]
+    fused = segmentation.prefix_fused or (False,) * len(segmentation.prefixes)
+    prefixes = [_prefix_sound(p, f) for p, f in zip(segmentation.prefixes, fused)]
     suffix_lengths = [_suffix_length(s) for s in segmentation.suffix_shapes]
     start = sum(len(p) for p in prefixes)
     end = len(whole) - sum(suffix_lengths)
@@ -69,6 +80,7 @@ def sound_segments(segmentation: Segmentation) -> list[str]:
     if segmentation.infix:
         # The stem's written letters, between the prefixes and the plain
         # tails of the suffixes; a fused carrier stays with the stem.
+        # Fusion leaves a prefix's letter count unchanged (የ -> ያ).
         first = sum(len(p) for p in segmentation.prefixes)
         last = len(word) - sum(len(s.tail) for s in segmentation.suffix_shapes)
         index = _infix_index(word[first:last])

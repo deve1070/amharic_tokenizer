@@ -792,6 +792,12 @@ class TestPluralAt:
         assert segment_word("ሰጣት", typed(ሰጠ="verb")).morphemes == ["ሰጠ", "ኣት"]
 
 
+class TestLabiovelarCarrier:
+    def test_possessive_on_a_velar_final_noun(self):
+        # ቤት + ዋ -> ቤቷ; ልክ + ዋ is written ልኳ, with the labiovelar.
+        assert segment_word("ልኳ", typed(ልክ="noun")).morphemes == ["ልክ", "ዋ"]
+
+
 class TestNegativePerfective:
     """አል ... ም: a prefix accepted only on a verb that also carries ም"""
 
@@ -906,6 +912,8 @@ def verbs():
         "ደረሰ": verb("ደረሰ", imperfective="ደርስ", jussive="ድረስ"),
         "አለ": verb("አለ", imperfective="ል", jussive="በል", gerund="ብል", gerund_palatal="ብይ"),
         "የለ": verb("የለ"),
+        "አወቀ": verb("አወቀ", imperfective="አውቅ", gerund="አውቅ"),
+        "አደረገ": verb("አደረገ", imperfective="አደርግ", jussive="አድርግ", gerund="አድርግ"),
     }
     index["ቤት"] = {"word": "ቤት", "category": "noun", "allows_prefix": [], "allows_suffix": []}
     return index
@@ -1166,6 +1174,12 @@ class TestPresentPerfect:
         assert result.morphemes == ["ሆነ", "ኣል", "ሁ"]
         assert result.aspect == "gerund_palatal"
 
+    def test_velar_stem_takes_the_labiovelar(self):
+        # After ግ ክ ቅ ህ the "wa" is written with the labiovelar: ፈልግ + ኦ + ኣል
+        # -> ፈልጓል, not the order-8 ፈልጏል.
+        assert seg("ፈልጓል").morphemes == ["ፈለገ", "ኣል"]
+        assert seg("አድርጓል").morphemes == ["አደረገ", "ኣል"]
+
     def test_to_gerund_verbs(self):
         assert seg("ሰጥቷል").morphemes == ["ሰጠ", "ት", "ኣል"]
         assert seg("ገብቷል").morphemes == ["ገባ", "ት", "ኣል"]
@@ -1174,6 +1188,17 @@ class TestPresentPerfect:
     def test_third_plural_gerund_of_a_to_verb(self):
         # ሰጥተው "they, having given", IRIT ሰጥ_ተ_ው.
         assert seg("ሰጥተው").morphemes == ["ሰጠ", "ት", "ው"]
+
+    def test_second_persons(self):
+        assert seg("ሆነሃል").morphemes == ["ሆነ", "ህ", "ኣል"]
+        assert seg("ሆነሻል").morphemes == ["ሆነ", "ሽ", "ኣል"]
+        assert seg("ሆናችሁ").morphemes == ["ሆነ", "ኣችሁ"]
+        assert seg("ብላችሁ").morphemes == ["አለ", "ኣችሁ"]
+
+    def test_gerund_stem_takes_a_gerund_ending_first(self):
+        # An object or ኣል never sits directly on the gerund stem:
+        # ሆን + ሽ + ኣል is not a word (አይሻልም is አይ + ሻለ + ም).
+        assert seg("ሆንሻል").known is False
 
     def test_only_ch_and_hu_follow_the_auxiliary(self):
         # The present perfect's persons: ሆኛለሁ ሆነሃል ሆነሻል ሆኗል ሆናለች ሆነናል
@@ -1203,6 +1228,47 @@ class TestPresentPerfect:
         assert seg("ይሆናል").aspect == "imperfective"
         assert seg("ሆኖ").morphemes == ["ሆነ", "ኦ"]
         assert seg("ሰጥቶ").morphemes == ["ሰጠ", "ቶ"]
+
+
+class TestPrefixFusion:
+    """
+    A prefix ending in a bare consonant or an order-1 letter takes the
+    stem's initial አ as its vowel: ይ + አውቅ -> ያውቅ, የ + አለ -> ያለ. As IRIT:
+    ይ_አውቅ_አል, የ_ሚ_ይ_አውቅ, የ_አል_ኧ_ው. Ruled 2026-10-30.
+    """
+
+    def test_person_prefix(self):
+        result = seg("ያውቃል")
+        assert result.morphemes == ["ይ", "አወቀ", "ኣል"]
+        assert result.aspect == "imperfective"
+        assert seg("ያደርጋል").morphemes == ["ይ", "አደረገ", "ኣል"]
+
+    def test_second_person(self):
+        assert seg("ታውቃለህ").morphemes == ["ት", "አወቀ", "ኣል", "ህ"]
+
+    def test_after_a_subordinator_the_glide_is_the_third_person(self):
+        assert seg("የሚያውቅ").morphemes == ["የ", "ሚ", "ይ", "አወቀ"]
+        assert seg("የሚያደርግ").morphemes == ["የ", "ሚ", "ይ", "አደረገ"]
+
+    def test_negative_perfective(self):
+        assert seg("አላወቀም").morphemes == ["አል", "አወቀ", "ም"]
+
+    def test_preposition_on_a_perfective(self):
+        assert seg("ያለው").morphemes == ["የ", "አለ", "ው"]
+        assert seg("ካወቀ").morphemes == ["ከ", "አወቀ"]
+
+    def test_jussive(self):
+        assert seg("ያድርግ").morphemes == ["ይ", "አደረገ"]
+
+    def test_preposition_fuses_only_onto_a_longer_noun(self):
+        # ካሳ "compensation" is not ከ + አሳ: two-letter stems match by
+        # accident. ባገሩ is በ + አገር + ኡ.
+        lex = typed(አሳ="noun", አገር="noun")
+        assert segment_word("ካሳ", lex).known is False
+        assert segment_word("ባገሩ", lex).morphemes == ["በ", "አገር", "ኡ"]
+
+    def test_unfused_prefixes_still_work(self):
+        assert seg("ይሆናል").morphemes == ["ይ", "ሆነ", "ኣል"]
 
 
 class TestNegativeImperfective:

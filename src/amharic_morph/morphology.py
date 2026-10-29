@@ -108,8 +108,9 @@ choice, not a limitation of the search.
 """
 
 from dataclasses import dataclass, field
+from functools import lru_cache
 
-from amharic_morph.levels import fidel_order, is_ethiopic, to_order, to_order6
+from amharic_morph.levels import bare_consonant, fidel_order, is_ethiopic, is_labiovelar, to_order, to_order6
 
 # The negative perfective prefix and the suffix it pairs with. Without
 # the pairing, አል would strip the front off every word that happens to
@@ -120,6 +121,9 @@ NEGATIVE_SUFFIX = "ም"
 # The negative of the existential አለ is a verb of its own, and ም is its
 # negative too: የለ + ው + ም -> የለውም "he does not have".
 NEGATIVE_EXISTENTIAL = "የለ"
+
+# The shortest noun a preposition fuses onto. See _compatible().
+_MIN_FUSED_NOUN = 3
 
 # The only category that takes the infix. See _compatible().
 _INFIX_CATEGORY = "adjective"
@@ -276,6 +280,11 @@ AUXILIARY = "ኣል"
 # One row serves both, so the search detaches the ኣ once. On a noun ኣ is
 # never a suffix of its own: ስራ is not the "definite" of ስር.
 STEM_VOWEL = "ኣ"
+# Order 8 is the "wa" form of a family (ሏ, ቷ). A labiovelar's order-4 letter
+# (ቋ, ጓ, ኳ) is the same sound for the velars.
+_LABIALIZED_ORDER = 8
+_LABIOVELAR_WA = 4
+
 _STEM_VOWEL_ROW = SuffixShape(
     STEM_VOWEL, VERB, "", SUBJECT, carrier_order=4, restore_orders=(6,),
     rule=RULE_AMBIGUOUS_FUSION, aspects=GERUND + (IMPERFECTIVE[0], JUSSIVE[0]),
@@ -346,8 +355,11 @@ SUFFIX_TABLE = (
     # The ቶ-gerund's ት before another suffix, as IRIT ሰጥ_ት_አል, ሰጥ_ተ_ው:
     # ሰጥ + ት + ኣል -> ሰጥቷል, ሰጥ + ት + ው -> ሰጥተው. Never word-final.
     _plain("ት", VERB, SUBJECT, after_orders=(6,), aspects=GERUND[:1], bound=True),
-    # The 1pl gerund after a linking ኧ: ሆን + ን -> ሆነን, before ኣል ሆነናል.
-    _fused("ን", VERB, OBJECT, 1, "ን", (6,), aspects=GERUND[:1]),
+    # The 1pl and 2nd-person gerunds after a linking ኧ: ሆን + ን -> ሆነን,
+    # ሆን + ህ -> ሆነህ, ሆን + ሽ -> ሆነሽ; the 2pl ሆን + ኣችሁ -> ሆናችሁ. With ኣል
+    # they make the present perfect: ሆነናል, ሆነሃል, ሆነሻል.
+    *(_fused(m, VERB, OBJECT, 1, m, (6,), aspects=GERUND[:1]) for m in ("ን", "ህ", "ሽ")),
+    _fused("ኣችሁ", VERB, OBJECT, 4, "ችሁ", (6,), aspects=GERUND[:1]),
     # The 1s gerund on the palatal stem: ሄጅ + ኤ -> ሄጄ.
     _fused("ኤ", VERB, SUBJECT, 5, "", (6,), aspects=(GERUND[1],)),
     # The 2fs on the palatal imperfective or jussive stem: ት + ሄጅ + ኢ.
@@ -524,19 +536,64 @@ def detach_prefix(word: str, prefixes=CORPUS_PREFIXES) -> list[tuple[str, str]]:
     ]
 
 
-def detach_prefix_shapes(word: str, prefixes=PREFIX_TABLE) -> list[tuple[str, PrefixShape]]:
+# A stem's initial glottal አ fuses with a prefix whose last letter is a
+# bare consonant or at order 1: that letter takes the vowel ኣ (order 4).
+# ይ + አውቅ -> ያውቅ, አል + አወቀ -> አላወቀ, የ + አለ -> ያለ. Ruled 2026-10-30,
+# as IRIT writes them (ይ_አውቅ_አል, የ_አል_ኧ_ው).
+_FUSING_ORDERS = (1, 6)
+_FUSED_ORDER = 4
+_GLOTTAL_A = "አ"
+
+
+# Cached: it depends on the prefix alone, and the search asks for every
+# prefix of the table at every node.
+@lru_cache(maxsize=None)
+def _fused_form(prefix: str) -> str | None:
+    """How a prefix is written before a stem's initial አ, or None."""
+    last = prefix[-1]
+    if fidel_order(last) not in _FUSING_ORDERS:
+        return None
+    return prefix[:-1] + to_order(last, _FUSED_ORDER)
+
+
+_SPELLINGS: dict[int, tuple] = {}
+
+
+def _prefix_spellings(prefixes) -> tuple[str, ...]:
+    """Every way a prefix of this table can be written, for str.startswith."""
+    cached = _SPELLINGS.get(id(prefixes))
+    if cached is None or cached[0] is not prefixes:
+        spellings = {p.morpheme for p in prefixes}
+        spellings.update(f for f in (_fused_form(p.morpheme) for p in prefixes) if f)
+        cached = (prefixes, tuple(sorted(spellings)))
+        _SPELLINGS[id(prefixes)] = cached
+    return cached[1]
+
+
+def detach_prefix_shapes(word: str, prefixes=PREFIX_TABLE) -> list[tuple[str, PrefixShape, bool]]:
     """
     Prefix rows removable from a surface form, with the remainder.
 
+    A prefix is removed as written, or in its fused form, which gives the
+    stem back its initial አ (see _fused_form).
+
+    Returns:
+        (remainder, row, fused) for every match.
+
     Examples:
-        >>> [(r, p.morpheme) for r, p in detach_prefix_shapes("የሚሆን")]
+        >>> [(r, p.morpheme) for r, p, _ in detach_prefix_shapes("የሚሆን")]
         [('ሚሆን', 'የ')]
+        >>> ("አውቃል", "ይ", True) in [(r, p.morpheme, f) for r, p, f in detach_prefix_shapes("ያውቃል")]
+        True
     """
-    return [
-        (word[len(p.morpheme):], p)
-        for p in prefixes
-        if word.startswith(p.morpheme) and len(word) > len(p.morpheme)
-    ]
+    found = []
+    for p in prefixes:
+        if word.startswith(p.morpheme) and len(word) > len(p.morpheme):
+            found.append((word[len(p.morpheme):], p, False))
+        fused = _fused_form(p.morpheme)
+        if fused and word.startswith(fused) and len(word) > len(fused):
+            found.append((_GLOTTAL_A + word[len(fused):], p, True))
+    return found
 
 
 # Per-table index of the rows by the letter they end on. Keyed by the
@@ -566,7 +623,11 @@ def _rows_ending(word: str, suffixes) -> list:
         _SUFFIX_INDEXES[id(suffixes)] = cached
     _, by_last, by_order = cached
     last = word[-1]
-    rows = by_last.get(last, []) + by_order.get(fidel_order(last), [])
+    order = fidel_order(last)
+    rows = by_last.get(last, []) + by_order.get(order, [])
+    if order == _LABIOVELAR_WA and is_labiovelar(last):
+        # A velar's "wa" (ኳ) carries the order-8 rows too; see detach_suffix_shapes.
+        rows += by_order.get(_LABIALIZED_ORDER, [])
     return [shape for _, shape in sorted(rows, key=lambda item: item[0])]
 
 
@@ -622,7 +683,16 @@ def detach_suffix_shapes(
         if len(rest) < 2 or not is_ethiopic(rest[-1]):
             continue
         carrier = rest[-1]
-        if fidel_order(carrier) != shape.carrier_order:
+        if (
+            shape.carrier_order == _LABIALIZED_ORDER
+            and is_labiovelar(carrier)
+            and fidel_order(carrier) == _LABIOVELAR_WA
+        ):
+            # A velar writes its "wa" with the labiovelar (ጓ), not the
+            # order-8 letter (ጏ): ፈልግ + ኦ + ኣል -> ፈልጓል. Restore from the
+            # plain consonant, since a labiovelar stays in its own block.
+            carrier = bare_consonant(carrier)
+        elif fidel_order(carrier) != shape.carrier_order:
             continue
         for order in shape.restore_orders:
             try:
@@ -930,6 +1000,9 @@ class Segmentation:
                   word in different places, so the BPE level needs it.
                   Not part of equality: two analyses with the same
                   morphemes are the same analysis.
+        prefix_fused: Whether each prefix was fused with the stem's
+                  initial አ (ያለው = የ + አለ + ው), parallel to prefixes. Not
+                  part of equality, for the same reason.
     """
 
     word: str
@@ -941,6 +1014,7 @@ class Segmentation:
     category: str | None = None
     aspect: str | None = None
     suffix_shapes: tuple[SuffixShape, ...] = field(default=(), compare=False, repr=False)
+    prefix_fused: tuple[bool, ...] = field(default=(), compare=False, repr=False)
 
     @property
     def parts(self) -> list[Morpheme]:
@@ -995,6 +1069,8 @@ class _Node:
     shapes: tuple[SuffixShape, ...] = ()
     # The table row of each prefix, parallel to prefixes.
     prefix_shapes: tuple[PrefixShape, ...] = ()
+    # Whether each prefix was fused with the stem's initial አ (ያለ = የ + አለ).
+    prefix_fused: tuple[bool, ...] = ()
 
 
 def _kind_allows(kind: str, category: str | None) -> bool:
@@ -1020,7 +1096,7 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     - Per aspect: an imperfective needs a person, and after a
       preposition a subordinator as well (የሚሆን, not የይሆናል). A jussive
       needs a person prefix and takes no other. A gerund takes no prefix
-      and needs a verb ending (ሆኖ, not ሆን). In its present perfect, a
+      and its first suffix is a gerund ending (ሆኖ, not ሆን). In its present perfect, a
       person ending follows the auxiliary only as ች or ሁ.
     - Only an adjective takes the infix.
     - The stem vowel ኣ attaches only to a verb whose perfective ends in
@@ -1060,6 +1136,12 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     if node.infix and category != _INFIX_CATEGORY:
         return False
 
+    # A preposition fuses onto a noun only of three letters or more: on a
+    # two-letter stem the match is an accident (ካሳ is not ከ + አሳ, ካፌ is not
+    # ከ + አፍ + ኤ), while ያገር, ባንድ, እስካሁን are real. Verbs are exempt: ያየ.
+    if not is_verb and any(node.prefix_fused) and len(stem) < _MIN_FUSED_NOUN:
+        return False
+
     if not is_verb:
         return True
     if aspect in _IMPERFECTIVE_OR_JUSSIVE:
@@ -1085,7 +1167,9 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
         if not prefixes or any(p.slot != PERSON for p in prefixes):
             return False
     elif aspect in GERUND:
-        if prefixes or not any(s.aspects is not None for s in shapes):
+        # The first suffix is a gerund ending (ኦ, ኣ, ቶ, ው, ን, ...); an object
+        # or the auxiliary never sits directly on the gerund stem.
+        if prefixes or not shapes or shapes[0].aspects is None:
             return False
         if not _is_present_perfect_shape(shapes, category, aspect):
             return False
@@ -1222,6 +1306,7 @@ def _analyses(
                         category=category,
                         aspect=aspect,
                         suffix_shapes=node.shapes,
+                        prefix_fused=node.prefix_fused,
                     )
                 )
 
@@ -1232,11 +1317,12 @@ def _analyses(
             continue
 
         if node.depth_prefix < max_prefixes:
-            for rest, prefix in detach_prefix_shapes(node.text, prefixes):
+            for rest, prefix, fused in detach_prefix_shapes(node.text, prefixes):
                 # Keep a text that can still reach an anchor, or that
-                # begins with a further prefix (የ + ሚሆን).
-                if not _can_reach_an_anchor(rest, starts) and not any(
-                    rest.startswith(p.morpheme) for p in prefixes
+                # begins with a further prefix, as written (የ + ሚሆን) or
+                # fused (የ + ሚ + ያውቅ).
+                if not _can_reach_an_anchor(rest, starts) and not rest.startswith(
+                    _prefix_spellings(prefixes)
                 ):
                     continue
                 queue.append(
@@ -1249,6 +1335,7 @@ def _analyses(
                         node.depth_suffix,
                         node.shapes,
                         node.prefix_shapes + (prefix,),
+                        node.prefix_fused + (fused,),
                     )
                 )
 
@@ -1264,6 +1351,7 @@ def _analyses(
                         node.depth_suffix + 1,
                         (shape,) + node.shapes,
                         node.prefix_shapes,
+                        node.prefix_fused,
                     )
                 )
 
@@ -1280,6 +1368,7 @@ def _analyses(
                     node.depth_suffix,
                     node.shapes,
                     node.prefix_shapes,
+                    node.prefix_fused,
                 )
             )
 

@@ -55,6 +55,13 @@ class TestSoundSegments:
         # ትላልቅ: ላ is the copy inserted into ትልቅ.
         assert cut(tok, "ትላልቅ") == ["ት", "ልኣ", "ልቅ"]
 
+    def test_fused_prefix(self, tok):
+        # ያ is ይ + the stem's ኣ: the cut is after the prefix's consonant.
+        assert cut(tok, "ያለው") == ["ይ", "ኣልኧ", "ው"]
+        assert cut(tok, "ያውቃል") == ["ይ", "ኣውቅ", "ኣል"]
+        assert cut(tok, "የሚያውቅ") == ["ይኧ", "ምኢ", "ይ", "ኣውቅ"]
+        assert cut(tok, "እስካሁን") == ["እስክ", "ኣህኡን"]
+
     def test_unknown_word_is_whole(self, tok):
         assert cut(tok, "ሆስፒታል") == [sound_text("ሆስፒታል")]
 
