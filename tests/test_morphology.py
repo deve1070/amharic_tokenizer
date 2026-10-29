@@ -5,12 +5,8 @@ Level 4 anchors on the lexicon: a stem is a morpheme because a
 validated entry says so, never because the search could reach it.
 """
 
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from amharic_morph.morphology import (  # noqa: E402
+from amharic_morph.morphology import (
     INDEPENDENT,
     PREFIX,
     SUFFIX,

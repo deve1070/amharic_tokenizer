@@ -7,12 +7,9 @@ segmentation on one propagates errors.
 """
 
 import json
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_morph.lexicon_builder import (  # noqa: E402
+from amharic_morph.lexicon_builder import (
     CATEGORY_REVIEW_COLUMNS,
     ROOT_REVIEW_COLUMNS,
     SCHEMA_FIELDS,
@@ -561,7 +558,6 @@ class TestReadCategoryReview:
         row = review_row(reviewed="ok", gloss='"to become"', notes="a\tb")
         decision = round_trip(tmp_path, [row])[0]
         assert decision.notes == "a\tb"
-
 
 
 class TestWriteReview:

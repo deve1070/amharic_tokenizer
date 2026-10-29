@@ -6,13 +6,10 @@ the per-filter drop accounting that makes a large run diagnosable.
 """
 
 import json
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_morph.filter import DROP_REASONS  # noqa: E402
-from amharic_morph.quality_check import (  # noqa: E402
+from amharic_morph.filter import DROP_REASONS
+from amharic_morph.quality_check import (
     CorpusStatistics,
     compute_statistics,
     count_ethiopic_tokens,

@@ -12,10 +12,6 @@ Covers:
 Run with: python -m pytest tests/test_segmenter.py -v
 """
 
-import os
-import sys
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from amharic_morph.segmenter import segment, segment_lines
 

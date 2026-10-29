@@ -10,15 +10,12 @@ The worked example throughout is the spec's, section 5.4:
 """
 
 import json
-import sys
-from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_morph import AmharicTokenizer  # noqa: E402
-from amharic_morph.tokenizer import LEVELS  # noqa: E402
+from amharic_morph import AmharicTokenizer
+from amharic_morph.tokenizer import LEVELS
 
 
 @pytest.fixture

@@ -6,14 +6,11 @@ the annotation format faithfully, and refuse rows that do not follow it
 rather than guess at what they meant.
 """
 
-import sys
 from collections import Counter
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_morph.morphology import Segmentation  # noqa: E402
-from amharic_morph.reference import (  # noqa: E402
+from amharic_morph.morphology import Segmentation
+from amharic_morph.reference import (
     ReferenceAnalysis,
     inflection_agreement,
     propose_root,

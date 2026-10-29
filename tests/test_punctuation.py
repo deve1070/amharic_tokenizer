@@ -5,12 +5,8 @@ The Latin period cases follow the four non-sentence uses of "." in
 Amharic text: numbers, abbreviations, ellipsis, and URLs.
 """
 
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from amharic_morph.punctuation import (  # noqa: E402
+from amharic_morph.punctuation import (
     convert_latin_periods,
     normalize_punctuation,
     normalize_punctuation_lines,

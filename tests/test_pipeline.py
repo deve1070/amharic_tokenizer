@@ -9,12 +9,9 @@ Covers:
 Run with: python -m pytest tests/test_pipeline.py -v
 """
 
-import os
-import sys
 
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from amharic_morph.pipeline import process_file, process_line, process_lines
 

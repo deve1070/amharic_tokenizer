@@ -9,14 +9,11 @@ because nothing ran them.
 import doctest
 import importlib
 import pkgutil
-import sys
-from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-import amharic_morph  # noqa: E402
+import amharic_morph
 
 MODULES = sorted(m.name for m in pkgutil.iter_modules(amharic_morph.__path__))
 

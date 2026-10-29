@@ -7,12 +7,8 @@ The spec's worked example is ቤቶች:
     Level 1 root    ብ ት
 """
 
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from amharic_morph.levels import (  # noqa: E402
+from amharic_morph.levels import (
     bare_consonant,
     decompose_fidel,
     fidel_order,

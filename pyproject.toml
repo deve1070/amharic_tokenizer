@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "amharic-morph"
+dynamic = ["version"]
+description = "Morphologically aware Amharic tokenization at four levels: morpheme, fidel, sound and root."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Dawit" }]
+requires-python = ">=3.10"
+dependencies = []
+keywords = ["amharic", "tokenizer", "morphology", "ethiopic", "nlp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "build>=1.2", "twine>=5.0"]
+
+[project.urls]
+Repository = "https://github.com/deve1070/amharic_tokenizer"
+
+[tool.hatch.version]
+path = "src/amharic_morph/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/amharic_morph"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/amharic_morph", "tests", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

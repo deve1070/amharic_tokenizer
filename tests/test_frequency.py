@@ -7,13 +7,10 @@ removal.
 """
 
 import json
-import sys
 from collections import Counter
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amharic_morph.frequency import (  # noqa: E402
+from amharic_morph.frequency import (
     build_frequency_table,
     candidate_stems,
     coverage_curve,
