@@ -5,11 +5,12 @@
 First release.
 
 - Four linguistic levels for every word: morpheme, fidel, sound and root.
-- Level 4: lexicon-anchored morpheme analysis over 919 reviewed entries.
+- Level 4: lexicon-anchored morpheme analysis over 948 reviewed entries.
   - Fused suffixes, the possessive and object series, the plural ኣት.
   - The በ-series ("on" a person, as in አለበት).
-  - Perfective, imperfective, jussive and gerund verb forms for 44
-    reviewed verbs.
+  - Perfective, imperfective, jussive and gerund verb forms for 70
+    reviewed verbs, and the present perfect (ሆኗል, ሆነዋል, አድርጓል).
+  - Prefixes fused with a stem's initial አ (ያለው, ያውቃል, የሚያደርግ).
   - The plural-adjective infix.
   - The relative ም for subjects other than the 3rd person (የምፈልገው).
   - Readings for every affix.

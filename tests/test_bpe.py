@@ -62,6 +62,10 @@ class TestSoundSegments:
         assert cut(tok, "የሚያውቅ") == ["ይኧ", "ምኢ", "ይ", "ኣውቅ"]
         assert cut(tok, "እስካሁን") == ["እስክ", "ኣህኡን"]
 
+    def test_fused_onto_another_prefix(self, tok):
+        # ካልሆነም: ከ absorbs the አ of the negative አል, not of the stem.
+        assert cut(tok, "ካልሆነም") == ["ክ", "ኣል", "ህኦንኧ", "ም"]
+
     def test_unknown_word_is_whole(self, tok):
         assert cut(tok, "ሆስፒታል") == [sound_text("ሆስፒታል")]
 

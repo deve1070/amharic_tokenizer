@@ -25,6 +25,9 @@ from amharic_morph.morphology import Segmentation
 # symbol to the suffix.
 _BARE = 6
 _INFIX_ORDER = 4
+# A fused prefix takes the next morpheme's initial አ as this vowel.
+_GLOTTAL_A = "አ"
+_ABSORBED = "ኣ"
 
 
 def _suffix_length(shape) -> int:
@@ -33,14 +36,20 @@ def _suffix_length(shape) -> int:
     return vowel + len(sound_text(shape.tail))
 
 
-def _prefix_sound(prefix: str, fused: bool) -> str:
+def _prefix_sound(prefix: str, fused: bool, absorbed: bool) -> str:
     """
-    A prefix's sound text as written. A fused prefix gives its last vowel
-    to the stem: ያለ = ይ | ኣልኧ, where the ኣ is the stem's absorbed አ.
+    A prefix's sound text as written.
+
+    A fused prefix stops at its consonant; the ኣ after it stands for the
+    absorbed አ of what follows: ያለ = ይ | ኣልኧ. When what follows is itself
+    a prefix (ካልሆነም = ከ + አል + ...), that prefix starts with this ኣ in
+    place of its own አ (እኧ).
     """
-    if not fused:
-        return sound_text(prefix)
-    return sound_text(prefix[:-1] + to_order6(prefix[-1]))
+    text = prefix[:-1] + to_order6(prefix[-1]) if fused else prefix
+    sound = sound_text(text)
+    if absorbed:
+        sound = _ABSORBED + sound[len(sound_text(_GLOTTAL_A)):]
+    return sound
 
 
 def _infix_index(stem_letters: str) -> int | None:
@@ -71,7 +80,11 @@ def sound_segments(segmentation: Segmentation) -> list[str]:
         return [whole]
 
     fused = segmentation.prefix_fused or (False,) * len(segmentation.prefixes)
-    prefixes = [_prefix_sound(p, f) for p, f in zip(segmentation.prefixes, fused)]
+    prefixes = []
+    absorbed = False
+    for prefix, is_fused in zip(segmentation.prefixes, fused):
+        prefixes.append(_prefix_sound(prefix, is_fused, absorbed))
+        absorbed = is_fused
     suffix_lengths = [_suffix_length(s) for s in segmentation.suffix_shapes]
     start = sum(len(p) for p in prefixes)
     end = len(whole) - sum(suffix_lengths)
