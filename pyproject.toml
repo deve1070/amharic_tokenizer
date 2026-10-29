@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "build>=1.2", "twine>=5.0"]
+dev = ["pytest>=8.0", "build>=1.2", "hatchling>=1.25", "twine>=5.0"]
 
 [project.urls]
 Repository = "https://github.com/deve1070/amharic_tokenizer"
@@ -42,3 +42,5 @@ include = ["src/amharic_morph", "tests", "README.md", "LICENSE", "pyproject.toml
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["packaging: builds and installs the wheel; run with -m packaging"]
+addopts = "-m 'not packaging'"

@@ -3,9 +3,10 @@ The IRIT morphologically annotated lexicons, as a reference for Levels 4
 and 1.
 
 Yeshambel, Mothe and Assabie (SIGIR 2021) annotated about 171K Amharic
-word types by hand, once stem-based and once root-based. The files
-are kept in resource/irit/, which is gitignored. The download links are
-in resource/resouce.txt.
+word types by hand, once stem-based and once root-based. The files are
+not distributed with this package; load_reference() takes the path of
+one. In the repository they are kept in resource/irit/, which is
+gitignored, and the download links are in resource/resouce.txt.
 
 ── The annotation format ────────────────────────────────────────────────
 
@@ -62,10 +63,6 @@ from amharic_morph.morphology import (
     SUFFIX_TABLE,
 )
 from amharic_morph.normalizer import normalize
-
-REFERENCE_DIR = Path(__file__).parent.parent / "resource" / "irit"
-STEM_LEXICON = REFERENCE_DIR / "Stem-based-lexicon.txt"
-ROOT_LEXICON = REFERENCE_DIR / "Root-based-lexicon.txt"
 
 _HEADER = "Surface word"
 
