@@ -47,10 +47,11 @@ from pathlib import Path
 
 from amharic_morph.levels import (
     bare_consonant,
+    consonant_skeleton,
     fidel_order,
     is_glottal,
     is_labiovelar,
-    consonant_skeleton,
+    to_order,
 )
 from amharic_morph.morphology import (
     DEFAULT_PREFIXES,
@@ -538,3 +539,183 @@ def root_review_rows(words, votes: dict[str, Counter]) -> list[dict]:
         }
         keyed.append(((group, -sum(entry_votes.values()), word), row))
     return [row for _, row in sorted(keyed, key=lambda item: item[0])]
+
+
+# ── Verb stem proposals ───────────────────────────────────────────────────────
+#
+# A verb entry is its 3ms perfective (ሆነ), and the other aspects are
+# built on stems whose vowels differ (ይሆናል on ሆን, ይሁን on ሁን, ፈልጎ on
+# ፈልግ). The reference segments those forms, so each one votes for the
+# stem it shows, in the context that identifies the aspect:
+#
+#   imperfective   ይ_ሆን_አል, የ_ሚ_ሆን, ስ_ት_ሄድ, አይ_ሆን_ም
+#   jussive        ይ_ሁን, with no auxiliary and no subordinator
+#   gerund         ፈልግ_ኦ, ሰጥ_ቶ, ፈልግ_ኤ
+#
+# The proposals go to a native speaker's review; nothing is applied from
+# the vote alone.
+
+_PERSON_PREFIXES = {"ይ", "ት", "እ", "እን", "ን"}
+_SUBORDINATORS = {"ሚ", "ሲ", "ሊ", "ቢ", "እንዲ", "ሳይ", "አይ", "ማ", "ስ", "ል", "ብ", "እንድ", "ሳ"}
+_GERUND_ENDINGS = {"ኦ", "ቶ", "ታ", "ኤ", "አ"}
+_AUXILIARY = ("አል", "አለ")
+
+# Below this share of the jussive votes, a variant that differs from the
+# imperfective is noise rather than a jussive stem.
+_JUSSIVE_MIN_SHARE = 0.1
+
+# Palatalization of a stem's last consonant, as in ሄድ -> ሄጅ (ሄጄ, ትሄጂ).
+_PALATAL = {"ድ": "ጅ", "ት": "ች", "ጥ": "ጭ", "ስ": "ሽ", "ዝ": "ዥ", "ን": "ኝ", "ል": "ይ", "ጽ": "ጭ"}
+
+_PASSIVE = "ተ"
+
+
+def _skeleton(word: str) -> tuple[str, ...]:
+    return tuple(consonant_skeleton(word) or ())
+
+
+def stem_votes(reference, verbs) -> dict[str, dict[str, Counter]]:
+    """
+    Pool the stems the reference shows for each verb, by aspect.
+
+    A stem belongs to a verb when their consonant skeletons are equal. A
+    passive verb (ተደረገ) also takes stems without its ተ (ደረግ), which
+    the imperfective drops: ይደረጋል. Only primary readings vote, and a
+    word standing alone does not: ሞት is the noun, not the imperative of
+    ሞተ.
+
+    Args:
+        reference: A stem-based reference, as returned by load_reference().
+        verbs:     Verb entries, in their 3ms perfective form.
+
+    Returns:
+        verb -> {aspect: Counter of stems}, for verbs with any vote.
+    """
+    by_skeleton: dict[tuple, list[str]] = {}
+    for verb in verbs:
+        by_skeleton.setdefault(_skeleton(verb), []).append(verb)
+        if verb.startswith(_PASSIVE):
+            by_skeleton.setdefault(_skeleton(verb)[1:], []).append(verb)
+
+    votes: dict[str, dict[str, Counter]] = {}
+    for analyses in reference.values():
+        m = analyses[0].morphemes
+        for i, stem in enumerate(m):
+            owners = by_skeleton.get(_skeleton(stem))
+            if not owners:
+                continue
+            before = m[i - 1] if i else ""
+            earlier = m[i - 2] if i > 1 else ""
+            after = m[i + 1] if i + 1 < len(m) else ""
+            if before in _SUBORDINATORS or (
+                before in _PERSON_PREFIXES and (after.startswith(_AUXILIARY) or earlier in _SUBORDINATORS)
+            ):
+                aspect = "imperfective"
+            elif before in _PERSON_PREFIXES and after in ("", "ኡ"):
+                aspect = "jussive"
+            elif i == 0 and after in _GERUND_ENDINGS:
+                aspect = "gerund"
+            else:
+                continue
+            for verb in owners:
+                votes.setdefault(verb, {}).setdefault(aspect, Counter())[stem] += 1
+    return votes
+
+
+def palatalize(stem: str) -> str:
+    """
+    The stem with its last consonant palatalized, or unchanged.
+
+    Examples:
+        >>> palatalize("ሄድ")
+        'ሄጅ'
+        >>> palatalize("ፈልግ")
+        'ፈልግ'
+    """
+    last = stem[-1]
+    target = _PALATAL.get(bare_consonant(last))
+    if target is None:
+        return stem
+    return stem[:-1] + to_order(target, fidel_order(last))
+
+
+def _winner(counter: Counter) -> str:
+    return max(counter.items(), key=lambda item: (item[1], item[0]))[0]
+
+
+def propose_stems(verb: str, votes: dict[str, Counter]) -> dict[str, tuple[str, str]]:
+    """
+    Propose every stem of a verb from its votes.
+
+    - imperfective: the heaviest vote. For a passive, the vote that keeps
+      the perfective's vowels (ተደረገ -> ደረግ), because the active verb's
+      stem (ደርግ) is pooled with it. With no vote, the perfective with
+      its last letter made bare (ሆነ -> ሆን, ታየ -> ታይ).
+    - jussive: for a passive, the imperfective (ይደረግ). For a
+      three-radical verb, the shape with the first radical bare and the
+      second carrying ኧ (ቅረብ), when the reference attests it anywhere.
+      Otherwise a variant unlike the imperfective with at least a tenth
+      of the votes (ሁን for ሆነ), else the imperfective, which many verbs
+      share with the jussive (ይፈልግ).
+    - gerund: the heaviest vote, else the imperfective. A passive gerund
+      keeps its ተ (ተደርጎ).
+    - the palatal stems: the three above with the last consonant
+      palatalized, by rule.
+
+    Args:
+        verb:  The verb entry.
+        votes: Its aspect -> Counter from stem_votes(), possibly empty.
+
+    Returns:
+        kind -> (stem, source), source naming the evidence ("IRIT 155/157",
+        "rule").
+    """
+    def source(kind, stem):
+        counter = votes.get(kind)
+        bare = stem[1:] if passive and kind == "gerund" else stem
+        if counter and bare in counter:
+            return f"IRIT {counter[bare]}/{sum(counter.values())}"
+        if any(bare in c for c in votes.values()):
+            return "IRIT, another context"
+        return "rule"
+
+    passive = verb.startswith(_PASSIVE)
+    by_rule = verb[:-1] + to_order(verb[-1], 6)
+    if passive:
+        by_rule = by_rule[1:]
+
+    imperfective = votes.get("imperfective")
+    if imperfective and passive and by_rule in imperfective:
+        imp = by_rule
+    elif imperfective:
+        imp = _winner(imperfective)
+    else:
+        imp = by_rule
+
+    jussive_votes = votes.get("jussive") or Counter()
+    total = sum(jussive_votes.values())
+    unlike = Counter({s: n for s, n in jussive_votes.items() if s != imp and n >= _JUSSIVE_MIN_SHARE * total})
+    # The three-radical jussive: first radical bare, second with ኧ, last
+    # bare (ቀረበ -> ቅረብ, ወረደ -> ውረድ). Taken when the reference attests
+    # it in any context.
+    shape_a = None
+    if len(verb) == 3 and not passive:
+        shape_a = to_order(verb[0], 6) + to_order(verb[1], 1) + to_order(verb[2], 6)
+    attested = sum((c.get(shape_a, 0) for c in votes.values()), 0) if shape_a else 0
+    if passive:
+        jus = imp
+    elif attested >= 2:
+        jus = shape_a
+    else:
+        jus = _winner(unlike) if unlike else imp
+
+    gerund_votes = votes.get("gerund")
+    ger = _winner(gerund_votes) if gerund_votes else imp
+    if passive and not ger.startswith(_PASSIVE):
+        ger = _PASSIVE + ger
+
+    stems = {"imperfective": imp, "jussive": jus, "gerund": ger}
+    proposal = {kind: (stem, source(kind, stem)) for kind, stem in stems.items()}
+    for kind, stem in stems.items():
+        proposal[f"{kind}_palatal"] = (palatalize(stem), "rule")
+    return proposal

@@ -51,6 +51,7 @@ def entry(word="ቤት", validated=False, category=None, **kwargs):
         "allows_infix": None,
         "root_consonants": ["ብ", "ት"],
         "root_source": "skeleton",
+        "stems": {},
         "source": "corpus_bootstrap",
         "validated": validated,
         "notes": "",
@@ -790,3 +791,95 @@ class TestApplyRootReview:
         entries = [entry("ሆነ")]
         apply_root_review(entries, [RootDecision("ሆነ", ["ህ", "ው", "ን"], "")])
         assert entries[0]["root_source"] == "skeleton"
+
+
+# ── Verb stems ───────────────────────────────────────────────────────────────
+
+from amharic_morph.lexicon_builder import (  # noqa: E402
+    STEM_KINDS,
+    STEM_REVIEW_COLUMNS,
+    StemDecision,
+    apply_stem_review,
+    read_stem_review,
+)
+
+
+def stem_row(word="ሆነ", kind="imperfective", proposed="ሆን", reviewed="", **kwargs):
+    row = {column: "" for column in STEM_REVIEW_COLUMNS}
+    row.update(word=word, kind=kind, proposed=proposed, reviewed=reviewed)
+    row.update(kwargs)
+    return row
+
+
+def stem_round_trip(tmp_path, rows):
+    path = tmp_path / "stems.tsv"
+    write_review(rows, str(path), STEM_REVIEW_COLUMNS)
+    return read_stem_review(str(path))
+
+
+class TestStemSchema:
+    def test_stems_is_a_schema_field(self):
+        assert "stems" in SCHEMA_FIELDS
+
+    def test_known_kinds_are_clean(self):
+        assert schema_errors(entry(stems={"imperfective": "ሆን"})) == []
+
+    def test_unknown_kind(self):
+        assert any("stems" in p for p in schema_errors(entry(stems={"future": "ሆን"})))
+
+    def test_stems_must_be_a_mapping(self):
+        assert any("stems" in p for p in schema_errors(entry(stems=["ሆን"])))
+
+
+class TestReadStemReview:
+    def test_unreviewed_rows_are_not_returned(self, tmp_path):
+        assert stem_round_trip(tmp_path, [stem_row()]) == []
+
+    def test_ok_accepts_the_proposal(self, tmp_path):
+        assert stem_round_trip(tmp_path, [stem_row(reviewed="ok")]) == [
+            StemDecision("ሆነ", "imperfective", "ሆን", "")
+        ]
+
+    def test_a_written_stem_overrides(self, tmp_path):
+        decisions = stem_round_trip(tmp_path, [stem_row(kind="jussive", reviewed="ሁን")])
+        assert decisions[0].stem == "ሁን"
+
+    def test_none_means_the_verb_has_no_such_stem(self, tmp_path):
+        assert stem_round_trip(tmp_path, [stem_row(reviewed="none")])[0].stem is None
+
+    def test_unknown_kind_raises(self, tmp_path):
+        raises_value_error(lambda: stem_round_trip(tmp_path, [stem_row(kind="future", reviewed="ok")]), "future")
+
+    def test_non_ethiopic_stem_raises(self, tmp_path):
+        raises_value_error(lambda: stem_round_trip(tmp_path, [stem_row(reviewed="hon")]), "line 2")
+
+
+class TestApplyStemReview:
+    def test_sets_the_stems(self):
+        verb = entry("ሆነ", category="verb", stems={})
+        result = apply_stem_review([verb], [
+            StemDecision("ሆነ", "imperfective", "ሆን", ""),
+            StemDecision("ሆነ", "jussive", "ሁን", ""),
+        ])
+        assert result[0]["stems"] == {"imperfective": "ሆን", "jussive": "ሁን"}
+
+    def test_none_removes_a_stem(self):
+        verb = entry("ሆነ", category="verb", stems={"jussive": "ሁን"})
+        result = apply_stem_review([verb], [StemDecision("ሆነ", "jussive", None, "")])
+        assert result[0]["stems"] == {}
+
+    def test_a_non_verb_raises(self):
+        raises_value_error(
+            lambda: apply_stem_review([entry("ቤት", category="noun", stems={})],
+                                      [StemDecision("ቤት", "imperfective", "ቤት", "")]),
+            "ቤት",
+        )
+
+    def test_unknown_word_raises(self):
+        raises_value_error(lambda: apply_stem_review([], [StemDecision("ሆነ", "jussive", "ሁን", "")]), "ሆነ")
+
+    def test_kinds_cover_the_paradigm(self):
+        assert set(STEM_KINDS) == {
+            "imperfective", "jussive", "gerund",
+            "imperfective_palatal", "jussive_palatal", "gerund_palatal",
+        }

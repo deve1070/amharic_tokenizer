@@ -36,6 +36,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -77,6 +78,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -116,6 +118,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -155,6 +158,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -189,6 +193,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -228,6 +233,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -267,6 +273,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive (verbal noun) of ሆነ; same root as ሆነ (Q1)"
@@ -306,6 +313,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -345,6 +353,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of አገር"
@@ -387,6 +396,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -426,6 +436,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -466,6 +477,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -501,6 +513,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "homograph: ይነጋል belongs to ነጋ (dawn), not to ነገ"
@@ -536,6 +549,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "interrogative"
@@ -579,6 +593,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "the verb is ሰራ"
@@ -617,6 +632,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive of አለ, also a discourse marker"
@@ -651,6 +667,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also the name Addis"
@@ -691,6 +708,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -728,6 +746,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -767,6 +786,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -803,6 +823,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -841,6 +862,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -878,6 +900,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -915,6 +938,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -955,6 +979,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -992,6 +1017,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1025,6 +1051,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "interrogative"
@@ -1057,6 +1084,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1093,6 +1121,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1133,6 +1162,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "the verb is ሞተ"
@@ -1172,6 +1202,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1204,6 +1235,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1244,6 +1276,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also part of names (ጌታቸው)"
@@ -1277,6 +1310,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1314,6 +1348,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1346,6 +1381,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1390,6 +1426,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1422,6 +1459,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -1458,6 +1496,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pair of ነበረ"
@@ -1494,6 +1533,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1538,6 +1578,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "two verbs share this form; negative is irregular (የለም)"
@@ -1574,6 +1615,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1606,6 +1648,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1638,6 +1681,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -1677,6 +1721,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1715,6 +1760,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1746,6 +1792,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1782,6 +1829,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1812,6 +1860,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1850,6 +1899,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1889,6 +1939,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -1917,6 +1968,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -1948,6 +2000,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -1977,6 +2030,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -2014,6 +2068,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2047,6 +2102,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2092,6 +2148,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2129,6 +2186,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2166,6 +2224,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -2195,6 +2254,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -2230,6 +2290,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2266,6 +2327,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2304,6 +2366,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -2341,6 +2404,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2380,6 +2444,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2418,6 +2483,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2455,6 +2521,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2492,6 +2559,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2529,6 +2597,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2557,6 +2626,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -2593,6 +2663,7 @@
       "ጭ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2628,6 +2699,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2666,6 +2738,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2705,6 +2778,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2741,6 +2815,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2778,6 +2853,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2809,6 +2885,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2842,6 +2919,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2878,6 +2956,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -2913,6 +2992,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2949,6 +3029,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -2983,6 +3064,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3016,6 +3098,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -3058,6 +3141,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3089,6 +3173,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3126,6 +3211,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3162,6 +3248,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3199,6 +3286,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3233,6 +3321,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3276,6 +3365,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3308,6 +3398,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "postposition"
@@ -3344,6 +3435,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3380,6 +3472,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3415,6 +3508,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3451,6 +3545,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also (before) as a postposition"
@@ -3491,6 +3586,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3522,6 +3618,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3560,6 +3657,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3595,6 +3693,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3633,6 +3732,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3669,6 +3769,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3705,6 +3806,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3741,6 +3843,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3777,6 +3880,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3812,6 +3916,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3843,6 +3948,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3878,6 +3984,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3916,6 +4023,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -3949,6 +4057,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -3976,6 +4085,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -4003,6 +4113,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -4037,6 +4148,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4070,6 +4182,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4106,6 +4219,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -4143,6 +4257,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -4179,6 +4294,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4214,6 +4330,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4252,6 +4369,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4286,6 +4404,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4322,6 +4441,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4350,6 +4470,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "homograph: ይጋራል belongs to ተጋራ (share)"
@@ -4386,6 +4507,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also a postposition (under)"
@@ -4424,6 +4546,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4460,6 +4583,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4497,6 +4621,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4528,6 +4653,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4562,6 +4688,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4599,6 +4726,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4637,6 +4765,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4673,6 +4802,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4709,6 +4839,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4746,6 +4877,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4783,6 +4915,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4817,6 +4950,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4854,6 +4988,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4885,6 +5020,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4921,6 +5057,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4959,6 +5096,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -4989,6 +5127,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5021,6 +5160,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5058,6 +5198,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5091,6 +5232,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5124,6 +5266,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5151,6 +5294,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -5188,6 +5332,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5217,6 +5362,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5244,6 +5390,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -5280,6 +5427,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5312,6 +5460,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5343,6 +5492,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5378,6 +5528,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5415,6 +5566,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5446,6 +5598,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5481,6 +5634,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -5517,6 +5671,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5552,6 +5707,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5579,6 +5735,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -5618,6 +5775,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5656,6 +5814,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5690,6 +5849,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5726,6 +5886,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5759,6 +5920,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5796,6 +5958,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -5835,6 +5998,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5872,6 +6036,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -5906,6 +6071,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -5934,6 +6100,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -5969,6 +6136,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -6004,6 +6172,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6037,6 +6206,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6068,6 +6238,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6100,6 +6271,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6134,6 +6306,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -6175,6 +6348,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6210,6 +6384,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6243,6 +6418,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6279,6 +6455,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6315,6 +6492,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6351,6 +6529,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -6384,6 +6563,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6419,6 +6599,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6451,6 +6632,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6485,6 +6667,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6522,6 +6705,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also a personal name"
@@ -6558,6 +6742,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective (ordinary)"
@@ -6597,6 +6782,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6629,6 +6815,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Kept by hand: a real word, not ወንድ + ም. The suffix rule runs backwards over it."
@@ -6660,6 +6847,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6696,6 +6884,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6737,6 +6926,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6774,6 +6964,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6808,6 +6999,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6841,6 +7033,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6874,6 +7067,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6901,6 +7095,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -6936,6 +7131,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -6968,6 +7164,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7003,6 +7200,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7035,6 +7233,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7073,6 +7272,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7107,6 +7307,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -7138,6 +7339,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -7174,6 +7376,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7209,6 +7412,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -7245,6 +7449,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "verb evidence belongs to ጠበቀ"
@@ -7281,6 +7486,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7319,6 +7525,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7352,6 +7559,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7389,6 +7597,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "homograph: ይጥላል belongs to ጣለ (throw)"
@@ -7422,6 +7631,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7453,6 +7663,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7483,6 +7694,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7525,6 +7737,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7557,6 +7770,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "postposition"
@@ -7583,6 +7797,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -7620,6 +7835,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7647,6 +7863,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -7682,6 +7899,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7717,6 +7935,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7748,6 +7967,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adverb"
@@ -7774,6 +7994,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "demonstrative"
@@ -7804,6 +8025,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7843,6 +8065,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7874,6 +8097,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also (swimming)"
@@ -7911,6 +8135,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7949,6 +8174,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -7984,6 +8210,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8016,6 +8243,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8045,6 +8273,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8075,6 +8304,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8102,6 +8332,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -8128,6 +8359,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -8154,6 +8386,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -8187,6 +8420,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8219,6 +8453,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8245,6 +8480,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -8275,6 +8511,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -8307,6 +8544,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8342,6 +8580,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8379,6 +8618,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8418,6 +8658,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8451,6 +8692,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8476,6 +8718,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of ኢትዮጵያዊ; deferred with ኣን"
@@ -8511,6 +8754,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "homograph: ይዋጋል belongs to ተዋጋ (fight)"
@@ -8538,6 +8782,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -8573,6 +8818,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8607,6 +8853,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8640,6 +8887,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8668,6 +8916,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8696,6 +8945,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -8722,6 +8972,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -8759,6 +9010,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8794,6 +9046,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8828,6 +9081,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8862,6 +9116,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8891,6 +9146,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8926,6 +9182,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8961,6 +9218,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -8993,6 +9251,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "ordinal"
@@ -9019,6 +9278,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -9051,6 +9311,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9086,6 +9347,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9119,6 +9381,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9146,6 +9409,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -9181,6 +9445,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9213,6 +9478,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9250,6 +9516,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -9282,6 +9549,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9316,6 +9584,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9350,6 +9619,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9381,6 +9651,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -9417,6 +9688,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9453,6 +9725,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9488,6 +9761,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9523,6 +9797,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9559,6 +9834,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9590,6 +9866,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9616,6 +9893,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -9643,6 +9921,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun; also adjective (great)"
@@ -9677,6 +9956,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -9713,6 +9993,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -9748,6 +10029,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9775,6 +10057,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9809,6 +10092,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9844,6 +10128,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9877,6 +10162,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9904,6 +10190,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -9937,6 +10224,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -9974,6 +10262,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10010,6 +10299,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10042,6 +10332,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10077,6 +10368,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10110,6 +10402,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10143,6 +10436,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10169,6 +10463,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -10198,6 +10493,7 @@
       "ሽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10230,6 +10526,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10257,6 +10554,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10292,6 +10590,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10321,6 +10620,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10351,6 +10651,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10384,6 +10685,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10411,6 +10713,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -10444,6 +10747,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10477,6 +10781,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10507,6 +10812,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10539,6 +10845,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10575,6 +10882,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10605,6 +10913,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10637,6 +10946,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10671,6 +10981,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10708,6 +11019,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10740,6 +11052,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10776,6 +11089,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10809,6 +11123,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10841,6 +11156,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10876,6 +11192,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -10909,6 +11226,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -10941,6 +11259,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -10970,6 +11289,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11001,6 +11321,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11034,6 +11355,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11068,6 +11390,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11101,6 +11424,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11127,6 +11451,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11160,6 +11485,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11195,6 +11521,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11222,6 +11549,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11252,6 +11580,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11285,6 +11614,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11319,6 +11649,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11355,6 +11686,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11389,6 +11721,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11417,6 +11750,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11448,6 +11782,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11480,6 +11815,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11513,6 +11849,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11542,6 +11879,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11575,6 +11913,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11609,6 +11948,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11644,6 +11984,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -11677,6 +12018,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11707,6 +12049,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -11737,6 +12080,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of ምእመን; deferred with ኣን"
@@ -11764,6 +12108,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11797,6 +12142,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11831,6 +12177,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -11866,6 +12213,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11895,6 +12243,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11927,6 +12276,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11960,6 +12310,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -11993,6 +12344,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12023,6 +12375,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12057,6 +12410,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12083,6 +12437,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -12116,6 +12471,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -12149,6 +12505,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12181,6 +12538,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -12216,6 +12574,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12242,6 +12601,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -12268,6 +12628,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -12304,6 +12665,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12336,6 +12698,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12367,6 +12730,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12400,6 +12764,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12431,6 +12796,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12465,6 +12831,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12499,6 +12866,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12526,6 +12894,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12552,6 +12921,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12586,6 +12956,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12617,6 +12988,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12648,6 +13020,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12674,6 +13047,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -12709,6 +13083,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12746,6 +13121,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12774,6 +13150,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12805,6 +13182,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12842,6 +13220,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12876,6 +13255,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12907,6 +13287,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12944,6 +13325,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -12977,6 +13359,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13008,6 +13391,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13038,6 +13422,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ገዥ"
@@ -13072,6 +13457,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13106,6 +13492,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -13136,6 +13523,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13169,6 +13557,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -13202,6 +13591,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13236,6 +13626,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13268,6 +13659,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -13294,6 +13686,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -13324,6 +13717,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13357,6 +13751,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13391,6 +13786,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13431,6 +13827,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13461,6 +13858,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13496,6 +13894,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13537,6 +13936,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13570,6 +13970,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13604,6 +14005,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -13634,6 +14036,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13668,6 +14071,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13701,6 +14105,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13731,6 +14136,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13764,6 +14170,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13789,6 +14196,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -13820,6 +14228,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "verb evidence belongs to ጨለመ"
@@ -13852,6 +14261,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13888,6 +14298,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -13920,6 +14331,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13955,6 +14367,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -13986,6 +14399,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14020,6 +14434,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14056,6 +14471,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an exclamation"
@@ -14090,6 +14506,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14125,6 +14542,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14157,6 +14575,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -14192,6 +14611,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -14229,6 +14649,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14260,6 +14681,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14290,6 +14712,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14322,6 +14745,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -14348,6 +14772,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -14380,6 +14805,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14411,6 +14837,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14437,6 +14864,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14468,6 +14896,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14502,6 +14931,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14537,6 +14967,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14570,6 +15001,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14596,6 +15028,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -14632,6 +15065,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14664,6 +15098,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also a personal name"
@@ -14693,6 +15128,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14726,6 +15162,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -14754,6 +15191,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14794,6 +15232,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14827,6 +15266,7 @@
       "ሽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14858,6 +15298,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -14888,6 +15329,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14915,6 +15357,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14944,6 +15387,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -14976,6 +15420,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15005,6 +15450,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15032,6 +15478,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15066,6 +15513,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15101,6 +15549,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15129,6 +15578,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ቤተክርስቲያን"
@@ -15159,6 +15609,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15193,6 +15644,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15228,6 +15680,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15268,6 +15721,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15297,6 +15751,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15327,6 +15782,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -15357,6 +15813,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15387,6 +15844,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15422,6 +15880,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15453,6 +15912,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15484,6 +15944,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15517,6 +15978,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15549,6 +16011,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15583,6 +16046,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15613,6 +16077,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15642,6 +16107,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15672,6 +16138,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15703,6 +16170,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15739,6 +16207,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15767,6 +16236,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15798,6 +16268,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15823,6 +16294,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "arguably በ + ላይ; ruling still open"
@@ -15858,6 +16330,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "same root as ሆነ (Q1)"
@@ -15883,6 +16356,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -15920,6 +16394,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -15950,6 +16425,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of አመት; deferred with ኣን/ኣት"
@@ -15985,6 +16461,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16013,6 +16490,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16045,6 +16523,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16072,6 +16551,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -16107,6 +16587,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16135,6 +16616,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -16168,6 +16650,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16196,6 +16679,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16226,6 +16710,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "homograph: rare verb readings"
@@ -16259,6 +16744,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16292,6 +16778,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16321,6 +16808,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16349,6 +16837,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also ገና (Christmas)"
@@ -16379,6 +16868,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16417,6 +16907,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "relative form of አለ, also a compounding prefix (ባለሙያ)"
@@ -16447,6 +16938,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16481,6 +16973,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16512,6 +17005,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16545,6 +17039,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16578,6 +17073,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16605,6 +17101,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -16638,6 +17135,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16668,6 +17166,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16698,6 +17197,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16726,6 +17226,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16752,6 +17253,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "interrogative"
@@ -16785,6 +17287,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16818,6 +17321,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16849,6 +17353,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16882,6 +17387,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16915,6 +17421,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16946,6 +17453,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -16977,6 +17485,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17005,6 +17514,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ውጭ"
@@ -17038,6 +17548,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17070,6 +17581,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17095,6 +17607,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -17124,6 +17637,7 @@
       "ጭ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17158,6 +17672,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17188,6 +17703,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17219,6 +17735,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17250,6 +17767,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17275,6 +17793,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adverb"
@@ -17304,6 +17823,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17329,6 +17849,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective"
@@ -17360,6 +17881,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective (uniform)"
@@ -17394,6 +17916,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17429,6 +17952,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17460,6 +17984,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17490,6 +18015,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17522,6 +18048,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of ህጻን; deferred with ኣን/ኣት"
@@ -17552,6 +18079,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17582,6 +18110,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17610,6 +18139,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17646,6 +18176,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17674,6 +18205,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17703,6 +18235,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of አፍሪካ"
@@ -17737,6 +18270,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "verb evidence belongs to ወረደ"
@@ -17766,6 +18300,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17802,6 +18337,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17836,6 +18372,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17867,6 +18404,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pair of አባ"
@@ -17898,6 +18436,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17927,6 +18466,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of ቃል; deferred with ኣን/ኣት"
@@ -17957,6 +18497,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -17982,6 +18523,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18013,6 +18555,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18042,6 +18585,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18066,6 +18610,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18097,6 +18642,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18131,6 +18677,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -18160,6 +18707,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18191,6 +18739,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18227,6 +18776,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pair of አብ"
@@ -18258,6 +18808,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18287,6 +18838,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "interjection; also the negative prefix in አይሄድም"
@@ -18316,6 +18868,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18345,6 +18898,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of ቅዱስ; deferred with ኣን"
@@ -18370,6 +18924,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -18399,6 +18954,7 @@
       "ጭ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18424,6 +18980,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18457,6 +19014,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18489,6 +19047,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -18519,6 +19078,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18544,6 +19104,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun (club names)"
@@ -18575,6 +19136,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18609,6 +19171,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18643,6 +19206,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -18678,6 +19242,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18708,6 +19273,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18741,6 +19307,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18770,6 +19337,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18801,6 +19369,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18830,6 +19399,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18862,6 +19432,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18891,6 +19462,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18923,6 +19495,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -18955,6 +19528,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "ordinal"
@@ -18982,6 +19556,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19015,6 +19590,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19049,6 +19625,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19079,6 +19656,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -19112,6 +19690,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19137,6 +19716,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -19169,6 +19749,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19199,6 +19780,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19229,6 +19811,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -19259,6 +19842,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19284,6 +19868,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -19314,6 +19899,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19348,6 +19934,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "verb evidence belongs to መከረ (advise)"
@@ -19379,6 +19966,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19413,6 +20001,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19441,6 +20030,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19472,6 +20062,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19497,6 +20088,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -19530,6 +20122,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective (entire)"
@@ -19562,6 +20155,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19592,6 +20186,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19619,6 +20214,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19651,6 +20247,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19677,6 +20274,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19704,6 +20302,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19740,6 +20339,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19770,6 +20370,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19794,6 +20395,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "numeral"
@@ -19828,6 +20430,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19857,6 +20460,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19895,6 +20499,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19926,6 +20531,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19958,6 +20564,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -19987,6 +20594,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20018,6 +20626,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20053,6 +20662,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20085,6 +20695,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20114,6 +20725,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20143,6 +20755,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20172,6 +20785,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also a personal name"
@@ -20204,6 +20818,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -20230,6 +20845,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20255,6 +20871,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of አብይ"
@@ -20284,6 +20901,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20314,6 +20932,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20345,6 +20964,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20370,6 +20990,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "personal name; looks like ተስፋ + ዬ"
@@ -20403,6 +21024,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20432,6 +21054,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20463,6 +21086,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20500,6 +21124,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20529,6 +21154,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of ማህበር; deferred with ኣን/ኣት"
@@ -20560,6 +21186,7 @@
       "ሽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20593,6 +21220,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20625,6 +21253,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -20655,6 +21284,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20684,6 +21314,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20717,6 +21348,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20745,6 +21377,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Kept by hand: ወሬ (rumour), not ወር + ኤ"
@@ -20770,6 +21403,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -20803,6 +21437,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20834,6 +21469,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20862,6 +21498,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20895,6 +21532,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20928,6 +21566,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20957,6 +21596,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -20987,6 +21627,7 @@
       "ሽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21016,6 +21657,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21046,6 +21688,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -21076,6 +21719,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21113,6 +21757,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21147,6 +21792,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21179,6 +21825,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21209,6 +21856,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21242,6 +21890,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21274,6 +21923,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21302,6 +21952,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun (Oromo system)"
@@ -21336,6 +21987,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21368,6 +22020,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21397,6 +22050,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21426,6 +22080,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21456,6 +22111,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21490,6 +22146,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -21523,6 +22180,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21555,6 +22213,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21587,6 +22246,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21621,6 +22281,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -21654,6 +22315,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21679,6 +22341,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -21711,6 +22374,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -21736,6 +22400,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21770,6 +22435,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21802,6 +22468,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21832,6 +22499,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21865,6 +22533,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -21893,6 +22562,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21919,6 +22589,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21956,6 +22627,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -21986,6 +22658,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22015,6 +22688,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22045,6 +22719,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22078,6 +22753,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -22112,6 +22788,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective"
@@ -22138,6 +22815,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -22163,6 +22841,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -22191,6 +22870,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -22222,6 +22902,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22251,6 +22932,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22276,6 +22958,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22301,6 +22984,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -22332,6 +23016,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -22362,6 +23047,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22396,6 +23082,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -22426,6 +23113,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22461,6 +23149,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22493,6 +23182,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -22523,6 +23213,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22549,6 +23240,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22574,6 +23266,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -22606,6 +23299,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -22631,6 +23325,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22664,6 +23359,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22695,6 +23391,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22729,6 +23426,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22757,6 +23455,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22787,6 +23486,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22817,6 +23517,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22847,6 +23548,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22878,6 +23580,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22909,6 +23612,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -22934,6 +23638,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -22961,6 +23666,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -22990,6 +23696,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23026,6 +23733,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23056,6 +23764,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ትናንት"
@@ -23089,6 +23798,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -23116,6 +23826,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23146,6 +23857,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23172,6 +23884,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -23205,6 +23918,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23230,6 +23944,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -23262,6 +23977,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -23291,6 +24007,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23322,6 +24039,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23353,6 +24071,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23387,6 +24106,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23419,6 +24139,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23450,6 +24171,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23480,6 +24202,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23512,6 +24235,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23537,6 +24261,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -23562,6 +24287,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "pronoun"
@@ -23594,6 +24320,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23624,6 +24351,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -23654,6 +24382,7 @@
       "ሽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also an adjective (dirty)"
@@ -23686,6 +24415,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23717,6 +24447,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -23749,6 +24480,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23774,6 +24506,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -23806,6 +24539,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -23838,6 +24572,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -23868,6 +24603,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "a word of its own, not ስልጣን + ኤ"
@@ -23898,6 +24634,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23928,6 +24665,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23961,6 +24699,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -23990,6 +24729,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24021,6 +24761,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -24053,6 +24794,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -24083,6 +24825,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "verb evidence belongs to ደከመ"
@@ -24112,6 +24855,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24141,6 +24885,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural of መልአክ; deferred with ኣን/ኣት"
@@ -24174,6 +24919,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24205,6 +24951,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24236,6 +24983,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -24272,6 +25020,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -24300,6 +25049,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24325,6 +25075,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -24362,6 +25113,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "homograph: also a verb (envied)"
@@ -24392,6 +25144,7 @@
       "ጽ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24422,6 +25175,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24451,6 +25205,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24480,6 +25235,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -24509,6 +25265,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24540,6 +25297,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24574,6 +25332,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24600,6 +25359,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24628,6 +25388,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24653,6 +25414,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -24684,6 +25446,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24722,6 +25485,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24752,6 +25516,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24782,6 +25547,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24807,6 +25573,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -24837,6 +25604,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24868,6 +25636,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24900,6 +25669,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24932,6 +25702,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -24958,6 +25729,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -24988,6 +25760,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25020,6 +25793,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25045,6 +25819,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25079,6 +25854,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25107,6 +25883,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25136,6 +25913,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25164,6 +25942,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25191,6 +25970,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25217,6 +25997,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ኢኮኖሚ"
@@ -25244,6 +26025,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25274,6 +26056,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25306,6 +26089,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25338,6 +26122,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25374,6 +26159,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25404,6 +26190,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25436,6 +26223,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25466,6 +26254,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "also a noun (poor person)"
@@ -25496,6 +26285,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25528,6 +26318,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25557,6 +26348,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25586,6 +26378,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25615,6 +26408,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25640,6 +26434,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -25672,6 +26467,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25702,6 +26498,7 @@
       "ክ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25727,6 +26524,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25762,6 +26560,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25794,6 +26593,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25822,6 +26622,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25852,6 +26653,7 @@
       "ው"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -25890,6 +26692,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25921,6 +26724,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -25949,6 +26753,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Kept by hand: ቅኔ (poetry), not ቅን + ኤ"
@@ -25975,6 +26780,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26008,6 +26814,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26040,6 +26847,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26070,6 +26878,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -26102,6 +26911,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26132,6 +26942,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26157,6 +26968,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -26188,6 +27000,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26217,6 +27030,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26247,6 +27061,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26284,6 +27099,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26317,6 +27133,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26346,6 +27163,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of አካባቢ"
@@ -26375,6 +27193,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26400,6 +27219,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural; deferred with ኣን"
@@ -26430,6 +27250,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -26460,6 +27281,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -26491,6 +27313,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26521,6 +27344,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26552,6 +27376,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26583,6 +27408,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -26613,6 +27439,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26644,6 +27471,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26675,6 +27503,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26706,6 +27535,7 @@
       "ጅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26742,6 +27572,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26772,6 +27603,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26797,6 +27629,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -26827,6 +27660,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26857,6 +27691,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26890,6 +27725,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26926,6 +27762,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26958,6 +27795,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -26990,6 +27828,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27020,6 +27859,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27051,6 +27891,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -27089,6 +27930,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27118,6 +27960,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27147,6 +27990,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27183,6 +28027,7 @@
       "ይ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27213,6 +28058,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27239,6 +28085,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27266,6 +28113,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27295,6 +28143,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -27325,6 +28174,7 @@
       "ፍ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27353,6 +28203,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Kept by hand: በሬ (ox), not በር + ኤ"
@@ -27384,6 +28235,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27414,6 +28266,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -27445,6 +28298,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27474,6 +28328,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27504,6 +28359,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27529,6 +28385,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -27561,6 +28418,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27593,6 +28451,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27624,6 +28483,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27653,6 +28513,7 @@
       "ህ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ድሀ"
@@ -27684,6 +28545,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27716,6 +28578,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27746,6 +28609,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27775,6 +28639,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27811,6 +28676,7 @@
       "ቅ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27842,6 +28708,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27867,6 +28734,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "Ge'ez-pattern plural; deferred with ኣን"
@@ -27903,6 +28771,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27935,6 +28804,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27965,6 +28835,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -27995,6 +28866,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28028,6 +28900,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "spelling variant of ሀጢአት"
@@ -28058,6 +28931,7 @@
       "ጭ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28090,6 +28964,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28115,6 +28990,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -28148,6 +29024,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28177,6 +29054,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28210,6 +29088,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -28242,6 +29121,7 @@
       "ጥ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -28271,6 +29151,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28300,6 +29181,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28333,6 +29215,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -28364,6 +29247,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28396,6 +29280,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28427,6 +29312,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "infinitive"
@@ -28458,6 +29344,7 @@
       "ዝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28486,6 +29373,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28524,6 +29412,7 @@
       "ድ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28553,6 +29442,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28578,6 +29468,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -28607,6 +29498,7 @@
       "ት"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28632,6 +29524,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": "proper noun"
@@ -28659,6 +29552,7 @@
       "ኝ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28696,6 +29590,7 @@
       "ል"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28729,6 +29624,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28758,6 +29654,7 @@
       "ስ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28789,6 +29686,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28817,6 +29715,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28848,6 +29747,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28878,6 +29778,7 @@
       "ግ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28906,6 +29807,7 @@
       "ብ"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28935,6 +29837,7 @@
       "ን"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
@@ -28959,6 +29862,7 @@
     "allows_infix": null,
     "root_consonants": null,
     "root_source": "native_speaker",
+    "stems": {},
     "source": "native_speaker",
     "validated": true,
     "notes": "loanword; without an entry ኣማ splits it as ድር + ኣማ"
@@ -28976,6 +29880,7 @@
       "ም"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "native_speaker",
     "validated": true,
     "notes": "without an entry ኣማ splits it as አሳ + ኣማ (fishy)"
@@ -29007,6 +29912,7 @@
       "ር"
     ],
     "root_source": "native_speaker",
+    "stems": {},
     "source": "native_speaker",
     "validated": true,
     "notes": ""

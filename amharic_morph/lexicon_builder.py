@@ -74,6 +74,7 @@ SCHEMA_FIELDS = (
     "allows_infix",
     "root_consonants",
     "root_source",
+    "stems",
     "source",
     "validated",
     "notes",
@@ -100,6 +101,22 @@ SOURCE_NATIVE_SPEAKER = "native_speaker"
 ROOT_SOURCE_SKELETON = "skeleton"
 
 VALID_ROOT_SOURCES = (SOURCE_NATIVE_SPEAKER, ROOT_SOURCE_SKELETON)
+
+# The stems a verb entry can carry besides its own form, the 3ms
+# perfective. Each is a native speaker's ruling, stored only once
+# reviewed. The vowels inside the stem change with the aspect, which no
+# rule recovers reliably: ፈለገ has the imperfective ፈልግ (ይፈልጋል),
+# ሆነ the jussive ሁን (ይሁን), ሰጠ the gerund ሰጥ (ሰጥቶ). The palatal stems
+# are the ones the 1s gerund (ሄጄ), the 2fs imperfective (ትሄጂ) and the
+# 2fs imperative (ሂጂ) are built on.
+STEM_KINDS = (
+    "imperfective",
+    "jussive",
+    "gerund",
+    "imperfective_palatal",
+    "jussive_palatal",
+    "gerund_palatal",
+)
 
 
 def to_schema_entry(entry: dict) -> dict:
@@ -261,6 +278,14 @@ def schema_errors(entry: dict) -> list[str]:
         value = entry.get(field)
         if value is not None and not isinstance(value, list):
             problems.append(f"{field} must be a list")
+
+    stems = entry.get("stems")
+    if not isinstance(stems, dict):
+        problems.append("stems must be a mapping")
+    else:
+        unknown = sorted(set(stems) - set(STEM_KINDS))
+        if unknown:
+            problems.append(f"stems kind not recognised: {unknown}")
 
     root_source = entry.get("root_source")
     if root_source not in VALID_ROOT_SOURCES:
@@ -742,6 +767,7 @@ def add_entries(entries: list[dict], categories: dict[str, str]) -> list[dict]:
             "allows_infix": None,
             "root_consonants": consonant_skeleton(word) or [],
             "root_source": ROOT_SOURCE_SKELETON,
+            "stems": {},
             "source": SOURCE_NATIVE_SPEAKER,
             "validated": True,
             "notes": "",
@@ -833,3 +859,92 @@ def apply_root_review(entries: list[dict], decisions: list[RootDecision]) -> lis
             "notes": _with_note(e.get("notes") or "", d.notes),
         })
     return result
+
+
+# ── Stem review ──────────────────────────────────────────────────────────────
+#
+# One row per verb and stem kind. The proposal comes from the IRIT vote
+# (reference.propose_stems); the reviewer accepts it, writes the stem,
+# or writes none for a verb that lacks that stem.
+
+STEM_REVIEW_COLUMNS = ("word", "kind", "proposed", "evidence", "reviewed", "notes")
+
+
+@dataclass(frozen=True)
+class StemDecision:
+    """
+    One reviewed row of the stem review file.
+
+    Attributes:
+        word:  The verb entry, in its 3ms perfective form.
+        kind:  One of STEM_KINDS.
+        stem:  The stem, or None for a verb without it.
+        notes: The reviewer's notes, possibly empty.
+    """
+
+    word: str
+    kind: str
+    stem: str | None
+    notes: str
+
+
+def read_stem_review(path: str, encoding: str = "utf-8") -> list[StemDecision]:
+    """
+    The reviewer's decisions from a stem review file.
+
+    Args:
+        path:     Review TSV with STEM_REVIEW_COLUMNS.
+        encoding: File encoding.
+
+    Returns:
+        Decisions in file order. Unreviewed rows are skipped.
+
+    Raises:
+        ValueError: With the line and word, on an unknown kind or a
+                    stem that is not written in Ethiopic letters.
+    """
+    decisions = []
+    for line, row in _reviewed_rows(path, encoding):
+        word, kind, mark = row["word"], row["kind"], row["reviewed"]
+        if kind not in STEM_KINDS:
+            raise ValueError(f"line {line}, {word}: stem kind not recognised: {kind!r}")
+        if mark == ROOT_NONE:
+            stem = None
+        else:
+            stem = row["proposed"] if mark == REVIEW_ACCEPT else mark
+            if not stem or not all(is_ethiopic(c) for c in stem):
+                raise ValueError(f"line {line}, {word}: not a stem: {stem!r}")
+        decisions.append(StemDecision(word, kind, stem, row["notes"]))
+    return decisions
+
+
+def apply_stem_review(entries: list[dict], decisions: list[StemDecision]) -> list[dict]:
+    """
+    Write a stem review into the lexicon.
+
+    Args:
+        entries:   Lexicon entries.
+        decisions: Output of read_stem_review().
+
+    Returns:
+        A new list of entries. The input is not modified.
+
+    Raises:
+        ValueError: If a decided word is not in the lexicon or is not a
+                    verb.
+    """
+    by_word = {e.get("word"): e for e in entries}
+    missing = sorted({d.word for d in decisions} - set(by_word))
+    if missing:
+        raise ValueError(f"not in the lexicon: {missing}")
+    not_verbs = sorted({d.word for d in decisions if by_word[d.word].get("category") != "verb"})
+    if not_verbs:
+        raise ValueError(f"stems apply to verbs only: {not_verbs}")
+
+    stems = {e.get("word"): dict(e.get("stems") or {}) for e in entries}
+    for d in decisions:
+        if d.stem is None:
+            stems[d.word].pop(d.kind, None)
+        else:
+            stems[d.word][d.kind] = d.stem
+    return [{**e, "stems": stems[e.get("word")]} for e in entries]

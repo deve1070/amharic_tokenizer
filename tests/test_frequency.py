@@ -448,7 +448,7 @@ class TestToLexiconEntry:
         entry = self.make()
         for field in (
             "word", "category", "gender", "allows_prefix", "allows_suffix",
-            "allows_infix", "root_consonants", "root_source", "source",
+            "allows_infix", "root_consonants", "root_source", "stems", "source",
             "validated", "notes",
         ):
             assert field in entry

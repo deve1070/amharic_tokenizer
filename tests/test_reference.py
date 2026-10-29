@@ -454,3 +454,121 @@ class TestRootReviewRows:
     def test_shares_that_round_to_zero_are_left_out(self):
         votes = {"ሞት": Counter({("ም", "ው", "ት"): 999, ("ም", "ት"): 1, None: 1})}
         assert root_review_rows(["ሞት"], votes)[0]["irit"] == "ም-ው-ት 100%"
+
+
+# ── Verb stem proposals ───────────────────────────────────────────────────────
+
+from amharic_morph.reference import palatalize, propose_stems, stem_votes  # noqa: E402
+
+
+def read(text):
+    return parse_annotation(text)
+
+
+class TestStemVotes:
+    def test_imperfective_before_the_auxiliary(self):
+        votes = stem_votes({"ይሆናል": read("ይ_ሆን_አል")}, ["ሆነ"])
+        assert votes["ሆነ"]["imperfective"]["ሆን"] == 1
+
+    def test_imperfective_after_a_subordinator(self):
+        votes = stem_votes({"የሚሆን": read("የ_ሚ_ሆን")}, ["ሆነ"])
+        assert votes["ሆነ"]["imperfective"]["ሆን"] == 1
+
+    def test_jussive_is_a_bare_person_form(self):
+        votes = stem_votes({"ይሁን": read("ይ_ሁን")}, ["ሆነ"])
+        assert votes["ሆነ"]["jussive"]["ሁን"] == 1
+
+    def test_a_bare_word_does_not_vote(self):
+        # ሞት is the noun "death", not the imperative of ሞተ.
+        assert not stem_votes({"ሞት": read("ሞት")}, ["ሞተ"]).get("ሞተ")
+
+    def test_subordinator_then_person_is_imperfective(self):
+        votes = stem_votes({"ስትሄድ": read("ስ_ት_ሄድ")}, ["ሄደ"])
+        assert votes["ሄደ"]["imperfective"]["ሄድ"] == 1
+
+    def test_gerund_before_o_or_to(self):
+        votes = stem_votes({"ፈልጎ": read("ፈልግ_ኦ"), "ሰጥቶ": read("ሰጥ_ቶ")}, ["ፈለገ", "ሰጠ"])
+        assert votes["ፈለገ"]["gerund"]["ፈልግ"] == 1
+        assert votes["ሰጠ"]["gerund"]["ሰጥ"] == 1
+
+    def test_stem_must_share_the_verbs_consonants(self):
+        votes = stem_votes({"ይሆናል": read("ይ_ሆን_አል")}, ["ሄደ"])
+        assert not votes.get("ሄደ")
+
+    def test_passive_verb_matches_without_its_te(self):
+        votes = stem_votes({"ይደረጋል": read("ይ_ደረግ_አል")}, ["ተደረገ"])
+        assert votes["ተደረገ"]["imperfective"]["ደረግ"] == 1
+
+
+class TestPalatalize:
+    def test_dental_becomes_palatal(self):
+        assert palatalize("ሄድ") == "ሄጅ"
+        assert palatalize("ሰጥ") == "ሰጭ"
+        assert palatalize("ሆን") == "ሆኝ"
+
+    def test_other_consonants_are_unchanged(self):
+        assert palatalize("ፈልግ") == "ፈልግ"
+
+
+class TestProposeStems:
+    def test_winner_by_votes(self):
+        from collections import Counter
+        p = propose_stems("ሆነ", {"imperfective": Counter({"ሆን": 155, "ሁን": 2}),
+                                 "jussive": Counter({"ሁን": 13, "ሆን": 61}),
+                                 "gerund": Counter({"ሆን": 40})})
+        assert p["imperfective"][0] == "ሆን"
+        assert p["gerund"][0] == "ሆን"
+
+    def test_jussive_prefers_a_shape_unlike_the_imperfective(self):
+        # ይሆን is also the bound imperfective, so the jussive vote is
+        # the variant that differs from it: ይሁን.
+        from collections import Counter
+        p = propose_stems("ሆነ", {"imperfective": Counter({"ሆን": 155}),
+                                 "jussive": Counter({"ሆን": 61, "ሁን": 13})})
+        assert p["jussive"][0] == "ሁን"
+
+    def test_passive_prefers_the_stem_that_keeps_the_vowel(self):
+        from collections import Counter
+        p = propose_stems("ተደረገ", {"imperfective": Counter({"ደረግ": 138, "ድረግ": 73, "ደርግ": 17})})
+        assert p["imperfective"][0] == "ደረግ"
+        p = propose_stems("ተፈጠረ", {"imperfective": Counter({"ፈጥር": 47, "ፈጠር": 43})})
+        assert p["imperfective"][0] == "ፈጠር"
+
+    def test_no_votes_falls_back_to_the_rule(self):
+        p = propose_stems("ታየ", {})
+        assert p["imperfective"] == ("ታይ", "rule")
+
+    def test_passive_gerund_keeps_te(self):
+        # ተደርጎ: the passive gerund keeps its ተ, which the imperfective
+        # (ይደረጋል) loses.
+        from collections import Counter
+        p = propose_stems("ተደረገ", {"gerund": Counter({"ደርግ": 9})})
+        assert p["gerund"][0] == "ተደርግ"
+
+    def test_three_radical_jussive_shape_when_attested(self):
+        # ቀረበ -> ይቅረብ: first radical bare, second with ኧ. IRIT shows
+        # ቅረብ, though in another context.
+        from collections import Counter
+        p = propose_stems("ቀረበ", {"imperfective": Counter({"ቀርብ": 87, "ቅረብ": 43}),
+                                  "jussive": Counter({"ቀርብ": 2, "ቀረብ": 1})})
+        assert p["jussive"][0] == "ቅረብ"
+
+    def test_passive_jussive_is_its_imperfective(self):
+        from collections import Counter
+        p = propose_stems("ተደረገ", {"imperfective": Counter({"ደረግ": 142}),
+                                   "jussive": Counter({"ደረግ": 3, "ዳረግ": 2})})
+        assert p["jussive"][0] == "ደረግ"
+
+    def test_jussive_ignores_rare_variants(self):
+        from collections import Counter
+        p = propose_stems("ፈለገ", {"imperfective": Counter({"ፈልግ": 72}),
+                                  "jussive": Counter({"ፈልግ": 39, "ፈለግ": 3})})
+        assert p["jussive"][0] == "ፈልግ"
+
+    def test_palatal_stems_follow_their_base(self):
+        from collections import Counter
+        p = propose_stems("ሄደ", {"imperfective": Counter({"ሄድ": 54}), "gerund": Counter({"ሄድ": 9}),
+                                 "jussive": Counter({"ሂድ": 1})})
+        assert p["gerund_palatal"][0] == "ሄጅ"
+        assert p["imperfective_palatal"][0] == "ሄጅ"
+        assert p["jussive_palatal"][0] == "ሂጅ"

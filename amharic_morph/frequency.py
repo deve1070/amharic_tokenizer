@@ -711,6 +711,7 @@ def to_lexicon_entry(candidate: dict, max_forms: int = 20) -> dict:
         "allows_infix": None,
         "root_consonants": consonantal_root(stem),
         "root_source": ROOT_SOURCE_SKELETON,
+        "stems": {},
         "source": "corpus_bootstrap",
         "validated": False,
         "notes": "",
