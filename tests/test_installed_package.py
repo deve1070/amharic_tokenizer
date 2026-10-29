@@ -11,6 +11,7 @@ default run leaves them out. Run them with: pytest -m packaging
 """
 
 import json
+import os
 import subprocess
 import sys
 import venv
@@ -65,10 +66,12 @@ def installed_python(wheel, tmp_path_factory):
 
 def run_installed(python, code, tmp_path):
     # From a directory outside the repository, so the checkout cannot be
-    # imported in place of the installed copy.
+    # imported in place of the installed copy. The snippet prints Amharic,
+    # and on Windows a pipe defaults to cp1252, so its output is set to
+    # UTF-8; the library itself prints nothing.
     result = subprocess.run(
         [str(python), "-c", code], cwd=tmp_path, check=True, capture_output=True,
-        text=True, encoding="utf-8",
+        text=True, encoding="utf-8", env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     return result.stdout
 
