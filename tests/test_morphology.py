@@ -279,16 +279,27 @@ class TestSegmentWord:
         assert segment_word("የቤቶች", lexicon("ቤት")).stem == "ቤት"
 
     def test_infix(self):
-        result = segment_word("ቀጫጭን", lexicon("ቀጭን"))
+        result = segment_word("ቀጫጭን", typed(ቀጭን="adjective"))
         assert result.morphemes == ["ቀጭን", "ጫ"]
         assert result.infix == "ጫ"
 
     def test_infix_on_another_stem(self):
-        assert segment_word("ትላልቅ", lexicon("ትልቅ")).morphemes == ["ትልቅ", "ላ"]
+        assert segment_word("ትላልቅ", typed(ትልቅ="adjective")).morphemes == ["ትልቅ", "ላ"]
 
     def test_infix_with_a_suffix(self):
-        result = segment_word("ትላልቆች", lexicon("ትልቅ"))
+        result = segment_word("ትላልቆች", typed(ትልቅ="adjective"))
         assert result.morphemes == ["ትልቅ", "ላ", "ኦች"]
+
+    def test_infix_only_on_an_adjective(self):
+        # The infix is the plural-adjective pattern. On a noun the same
+        # letters are something else: መንግስታት is the plural ኣት, አባባል
+        # "saying" is not አባል + ባ, ትላላችሁ is ት + አለ + ኣል + ኣችሁ.
+        assert segment_word("መንግስታት", typed(መንግስት="noun")).known is False
+        assert segment_word("አባባል", typed(አባል="noun")).known is False
+        assert segment_word("ትላላችሁ", typed(ትል="noun")).known is False
+
+    def test_infix_needs_a_known_category(self):
+        assert segment_word("ቀጫጭን", lexicon("ቀጭን")).known is False
 
     def test_empty_word(self):
         assert segment_word("", lexicon("ቤት")).known is False
@@ -1105,6 +1116,14 @@ class TestGerund:
         result = seg("ሄጄ")
         assert result.morphemes == ["ሄደ", "ኤ"]
         assert result.aspect == "gerund_palatal"
+
+    def test_first_person_on_a_to_gerund(self):
+        # IRIT ገብ_ቼ: on a ቶ-gerund the 1s is ቼ (ት + ኤ), not a palatal stem.
+        result = seg("ገብቼ")
+        assert result.morphemes == ["ገባ", "ቼ"]
+        assert result.aspect == "gerund"
+        assert seg("ሰጥቼ").morphemes == ["ሰጠ", "ቼ"]
+        assert suffix_readings(result, "ቼ") == ("gerund_1s",)
 
     def test_gerund_needs_its_stem(self):
         # ኖረ has no reviewed gerund stem, so ኖሮ is not guessed.

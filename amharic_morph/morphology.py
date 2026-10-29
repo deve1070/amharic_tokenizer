@@ -121,6 +121,9 @@ NEGATIVE_SUFFIX = "ም"
 # negative too: የለ + ው + ም -> የለውም "he does not have".
 NEGATIVE_EXISTENTIAL = "የለ"
 
+# The only category that takes the infix. See _compatible().
+_INFIX_CATEGORY = "adjective"
+
 # The order an infix always surfaces at. See detach_infix().
 _INFIX_ORDER = 4
 
@@ -328,6 +331,8 @@ SUFFIX_TABLE = (
     _fused("ኦ", VERB, SUBJECT, 7, "", (6,), aspects=GERUND),
     _plain("ቶ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
     _plain("ታ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
+    # The 1s on a ቶ-gerund, the ት palatalized by the ኤ: ገብ + ቼ -> ገብቼ.
+    _plain("ቼ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND[:1]),
     # The 1s gerund on the palatal stem: ሄጅ + ኤ -> ሄጄ.
     _fused("ኤ", VERB, SUBJECT, 5, "", (6,), aspects=(GERUND[1],)),
     # The 2fs on the palatal imperfective or jussive stem: ት + ሄጅ + ኢ.
@@ -750,6 +755,7 @@ _READINGS = {
     "ኦ": ((), ("gerund_3ms",)),
     "ቶ": ((), ("gerund_3ms",)),
     "ታ": ((), ("gerund_3fs",)),
+    "ቼ": ((), ("gerund_1s",)),
     "ኣማ": (("adjectivizer",), ()),
     "ማ": (("adjectivizer", "topic"), ()),
     "ዋ": (("definite_f", "possessive_3fs"), ()),
@@ -970,7 +976,8 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     - Per aspect: an imperfective needs a person, and after a
       preposition a subordinator as well (የሚሆን, not የይሆናል). A jussive
       needs a person prefix and takes no other. A gerund takes no prefix
-      and needs a verb ending (ሆኖ, not ሆን). No verb takes the infix.
+      and needs a verb ending (ሆኖ, not ሆን).
+    - Only an adjective takes the infix.
     - The stem vowel ኣ attaches only to a verb whose perfective ends in
       ኣ, and that verb's imperfective or jussive stem never ends the
       word: ይገባ, ይገባል, ይገቡ, never ይገብ.
@@ -1002,12 +1009,14 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
         if p.pairs_with and p.pairs_with not in node.suffixes:
             return False
 
+    # The infix is the plural-adjective copy (ትላልቅ). Elsewhere the same
+    # letters are something else: ይመስላል is ይ + መሰለ + ኣል, መንግስታት is the
+    # plural ኣት, አባባል "saying" is a word of its own.
+    if node.infix and category != _INFIX_CATEGORY:
+        return False
+
     if not is_verb:
         return True
-    # The infix is the plural-adjective copy (ትላልቅ). On a verb the same
-    # letters are the auxiliary: ይመስላል is ይ + መሰለ + ኣል.
-    if node.infix:
-        return False
     if aspect in _IMPERFECTIVE_OR_JUSSIVE:
         weak_final = fidel_order(stem[-1]) == 4
         if not shapes and weak_final:
