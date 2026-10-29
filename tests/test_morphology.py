@@ -1271,6 +1271,30 @@ class TestPrefixFusion:
         assert seg("ይሆናል").morphemes == ["ይ", "ሆነ", "ኣል"]
 
 
+class TestRelativeVerbTakesCase:
+    """
+    A relative verb is used as a noun: after its definite ው it takes the
+    accusative ን, as IRIT: ያለውን = የ_አል_ው_ን, የሚሆነውን = የ_ሚ_ሆን_ኧ_ው_ን.
+    """
+
+    def test_perfective_relative(self):
+        assert seg("የሆነውን").morphemes == ["የ", "ሆነ", "ው", "ን"]
+        assert seg("ያለውን").morphemes == ["የ", "አለ", "ው", "ን"]
+
+    def test_imperfective_relative(self):
+        assert seg("የሚሆነውን").morphemes == ["የ", "ሚ", "ሆነ", "ው", "ን"]
+
+    def test_reading_is_accusative(self):
+        assert suffix_readings(seg("የሆነውን"), "ን") == ("accusative",)
+
+    def test_needs_a_relative_prefix(self):
+        # Without one, ው + ን is not a case ending: ሆነውን is not a word.
+        assert seg("ሆነውን").known is False
+
+    def test_object_n_is_unchanged(self):
+        assert seg("ሰጠን").morphemes == ["ሰጠ", "ን"]
+
+
 class TestNegativeImperfective:
     def test_ai_with_m(self):
         result = seg("አይሆንም")

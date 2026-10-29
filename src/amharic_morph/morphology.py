@@ -280,6 +280,11 @@ AUXILIARY = "ኣል"
 # One row serves both, so the search detaches the ኣ once. On a noun ኣ is
 # never a suffix of its own: ስራ is not the "definite" of ስር.
 STEM_VOWEL = "ኣ"
+# The accusative on a relative verb, used as a noun: ያለው + ን -> ያለውን,
+# IRIT የ_አል_ው_ን. It takes the case position, after the definite ው, which
+# on a verb is the object position. See _compatible().
+_RELATIVE_CASE_ROW = SuffixShape("ን", VERB, "ን", CASE)
+
 # Order 8 is the "wa" form of a family (ሏ, ቷ). A labiovelar's order-4 letter
 # (ቋ, ጓ, ኳ) is the same sound for the velars.
 _LABIALIZED_ORDER = 8
@@ -296,6 +301,7 @@ _STEM_VOWEL_ROW = SuffixShape(
 SUFFIX_TABLE = (
     # ን is the case ending on a noun and the 1pl object on a verb (ሰጠን).
     _plain("ን", ANY, CASE, OBJECT),
+    _RELATIVE_CASE_ROW,
     _plain("ም", ANY, ALSO),
     _plain("ና", ANY, AND),
     # The 3fs subject (ሄደች). On a non-verb it produced only wrong
@@ -933,6 +939,8 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
         return _STEM_VOWEL_READING
     if is_verb and suffix == AUXILIARY and segmentation.aspect in GERUND:
         return _PRESENT_PERFECT_READING
+    if is_verb and _RELATIVE_CASE_ROW in segmentation.suffix_shapes and suffix == _RELATIVE_CASE_ROW.morpheme:
+        return _READINGS[suffix][0]
     return _READINGS[suffix][1 if is_verb else 0]
 
 
@@ -1124,6 +1132,14 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
         return False
     if shapes and shapes[-1].bound:
         return False
+    # The accusative on a verb follows its definite ው, on a relative verb.
+    for i, shape in enumerate(shapes):
+        if shape == _RELATIVE_CASE_ROW and (
+            i == 0
+            or shapes[i - 1].morpheme != "ው"
+            or not any(p.slot in (PREPOSITION, SUBORDINATOR) for p in prefixes)
+        ):
+            return False
     for i, p in enumerate(prefixes):
         if p.needs_person and not any(q.slot == PERSON for q in prefixes[i + 1:]):
             return False
@@ -1155,7 +1171,7 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
             return False
         # The auxiliary ends a main clause: ይሆናል, never ሲሆናል.
         if any(p.slot == SUBORDINATOR for p in prefixes) and any(
-            s.position(category) == AUX for s in shapes
+            s.morpheme == AUXILIARY for s in shapes
         ):
             return False
         if any(p.slot == PREPOSITION for p in prefixes) and not any(p.slot == SUBORDINATOR for p in prefixes):
