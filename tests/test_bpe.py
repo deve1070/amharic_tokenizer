@@ -61,3 +61,87 @@ class TestSoundSegments:
     def test_segments_rebuild_the_word(self, tok):
         for word in ("ቤቶቹን", "ለቤቶቻችን", "አልነበረም", "ይገባዋል", "ትላልቆች", "ብሎ"):
             assert "".join(cut(tok, word)) == sound_text(word)
+
+
+# ── Training text, training and encoding ─────────────────────────────────────
+
+from amharic_morph.bpe import (  # noqa: E402
+    DELIMITER,
+    SubwordModel,
+    training_line,
+    train,
+)
+
+LINES = [
+    "ቤቶቹን አየሁ ።",
+    "ይሆናል ብሎ ነበር ።",
+    "ቤቶች የሚገባ ይሆናል ።",
+    "ቋንቋዎች <LATIN>mast</LATIN> ቤቶች ።",
+]
+
+
+class TestTrainingLine:
+    def test_morpheme_aware_line(self, tok):
+        assert training_line("ቤቶች ይሆናል", tok, morphemes=True) == (
+            f" ብኤት{DELIMITER}ኦች ይ{DELIMITER}ህኦን{DELIMITER}ኣል"
+        )
+
+    def test_plain_line(self, tok):
+        assert training_line("ቤቶች ይሆናል", tok, morphemes=False) == " ብኤትኦች ይህኦንኣል"
+
+    def test_non_ethiopic_tokens_pass_through(self, tok):
+        assert training_line("<LATIN>mast</LATIN> ።", tok, morphemes=True) == " <LATIN>mast</LATIN> ።"
+
+
+@pytest.fixture(scope="module")
+def models(tok, tmp_path_factory):
+    pytest.importorskip("sentencepiece")
+    out = tmp_path_factory.mktemp("models")
+    built = {}
+    for morphemes in (True, False):
+        text = out / f"{morphemes}.txt"
+        text.write_text("\n".join(training_line(l, tok, morphemes) for l in LINES * 50) + "\n", encoding="utf-8")
+        prefix = out / ("morph" if morphemes else "plain")
+        train(text, prefix, vocab_size=400)
+        built[morphemes] = SubwordModel(f"{prefix}.model", tok, morphemes=morphemes)
+    return built
+
+
+class TestSubwordModel:
+    def test_pieces_never_cross_a_morpheme_boundary(self, models, tok):
+        model = models[True]
+        for word in ("ቤቶቹን", "ይሆናል", "ቋንቋዎች"):
+            pieces = model.encode_word(word)
+            boundaries = set()
+            position = 0
+            for segment in sound_segments(tok.segment(word)):
+                position += len(segment)
+                boundaries.add(position)
+            position = 0
+            ends = set()
+            for piece in pieces:
+                position += len(piece.lstrip("▁"))
+                ends.add(position)
+            assert boundaries <= ends, (word, pieces)
+
+    def test_only_the_first_piece_marks_the_word(self, models):
+        pieces = models[True].encode_word("ቤቶች")
+        assert pieces[0].startswith("▁")
+        assert not any(p.startswith("▁") for p in pieces[1:])
+
+    def test_round_trip(self, models):
+        for model in models.values():
+            for line in LINES + ["ሆስፒታል ገባ ።"]:
+                assert model.decode(model.encode(line)) == line
+
+    def test_ids_round_trip(self, models):
+        model = models[True]
+        assert model.decode_ids(model.encode_ids("ቤቶቹን አየሁ ።")) == "ቤቶቹን አየሁ ።"
+
+    def test_readable_pieces(self, models):
+        # Shown as fidel: ▁ቤት + ኦች, not ▁ብኤት + ኦች.
+        assert SubwordModel.readable(["▁ብኤት", "ኦች"]) == ["▁ቤት", "ኦች"]
+        assert SubwordModel.readable(["▁ይ", "ህኦን", "ኣል"]) == ["▁ይ", "ሆን", "ኣል"]
+
+    def test_latin_tag_is_one_piece(self, models):
+        assert "<LATIN>" in models[True].encode("<LATIN>mast</LATIN>")
