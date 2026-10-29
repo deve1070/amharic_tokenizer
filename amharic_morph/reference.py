@@ -91,7 +91,7 @@ _ALTERNATIVE = re.compile(f"\\[({_ANALYSIS})\\]")
 # - bare ኣ. On a noun the reference uses it for derivation (ከተም_ኣ), and
 #   on a verb for the 3ms ending of an ኣ-final verb (ገብ_አ, ተ_ነስ_አ),
 #   which is part of Level 4's stem ገባ;
-# - ኦ, ኣት and ኢ, which on a noun are derivation (ጉዝ_ኦ, አመት_አት, መር_ኢ)
+# - ኦ, ኣት and ኢ, which on a noun are derivation (ጉዝ_ኦ, ል_ም_አት, መር_ኢ)
 #   and on a verb the gerund, the object and the 2fs (ሆን_ኦ). They are peeled when Level
 #   4's stem is a verb. See VERB_INFLECTIONAL_SUFFIXES.
 _DERIVATION_LOOKALIKES = {"ኤ", "ኣ"}
@@ -114,6 +114,12 @@ INFLECTIONAL_SUFFIXES = tuple(
 VERB_INFLECTIONAL_SUFFIXES = INFLECTIONAL_SUFFIXES + tuple(
     normalize(m) for m in sorted(_VERB_LOOKALIKES)
 )
+# On a noun the reference writes ኣት both for the plural (ሀገር_አት) and for
+# derivation (ል_ም_አት, ልማት). It is peeled only when Level 4 also splits
+# it, so a whole entry is not charged for the derivation inside it, and a
+# split the reference does not make still disagrees.
+_PLURAL_AT = normalize("ኣት")
+NOUN_PLURAL_SUFFIXES = INFLECTIONAL_SUFFIXES + (_PLURAL_AT,)
 # On a derived verb stem (ገብ) the ኣ is a morpheme of its own: የ_ሚ_ገብ_ኣ,
 # ሆን_ኣ. A perfective entry (ገባ) already holds it.
 DERIVED_STEM_SUFFIXES = VERB_INFLECTIONAL_SUFFIXES + (normalize(STEM_VOWEL),)
@@ -300,6 +306,8 @@ def affixes_agree(
     if segmentation.category == "verb" and suffixes is INFLECTIONAL_SUFFIXES:
         derived = segmentation.aspect not in (None, PERFECTIVE)
         suffixes = DERIVED_STEM_SUFFIXES if derived else VERB_INFLECTIONAL_SUFFIXES
+    elif suffixes is INFLECTIONAL_SUFFIXES and segmentation.suffixes[:1] == ("ኣት",):
+        suffixes = NOUN_PLURAL_SUFFIXES
     if segmentation.category == "verb" and prefixes is CORPUS_PREFIXES:
         prefixes = VERB_PREFIXES
     pre, _, suf = outer_affixes(analysis, prefixes, suffixes)

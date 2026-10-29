@@ -308,6 +308,12 @@ SUFFIX_TABLE = (
     # I, after an ኣ-final verb (ገባሁ); me, after any verb (ሰጠኝ).
     _plain("ሁ", VERB, SUBJECT, after_orders=(4,), aspects=_PERFECTIVE),
     _plain("ኝ", VERB, OBJECT, after_orders=_VOWEL_ORDERS, aspects=_PERFECTIVE),
+    # The plural ኣት, as IRIT: ሳምንት + ኣት -> ሳምንታት, ቀን + ኣት -> ቀናት; after
+    # a vowel with a ያ glide: ጊዜያት. On a verb ኣት is the 3fs object.
+    _fused("ኣት", NOUN, PLURAL, 4, "ት", (6,)),
+    _plain("ያት", NOUN, PLURAL, after_orders=(3, 5)),
+    # "On, against" a person, the በ-series: አለ + በት -> አለበት "he must".
+    *(_plain(m, VERB, OBJECT) for m in ("በት", "ባት", "ባቸው", "ብኝ", "ብህ", "ብሽ", "ብን", "ባችሁ")),
     # The plural: ቤት + ኦች -> ቤቶች, the ኦ riding on the stem's last letter.
     _fused("ኦች", ANY, PLURAL, 7, "ች", _CARRIER_ORDERS, rule=RULE_PLURAL_FUSION),
     # The definite on a noun, 3pl agreement on a verb: ቤቱ, ሆኑ.
@@ -777,7 +783,16 @@ _READINGS = {
     "ሁ": ((), ("subject_1s",)),
     "ክ": ((), ("subject_2ms",)),
     "ኝ": ((), ("object_1s",)),
-    "ኣት": ((), ("object_3fs",)),
+    "ኣት": (("plural",), ("object_3fs",)),
+    "ያት": (("plural",), ()),
+    "በት": ((), ("applicative_3ms",)),
+    "ባት": ((), ("applicative_3fs",)),
+    "ባቸው": ((), ("applicative_3pl",)),
+    "ብኝ": ((), ("applicative_1s",)),
+    "ብህ": ((), ("applicative_2ms",)),
+    "ብሽ": ((), ("applicative_2fs",)),
+    "ብን": ((), ("applicative_1pl",)),
+    "ባችሁ": ((), ("applicative_2pl",)),
     "ን": (("accusative",), ("subject_1pl", "object_1pl")),
     "ች": ((), ("subject_3fs",)),
     "ኦች": (("plural",), ()),

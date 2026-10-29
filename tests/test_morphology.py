@@ -294,7 +294,7 @@ class TestSegmentWord:
         # The infix is the plural-adjective pattern. On a noun the same
         # letters are something else: መንግስታት is the plural ኣት, አባባል
         # "saying" is not አባል + ባ, ትላላችሁ is ት + አለ + ኣል + ኣችሁ.
-        assert segment_word("መንግስታት", typed(መንግስት="noun")).known is False
+        assert segment_word("መንግስታት", typed(መንግስት="noun")).morphemes == ["መንግስት", "ኣት"]
         assert segment_word("አባባል", typed(አባል="noun")).known is False
         assert segment_word("ትላላችሁ", typed(ትል="noun")).known is False
 
@@ -766,6 +766,29 @@ class TestCategoryGating:
         assert result.morphemes == ["ጓደኛ", "ኦች", "ኣችን"]
 
 
+class TestPluralAt:
+    """The plural ኣት, as IRIT: ሳምንት_አት, ቀን_አት, ጊዜ_ያት."""
+
+    def test_fused_on_a_consonant_final_noun(self):
+        lex = typed(ሳምንት="noun", ቀን="noun", ተቋም="noun")
+        assert segment_word("ሳምንታት", lex).morphemes == ["ሳምንት", "ኣት"]
+        assert segment_word("ቀናት", lex).morphemes == ["ቀን", "ኣት"]
+        assert segment_word("ተቋማት", lex).morphemes == ["ተቋም", "ኣት"]
+
+    def test_ya_after_a_vowel(self):
+        assert segment_word("ጊዜያት", typed(ጊዜ="noun")).morphemes == ["ጊዜ", "ያት"]
+
+    def test_further_suffixes(self):
+        assert segment_word("ሀገራትን", typed(ሀገር="noun")).morphemes == ["ሀገር", "ኣት", "ን"]
+
+    def test_reading(self):
+        assert suffix_readings(segment_word("ቀናት", typed(ቀን="noun")), "ኣት") == ("plural",)
+
+    def test_not_on_a_verb(self):
+        # On a verb ኣት is still the 3fs object: ሰጣት.
+        assert segment_word("ሰጣት", typed(ሰጠ="verb")).morphemes == ["ሰጠ", "ኣት"]
+
+
 class TestNegativePerfective:
     """አል ... ም: a prefix accepted only on a verb that also carries ም"""
 
@@ -1062,6 +1085,27 @@ class TestNegativeExistential:
 
     def test_m_elsewhere_is_also(self):
         assert suffix_readings(seg("ሆነም"), "ም") == ("also",)
+
+
+class TestApplicative:
+    """
+    The በ-series, "on, against" a person: አለበት "he must" (literally "it
+    is on him"). One morpheme each, as the possessives are.
+    """
+
+    def test_on_the_perfective(self):
+        assert seg("አለበት").morphemes == ["አለ", "በት"]
+        assert seg("አለባቸው").morphemes == ["አለ", "ባቸው"]
+        assert seg("አለብኝ").morphemes == ["አለ", "ብኝ"]
+
+    def test_after_the_stem_vowel(self):
+        assert seg("የሚገባበት").morphemes == ["የ", "ሚ", "ገባ", "ኣ", "በት"]
+
+    def test_negative_existential(self):
+        assert seg("የለበትም").morphemes == ["የለ", "በት", "ም"]
+
+    def test_reading(self):
+        assert suffix_readings(seg("አለበት"), "በት") == ("applicative_3ms",)
 
 
 class TestNegativeImperfective:

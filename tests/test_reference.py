@@ -264,6 +264,23 @@ class TestInflectionAgreement:
             "ገባው", "ገባ", suffixes=("ው",), category="verb", aspect="perfective")})
         assert inflection_agreement(segment, reference, {"ገባው": 1}).agreeing_tokens == 1
 
+    def test_plural_at_is_compared_when_level4_splits_it(self):
+        # ሀገራት is ሀገር + ኣት on both sides.
+        reference = {"ሀገራት": (ReferenceAnalysis(("ሀገር", "አት"), ()),)}
+        segment = segmenter({"ሀገራት": Segmentation("ሀገራት", "ሀገር", suffixes=("ኣት",), category="noun")})
+        assert inflection_agreement(segment, reference, {"ሀገራት": 1}).agreeing_tokens == 1
+
+    def test_derivational_at_inside_a_whole_entry_is_not_charged(self):
+        # The reference also writes the nominal derivation ኣት (ል_ም_አት).
+        reference = {"ልማት": (ReferenceAnalysis(("ል", "ም", "አት"), ()),)}
+        segment = segmenter({"ልማት": Segmentation("ልማት", "ልማት", category="noun")})
+        assert inflection_agreement(segment, reference, {"ልማት": 1}).agreeing_tokens == 1
+
+    def test_a_split_the_reference_does_not_make_still_disagrees(self):
+        reference = {"ጉዳት": (ReferenceAnalysis(("ጉዳት",), ()),)}
+        segment = segmenter({"ጉዳት": Segmentation("ጉዳት", "ጉድ", suffixes=("ኣት",), category="noun")})
+        assert inflection_agreement(segment, reference, {"ጉዳት": 1}).agreeing_tokens == 0
+
     def test_any_alternative_may_agree(self):
         reference = {"በላይ": (
             ReferenceAnalysis(("በ", "ላይ"), ()),
