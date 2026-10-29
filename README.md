@@ -137,8 +137,8 @@ Corpus: CC-100 Amharic after cleaning and deduplication, 2.9M sentences and 42.9
 
 **Level 4.**
 
-- **Coverage:** 45% of corpus tokens are analysed; the remaining words are returned whole.
-- **Agreement with a hand-annotated reference:** 94.2% on the inflectional affixes, over 18.5M compared tokens. The reference is a set of hand-annotated Amharic lexicons; it also marks derivation, which this package keeps inside the stem by design.
+- **Coverage:** 46% of corpus tokens are analysed; the remaining words are returned whole.
+- **Agreement with a hand-annotated reference:** 94.2% on the inflectional affixes, over 19.0M compared tokens. The reference is a set of hand-annotated Amharic lexicons; it also marks derivation, which this package keeps inside the stem by design.
 
 **Level 1.** Agreement with the reference's roots: 93.0% of tokens.
 
@@ -155,7 +155,7 @@ The plain model's boundary rate falls as its vocabulary grows: on a smaller trai
 
 ## Limitations
 
-- **Coverage.** About 55% of corpus tokens come back unknown, because the lexicon has 919 stems. Reaching 90% coverage needs closer to 10,000.
+- **Coverage.** About 54% of corpus tokens come back unknown, because the lexicon has 919 stems. Reaching 90% coverage needs closer to 10,000.
 - **Verbs.** Verb forms are analysed for the 44 verbs whose stems have been reviewed. Some combinations are not in the suffix table yet, such as a gerund followed by an object and the auxiliary (ተሰጥቶታል).
 - **Prepositions written as separate words** (ወደ, ስለ when written apart from the next word) are not yet analysed; they are recognised only as prefixes.
 - **Ambiguity.** A word with two analyses (ትል, "worm" or "she says") gets one from `segment()`; `segment_all()` returns them all. Choosing between them needs context, which a word-level analyser does not have.

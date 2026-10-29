@@ -11,6 +11,7 @@ First release.
   - Perfective, imperfective, jussive and gerund verb forms for 44
     reviewed verbs.
   - The plural-adjective infix.
+  - The relative ም for subjects other than the 3rd person (የምፈልገው).
   - Readings for every affix.
 - Level 1: native-speaker-reviewed roots.
 - Subword level: a SentencePiece unigram model over lossless sound text,
