@@ -16563,37 +16563,6 @@
     "notes": ""
   },
   {
-    "word": "አመታት",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "በ",
-      "ከ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን",
-      "ኡ",
-      "ኣቸው",
-      "ኦች"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "እ",
-      "ም",
-      "ት",
-      "ት"
-    ],
-    "root_source": "native_speaker",
-    "stems": {},
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "Ge'ez-pattern plural of አመት; deferred with ኣን/ኣት"
-  },
-  {
     "word": "መሰረት",
     "category": "noun",
     "gender": null,
@@ -18603,36 +18572,6 @@
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
-  },
-  {
-    "word": "ቃላት",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "በ",
-      "ከ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን",
-      "ኡ",
-      "ኦች",
-      "ዎ"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ቅ",
-      "ል",
-      "ት"
-    ],
-    "root_source": "native_speaker",
-    "stems": {},
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "Ge'ez-pattern plural of ቃል; deferred with ኣን/ኣት"
   },
   {
     "word": "ምስራቅ",
@@ -21305,36 +21244,6 @@
     "source": "corpus_bootstrap",
     "validated": true,
     "notes": ""
-  },
-  {
-    "word": "ማህበራት",
-    "category": "noun",
-    "gender": null,
-    "allows_prefix": [
-      "ለ",
-      "ስለ",
-      "በ",
-      "ከ",
-      "የ"
-    ],
-    "allows_suffix": [
-      "ም",
-      "ና",
-      "ን",
-      "ኡ",
-      "ኦች"
-    ],
-    "allows_infix": null,
-    "root_consonants": [
-      "ህ",
-      "ብ",
-      "ር"
-    ],
-    "root_source": "native_speaker",
-    "stems": {},
-    "source": "corpus_bootstrap",
-    "validated": true,
-    "notes": "Ge'ez-pattern plural of ማህበር; deferred with ኣን/ኣት"
   },
   {
     "word": "አዳራሽ",
