@@ -294,6 +294,13 @@ class TestSegmentWord:
         assert segment_word("አባባል", typed(አባል="noun")).known is False
         assert segment_word("ትላላችሁ", typed(ትል="noun")).known is False
 
+    def test_infix_lies_inside_the_stem(self):
+        # The copy and the consonant it copies are both stem letters. In
+        # ከታታላቅ the "copy" would straddle the prefix ከ.
+        lex = typed(ታላቅ="adjective", ትልቅ="adjective")
+        assert segment_word("ከታታላቅ", lex).known is False
+        assert segment_word("በትላልቆች", lex).morphemes == ["በ", "ትልቅ", "ላ", "ኦች"]
+
     def test_infix_needs_a_known_category(self):
         assert segment_word("ቀጫጭን", lexicon("ቀጭን")).known is False
 

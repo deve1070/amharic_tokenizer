@@ -902,6 +902,11 @@ class Segmentation:
                   The stem is still reported in its lexicon form
                   (ይሆናል = ይ + ሆነ + ኣል, aspect imperfective). None for
                   a non-verb.
+        suffix_shapes: The table row of each suffix, parallel to
+                  suffixes. A fused row and a plain one cut the written
+                  word in different places, so the BPE level needs it.
+                  Not part of equality: two analyses with the same
+                  morphemes are the same analysis.
     """
 
     word: str
@@ -912,6 +917,7 @@ class Segmentation:
     known: bool = True
     category: str | None = None
     aspect: str | None = None
+    suffix_shapes: tuple[SuffixShape, ...] = field(default=(), compare=False, repr=False)
 
     @property
     def parts(self) -> list[Morpheme]:
@@ -1162,8 +1168,15 @@ def _analyses(
                         infix=node.infix,
                         category=category,
                         aspect=aspect,
+                        suffix_shapes=node.shapes,
                     )
                 )
+
+        # The infix comes off last, from the bare stem: its copy and the
+        # consonant it copies are both stem letters. Detached earlier, it
+        # could take a prefix's or a suffix's letter (ከታታላቅ, በጎቻችንን).
+        if node.infix is not None:
+            continue
 
         if node.depth_prefix < max_prefixes:
             for rest, prefix in detach_prefix_shapes(node.text, prefixes):
@@ -1203,20 +1216,19 @@ def _analyses(
 
         # One infix at most: it is an internal modification of a single
         # stem, not something that stacks.
-        if node.infix is None:
-            for rest, infix in detach_infix(node.text):
-                queue.append(
-                    _Node(
-                        rest,
-                        node.prefixes,
-                        node.suffixes,
-                        infix,
-                        node.depth_prefix,
-                        node.depth_suffix,
-                        node.shapes,
-                        node.prefix_shapes,
-                    )
+        for rest, infix in detach_infix(node.text):
+            queue.append(
+                _Node(
+                    rest,
+                    node.prefixes,
+                    node.suffixes,
+                    infix,
+                    node.depth_prefix,
+                    node.depth_suffix,
+                    node.shapes,
+                    node.prefix_shapes,
                 )
+            )
 
     return list(found)
 
