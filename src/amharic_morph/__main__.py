@@ -41,7 +41,16 @@ def describe(tok: AmharicTokenizer, word: str) -> list[str]:
     ]
 
 
+def _use_utf8() -> None:
+    # A Windows pipe or redirected file defaults to cp1252, which has no
+    # Ethiopic letters: printing ቤቶች would raise UnicodeEncodeError.
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+
+
 def main(argv: list[str] | None = None) -> int:
+    _use_utf8()
     if argv is None:
         argv = sys.argv[1:]
     text = " ".join(argv) if argv else sys.stdin.read()

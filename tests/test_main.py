@@ -50,3 +50,30 @@ class TestCommand:
 
     def test_aspect_of_a_verb_is_shown(self):
         assert "[verb, perfective]" in run("ሄድኩ").stdout
+
+
+class TestConsoleEncoding:
+    """
+    On Windows a pipe or a redirected file defaults to cp1252, which has
+    no Ethiopic letters. The command writes UTF-8 whatever the console.
+    """
+
+    def test_output_is_utf8_under_a_non_utf8_default(self):
+        import os
+        env = {**os.environ, "PYTHONIOENCODING": "cp1252", "PYTHONUTF8": "0"}
+        result = subprocess.run(
+            [sys.executable, "-m", "amharic_morph", "ቤቶች"],
+            capture_output=True, cwd=ROOT, env=env,
+        )
+        assert result.returncode == 0, result.stderr.decode("utf-8", "replace")
+        assert "ቤት + ኦች" in result.stdout.decode("utf-8")
+
+    def test_input_is_read_as_utf8(self):
+        import os
+        env = {**os.environ, "PYTHONIOENCODING": "cp1252", "PYTHONUTF8": "0"}
+        result = subprocess.run(
+            [sys.executable, "-m", "amharic_morph"],
+            input="ቤቶች".encode("utf-8"), capture_output=True, cwd=ROOT, env=env,
+        )
+        assert result.returncode == 0, result.stderr.decode("utf-8", "replace")
+        assert "ቤት + ኦች" in result.stdout.decode("utf-8")
