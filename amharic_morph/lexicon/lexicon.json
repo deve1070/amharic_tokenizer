@@ -29987,5 +29987,22 @@
     "source": "native_speaker",
     "validated": true,
     "notes": "'-less' (ትርጉም የለሽ); not የለ + ሽ, whose form is የለሽም"
+  },
+  {
+    "word": "ትል",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "worm; also ት + አለ 'she says' (about half the corpus), which segment_all reports"
   }
 ]
