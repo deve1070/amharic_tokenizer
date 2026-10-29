@@ -1,7 +1,8 @@
 # Releasing
 
-The release is blocked on one thing: the subword model trained on the full
-corpus. Everything else below is ready.
+Steps 1 and 2 are done (2026-10-30): `morph_16k.model` was trained on a
+16 GB machine and ships in `src/amharic_morph/models/`. They are kept here
+so the model can be retrained. Next is step 3.
 
 ## 1. Train the subword model (16 GB machine)
 

@@ -39,6 +39,19 @@ def wheel(tmp_path_factory):
 
 
 @pytest.fixture(scope="module")
+def installed_with_bpe(wheel, tmp_path_factory):
+    # The [bpe] extra installs sentencepiece from the package index.
+    env = tmp_path_factory.mktemp("env_bpe")
+    venv.create(env, with_pip=True)
+    python = env / ("Scripts" if sys.platform == "win32" else "bin") / "python"
+    subprocess.run(
+        [str(python), "-m", "pip", "install", f"{wheel}[bpe]"],
+        check=True, capture_output=True,
+    )
+    return python
+
+
+@pytest.fixture(scope="module")
 def installed_python(wheel, tmp_path_factory):
     env = tmp_path_factory.mktemp("env")
     venv.create(env, with_pip=True)
@@ -63,6 +76,9 @@ def run_installed(python, code, tmp_path):
 class TestWheelContents:
     def test_carries_the_lexicon(self, wheel):
         assert "amharic_morph/lexicon/lexicon.json" in zipfile.ZipFile(wheel).namelist()
+
+    def test_carries_the_subword_model(self, wheel):
+        assert "amharic_morph/models/morph_16k.model" in zipfile.ZipFile(wheel).namelist()
 
     def test_leaves_out_the_working_files(self, wheel):
         names = zipfile.ZipFile(wheel).namelist()
@@ -104,3 +120,26 @@ class TestInstalledTokenizer:
             "print(' '.join(AmharicTokenizer().tokenize('ይሆናል')))\n"
         )
         assert run_installed(installed_python, code, tmp_path).split() == ["ይ", "ሆነ", "ኣል"]
+
+
+class TestInstalledSubwordLevel:
+    def test_bpe_level_with_the_shipped_model(self, installed_with_bpe, tmp_path):
+        code = (
+            "from amharic_morph import AmharicTokenizer\n"
+            "t = AmharicTokenizer()\n"
+            "print(' '.join(t.tokenize('ቤቶቻችንን', level='bpe')))\n"
+            "print(t.decode(t.encode('ቤቶቻችንን የሚገባቸው ሰዎች ።')))\n"
+        )
+        pieces, decoded = run_installed(installed_with_bpe, code, tmp_path).splitlines()
+        assert pieces.split() == ["▁ቤት", "ኦች", "ኣችን", "ን"]
+        assert decoded == "ቤቶቻችንን የሚገባቸው ሰዎች ።"
+
+    def test_without_the_extra_the_error_names_it(self, installed_python, tmp_path):
+        code = (
+            "from amharic_morph import AmharicTokenizer\n"
+            "try:\n"
+            "    AmharicTokenizer().tokenize('ቤቶች', level='bpe')\n"
+            "except ImportError as e:\n"
+            "    print(e)\n"
+        )
+        assert "amharic-morph[bpe]" in run_installed(installed_python, code, tmp_path)

@@ -15,7 +15,7 @@ Morphologically aware tokenization for Amharic. Every word is available at four 
 ['ብ', 'ት']
 ```
 
-> **Status: pre-release.** The four linguistic levels are complete and tested. The subword model is being trained on the full corpus; until it ships, `level="bpe"` needs a model file passed explicitly. The figures below marked *preliminary* come from models trained on a 300K-line sample.
+> **Status: pre-release (0.1.0).** All five levels are complete and tested, and the subword model ships with the package.
 
 ## Why
 
@@ -95,7 +95,7 @@ All levels at once:
 ### Subwords for language models
 
 ```python
->>> tok = AmharicTokenizer(subword_model="morph_16k.model")
+>>> tok = AmharicTokenizer()      # needs: pip install "amharic-morph[bpe]"
 >>> tok.tokenize("ቤቶቻችንን የሚገባቸው ሰዎች", level="bpe")
 ['▁ቤት', 'ኦች', 'ኣችን', 'ን', '▁የ', 'ሚ', 'ገብ', 'ኣቸው', '▁ሰው', 'ኦች']
 >>> ids = tok.encode("ቤቶቻችንን የሚገባቸው ሰዎች")
@@ -103,7 +103,7 @@ All levels at once:
 'ቤቶቻችንን የሚገባቸው ሰዎች'
 ```
 
-The subword model runs over sound text, where a fused suffix separates cleanly from its stem (ቤቶች is ብኤት | ኦች), and every word is cut at its morpheme boundaries before the model sees it. As a result:
+The shipped model has a 16,000-piece vocabulary and was trained on 3.5M sentences sampled from CC-100 and a second Amharic news corpus. It runs over sound text, where a fused suffix separates cleanly from its stem (ቤቶች is ብኤት | ኦች), and every word is cut at its morpheme boundaries before the model sees it. As a result:
 
 - no piece crosses a morpheme boundary;
 - `decode(encode(text))` returns the normalized text exactly, every character included;
@@ -142,17 +142,16 @@ Corpus: CC-100 Amharic after cleaning and deduplication, 2.9M sentences and 42.9
 
 **Level 1.** Agreement with the reference's roots: 93.0% of tokens.
 
-**Subword level** *(preliminary)*, on 5,000 held-out sentences:
+**Subword level**, on 20,000 held-out sentences (294,454 Amharic words) that neither model was trained on:
 
 | method | vocabulary | pieces per word | morpheme boundaries kept | words with every boundary kept | exact round trip |
 |---|---|---|---|---|---|
-| unigram over decomposed fidel | 8K | 1.72 | 30.1% | 19.2% | 100% |
-| unigram over decomposed fidel | 16K | 1.51 | 21.7% | 12.5% | 100% |
-| unigram over decomposed fidel | 32K | 1.36 | 14.9% | 7.8% | 100% |
-| **amharic-morph** | **8K** | 2.00 | **100%** | **100%** | **100%** |
+| unigram over decomposed fidel | 16K | 1.49 | 21.0% | 12.3% | 100% |
 | **amharic-morph** | **16K** | 1.80 | **100%** | **100%** | **100%** |
 
-The decomposed-fidel rows use the approach existing Amharic subword tokenizers take, trained on exactly the same data with the same settings and the same lossless encoding. The difference is therefore the morpheme boundaries alone. Keeping every boundary costs about 0.3 pieces per word.
+The decomposed-fidel model follows the approach existing Amharic subword tokenizers take. It was trained on exactly the same 5.9M sentences, with the same settings and the same lossless encoding, so the difference is the morpheme boundaries alone. Keeping every boundary costs about 0.3 pieces per word.
+
+The plain model's boundary rate falls as its vocabulary grows: on a smaller training sample it kept 40% of the boundaries at 4K, 30% at 8K, 22% at 16K and 15% at 32K. A larger vocabulary learns longer letter sequences, which span more morpheme boundaries.
 
 ## Limitations
 
@@ -165,6 +164,7 @@ The decomposed-fidel rows use the approach existing Amharic subword tokenizers t
 ## Data
 
 - **CC-100** Amharic, from the CC-Net monolingual corpora (Common Crawl). Used for the lexicon's candidate words and for training the subword model.
+- **GPAC**, an Amharic news corpus, after the same cleaning and deduplication against CC-100 (3.0M new sentences). Used for training the subword model only.
 - **The reference annotations** used in the measurements are the stem-based and root-based annotated lexicons published as "Morphologically Annotated Amharic Text Corpora" (SIGIR 2021). They are used for evaluation only and are not distributed with this package.
 
 ## License

@@ -15,6 +15,9 @@ First release.
 - Level 1: native-speaker-reviewed roots.
 - Subword level: a SentencePiece unigram model over lossless sound text,
   cut at morpheme boundaries; `encode()` and `decode()` round-trip exactly.
+  The shipped 16K model was trained on 3.5M sentences from CC-100 and GPAC
+  and keeps 100% of morpheme boundaries; a plain model on the same data
+  keeps 21%. Needs the `bpe` extra.
 - Text normalization: spelling variants, punctuation, Latin and URL
   tagging.
 - The `amharic-morph` command for trying the tokenizer on text.

@@ -152,6 +152,22 @@ class TestSubwordModel:
         assert "<LATIN>" in models[True].encode("<LATIN>mast</LATIN>")
 
 
+class TestShippedModel:
+    """The model in the package, found without being given a path."""
+
+    def test_default_tokenizer_finds_it(self):
+        pytest.importorskip("sentencepiece")
+        tok = AmharicTokenizer()
+        assert tok.tokenize("ቤቶቻችንን", level="bpe") == ["▁ቤት", "ኦች", "ኣችን", "ን"]
+
+    def test_round_trip_with_the_shipped_model(self):
+        pytest.importorskip("sentencepiece")
+        tok = AmharicTokenizer()
+        for text in ("ቤቶቻችንን የሚገባቸው ሰዎች አልነበሩም።", "ቋንቋዎች በ2015 ተጀመሩ።", "COVID-19 ወረርሽኝ"):
+            # decode() returns the text as words() normalizes it.
+            assert tok.decode(tok.encode(text)) == " ".join(tok.words(text))
+
+
 class TestTokenizerSubwordLevel:
     """level="bpe", encode() and decode() on AmharicTokenizer."""
 
