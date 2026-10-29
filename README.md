@@ -123,7 +123,7 @@ $ amharic-morph "ልጆቹ ትምህርት ቤት ሄዱ።"
 
 ## How it works
 
-**The lexicon.** Every Amharic word has exactly one independent morpheme, and affixes never appear alone, so a lexicon of independent words is enough to anchor the analysis. The lexicon has 915 entries drawn from the most frequent stems in the corpus. A native speaker reviewed each entry's category and root, and the stems of its 44 verbs.
+**The lexicon.** Every Amharic word has exactly one independent morpheme, and affixes never appear alone, so a lexicon of independent words is enough to anchor the analysis. The lexicon has 919 entries drawn from the most frequent stems in the corpus. A native speaker reviewed each entry's category and root, and the stems of its 44 verbs.
 
 **Level 4 is constructive.** Affixes are removed to build candidate stems, and the lexicon decides which candidates are real. Fused suffixes are undone with fidel arithmetic: ቶ is restored to ት, and the candidate ቤት is looked up. The stem's category gates which affixes may attach, and a fixed affix order rules out impossible stacks. When several analyses survive, the one with the fewest morphemes wins. A word with no lexicon anchor is returned whole and marked unknown; it is never split on a guess.
 
@@ -155,7 +155,7 @@ The plain model's boundary rate falls as its vocabulary grows: on a smaller trai
 
 ## Limitations
 
-- **Coverage.** About 55% of corpus tokens come back unknown, because the lexicon has 915 stems. Reaching 90% coverage needs closer to 10,000.
+- **Coverage.** About 55% of corpus tokens come back unknown, because the lexicon has 919 stems. Reaching 90% coverage needs closer to 10,000.
 - **Verbs.** Verb forms are analysed for the 44 verbs whose stems have been reviewed. Some combinations are not in the suffix table yet, such as a gerund followed by an object and the auxiliary (ተሰጥቶታል).
 - **Prepositions written as separate words** (ወደ, ስለ when written apart from the next word) are not yet analysed; they are recognised only as prefixes.
 - **Ambiguity.** A word with two analyses (ትል, "worm" or "she says") gets one from `segment()`; `segment_all()` returns them all. Choosing between them needs context, which a word-level analyser does not have.

@@ -5,7 +5,7 @@
 First release.
 
 - Four linguistic levels for every word: morpheme, fidel, sound and root.
-- Level 4: lexicon-anchored morpheme analysis over 915 reviewed entries.
+- Level 4: lexicon-anchored morpheme analysis over 919 reviewed entries.
   - Fused suffixes, the possessive and object series, the plural ኣት.
   - The በ-series ("on" a person, as in አለበት).
   - Perfective, imperfective, jussive and gerund verb forms for 44
