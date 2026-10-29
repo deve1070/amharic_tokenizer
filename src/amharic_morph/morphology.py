@@ -249,9 +249,9 @@ class SuffixShape:
         return self.slot
 
 
-def _plain(morpheme, kind, slot, verb_slot=None, after_orders=None, aspects=None):
+def _plain(morpheme, kind, slot, verb_slot=None, after_orders=None, aspects=None, bound=False):
     return SuffixShape(morpheme, kind, morpheme, slot, verb_slot, after_orders=after_orders,
-                       aspects=aspects)
+                       aspects=aspects, bound=bound)
 
 
 def _fused(morpheme, kind, slot, carrier_order, tail, restore_orders, verb_slot=None,
@@ -264,6 +264,10 @@ def _fused(morpheme, kind, slot, carrier_order, tail, restore_orders, verb_slot=
 
 _PERFECTIVE = (PERFECTIVE,)
 _IMPERFECTIVE_OR_JUSSIVE = IMPERFECTIVE + JUSSIVE
+# The stems the auxiliary ኣል attaches to: the imperfective (ይሆናል) and the
+# gerund, for the present perfect (ሆኗል).
+_AUXILIARY_STEMS = IMPERFECTIVE + GERUND
+AUXILIARY = "ኣል"
 
 # ኣ on a verb stem, fused onto its last letter. On the gerund stem it is
 # the 3fs (ሆን + ኣ -> ሆና). On the imperfective and jussive stem it is the
@@ -339,6 +343,11 @@ SUFFIX_TABLE = (
     _plain("ታ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
     # The 1s on a ቶ-gerund, the ት palatalized by the ኤ: ገብ + ቼ -> ገብቼ.
     _plain("ቼ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND[:1]),
+    # The ቶ-gerund's ት before another suffix, as IRIT ሰጥ_ት_አል, ሰጥ_ተ_ው:
+    # ሰጥ + ት + ኣል -> ሰጥቷል, ሰጥ + ት + ው -> ሰጥተው. Never word-final.
+    _plain("ት", VERB, SUBJECT, after_orders=(6,), aspects=GERUND[:1], bound=True),
+    # The 1pl gerund after a linking ኧ: ሆን + ን -> ሆነን, before ኣል ሆነናል.
+    _fused("ን", VERB, OBJECT, 1, "ን", (6,), aspects=GERUND[:1]),
     # The 1s gerund on the palatal stem: ሄጅ + ኤ -> ሄጄ.
     _fused("ኤ", VERB, SUBJECT, 5, "", (6,), aspects=(GERUND[1],)),
     # The 2fs on the palatal imperfective or jussive stem: ት + ሄጅ + ኢ.
@@ -346,15 +355,20 @@ SUFFIX_TABLE = (
     # The relative or object ው after a linking ኧ: የሚኖረው, IRIT
     # የ_ሚ_ኖር_ኧ_ው. The ኧ rides on the stem's last letter.
     _fused("ው", VERB, OBJECT, 1, "ው", (6,), aspects=_IMPERFECTIVE_OR_JUSSIVE + GERUND),
-    # The auxiliary of the main-clause imperfective, fused onto the stem:
-    # ይ + ሆን + ኣል -> ይሆናል. Before a person ending it is written ...ለ.
-    _fused("ኣል", VERB, AUX, 4, "ል", (6,), aspects=IMPERFECTIVE),
-    _fused("ኣል", VERB, AUX, 4, "ለ", (6,), aspects=IMPERFECTIVE, bound=True),
+    # The auxiliary, fused onto the stem. On the imperfective stem it makes
+    # the main-clause imperfective: ይ + ሆን + ኣል -> ይሆናል. On the gerund stem
+    # it makes the present perfect, as IRIT: ሆን + ኣል + ች -> ሆናለች,
+    # ሆን + ው + ኣል -> ሆነዋል. Before a person ending it is written ...ለ.
+    _fused("ኣል", VERB, AUX, 4, "ል", (6,), aspects=_AUXILIARY_STEMS),
+    _fused("ኣል", VERB, AUX, 4, "ለ", (6,), aspects=_AUXILIARY_STEMS, bound=True),
+    # The 3ms present perfect: the gerund's ኦ and the auxiliary's ኣ fuse
+    # into the order-8 letter. ሆን + ኣል -> ሆኗል, IRIT ሆን_አል.
+    _fused("ኣል", VERB, AUX, 8, "ል", (6,), aspects=GERUND[:1]),
     # Person endings after the auxiliary, as IRIT: ኣል + ሁ, ኣል + ኡ.
-    *(_plain(m, VERB, AUX_PERSON, after_orders=(1,), aspects=IMPERFECTIVE)
+    *(_plain(m, VERB, AUX_PERSON, after_orders=(1,), aspects=_AUXILIARY_STEMS)
       for m in ("ሁ", "ህ", "ሽ", "ች", "ን")),
-    _fused("ኡ", VERB, AUX_PERSON, 2, "", (6,), aspects=IMPERFECTIVE),
-    _fused("ኣችሁ", VERB, AUX_PERSON, 4, "ችሁ", (6,), aspects=IMPERFECTIVE),
+    _fused("ኡ", VERB, AUX_PERSON, 2, "", (6,), aspects=_AUXILIARY_STEMS),
+    _fused("ኣችሁ", VERB, AUX_PERSON, 4, "ችሁ", (6,), aspects=_AUXILIARY_STEMS),
 )
 
 
@@ -772,6 +786,7 @@ _READINGS = {
     "ኤ": (("possessive_1s",), ("gerund_1s",)),
     "ኢ": ((), ("subject_2fs",)),
     "ኣል": ((), ("auxiliary",)),
+    "ት": ((), ("gerund",)),
     "ዬ": (("possessive_1s",), ()),
     "ህ": (("possessive_2ms",), ("subject_2ms", "object_2ms")),
     "ሽ": (("possessive_2fs",), ("subject_2fs", "object_2fs")),
@@ -809,6 +824,8 @@ _READINGS = {
 _NEGATIVE = ("negative",)
 # ኣ on the imperfective or jussive stem; on the gerund stem it is the 3fs.
 _STEM_VOWEL_READING = ("stem_vowel",)
+# ኣል on the gerund stem; on the imperfective stem it is the auxiliary.
+_PRESENT_PERFECT_READING = ("present_perfect",)
 
 
 def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...] | None:
@@ -844,6 +861,8 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
         return _NEGATIVE
     if is_verb and suffix == STEM_VOWEL and segmentation.aspect in _IMPERFECTIVE_OR_JUSSIVE:
         return _STEM_VOWEL_READING
+    if is_verb and suffix == AUXILIARY and segmentation.aspect in GERUND:
+        return _PRESENT_PERFECT_READING
     return _READINGS[suffix][1 if is_verb else 0]
 
 
@@ -1001,7 +1020,8 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     - Per aspect: an imperfective needs a person, and after a
       preposition a subordinator as well (የሚሆን, not የይሆናል). A jussive
       needs a person prefix and takes no other. A gerund takes no prefix
-      and needs a verb ending (ሆኖ, not ሆን).
+      and needs a verb ending (ሆኖ, not ሆን). In its present perfect, a
+      person ending follows the auxiliary only as ች or ሁ.
     - Only an adjective takes the infix.
     - The stem vowel ኣ attaches only to a verb whose perfective ends in
       ኣ, and that verb's imperfective or jussive stem never ends the
@@ -1067,6 +1087,35 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     elif aspect in GERUND:
         if prefixes or not any(s.aspects is not None for s in shapes):
             return False
+        if not _is_present_perfect_shape(shapes, category, aspect):
+            return False
+    return True
+
+
+# The present perfect's persons are ሆኛለሁ ሆነሃል ሆነሻል ሆኗል ሆናለች ሆነናል
+# ሆናችኋል ሆነዋል. After the auxiliary only these endings are written, each
+# on its own stem: ች (3fs) on the gerund stem, ሁ (1s) on the palatal one.
+_PERFECT_ENDINGS = {("ች", GERUND[0]), ("ሁ", GERUND[1])}
+
+
+def _is_present_perfect_shape(shapes, category, aspect) -> bool:
+    """
+    On a gerund stem, whether the auxiliary and its endings are well placed.
+
+    A person ending follows the auxiliary, and only ች or ሁ does. The
+    auxiliary directly on the stem (the order-4 rows) needs that ending
+    after it: ሆናለች, never ሆናል. Elsewhere the person comes before the
+    auxiliary (ሆነ + ው + ኣል), or is fused into it (ሆኗል).
+    """
+    for i, shape in enumerate(shapes):
+        if shape.position(category) == AUX_PERSON:
+            if i == 0 or shapes[i - 1].morpheme != AUXILIARY:
+                return False
+            if (shape.morpheme, aspect) not in _PERFECT_ENDINGS:
+                return False
+    first = shapes[0]
+    if first.morpheme == AUXILIARY and first.carrier_order == 4 and not first.bound:
+        return False
     return True
 
 

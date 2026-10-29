@@ -1140,6 +1140,71 @@ class TestRelativeM:
         assert [p.readings for p in seg("የምፈልገው").parts][1] == ("relative",)
 
 
+class TestPresentPerfect:
+    """
+    The gerund form plus the auxiliary, as IRIT: ሆኗል = ሆን_አል,
+    ሆነዋል = ሆን_ኧ_ው_አል, ሰጥቷል = ሰጥ_ት_አል. Ruled 2026-10-30.
+    """
+
+    def test_third_masculine_fuses_into_order_8(self):
+        result = seg("ሆኗል")
+        assert result.morphemes == ["ሆነ", "ኣል"]
+        assert result.aspect == "gerund"
+
+    def test_third_feminine(self):
+        assert seg("ሆናለች").morphemes == ["ሆነ", "ኣል", "ች"]
+
+    def test_third_plural_and_polite(self):
+        assert seg("ሆነዋል").morphemes == ["ሆነ", "ው", "ኣል"]
+        assert seg("ብለዋል").morphemes == ["አለ", "ው", "ኣል"]
+
+    def test_first_plural(self):
+        assert seg("ሆነናል").morphemes == ["ሆነ", "ን", "ኣል"]
+
+    def test_first_singular_on_the_palatal_stem(self):
+        result = seg("ሆኛለሁ")
+        assert result.morphemes == ["ሆነ", "ኣል", "ሁ"]
+        assert result.aspect == "gerund_palatal"
+
+    def test_to_gerund_verbs(self):
+        assert seg("ሰጥቷል").morphemes == ["ሰጠ", "ት", "ኣል"]
+        assert seg("ገብቷል").morphemes == ["ገባ", "ት", "ኣል"]
+        assert seg("ሰጥተዋል").morphemes == ["ሰጠ", "ት", "ው", "ኣል"]
+
+    def test_third_plural_gerund_of_a_to_verb(self):
+        # ሰጥተው "they, having given", IRIT ሰጥ_ተ_ው.
+        assert seg("ሰጥተው").morphemes == ["ሰጠ", "ት", "ው"]
+
+    def test_only_ch_and_hu_follow_the_auxiliary(self):
+        # The present perfect's persons: ሆኛለሁ ሆነሃል ሆነሻል ሆኗል ሆናለች ሆነናል
+        # ሆናችኋል ሆነዋል. After ኣል only ች (3fs) and ሁ (1s) are written.
+        assert seg("ሆናለህ").known is False
+        assert seg("ሆናሉ").known is False
+
+    def test_first_singular_needs_the_palatal_stem(self):
+        assert seg("ሆናለሁ").known is False
+
+    def test_bare_stem_plus_auxiliary_is_not_a_perfect(self):
+        assert seg("ሆናል").known is False
+
+    def test_no_person_ending_without_the_auxiliary(self):
+        # ብልሹ "corrupt" is not አለ + ሽ + ኡ.
+        assert seg("ብልሹ").known is False
+
+    def test_to_marker_never_ends_the_word(self):
+        assert seg("ሰጥት").known is False
+
+    def test_reading(self):
+        assert suffix_readings(seg("ሆኗል"), "ኣል") == ("present_perfect",)
+        assert suffix_readings(seg("ይሆናል"), "ኣል") == ("auxiliary",)
+
+    def test_imperfective_and_gerund_are_unchanged(self):
+        assert seg("ይሆናል").morphemes == ["ይ", "ሆነ", "ኣል"]
+        assert seg("ይሆናል").aspect == "imperfective"
+        assert seg("ሆኖ").morphemes == ["ሆነ", "ኦ"]
+        assert seg("ሰጥቶ").morphemes == ["ሰጠ", "ቶ"]
+
+
 class TestNegativeImperfective:
     def test_ai_with_m(self):
         result = seg("አይሆንም")

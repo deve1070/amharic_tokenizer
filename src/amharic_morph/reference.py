@@ -88,11 +88,12 @@ _ALTERNATIVE = re.compile(f"\\[({_ANALYSIS})\\]")
 # - bare ኣ. On a noun the reference uses it for derivation (ከተም_ኣ), and
 #   on a verb for the 3ms ending of an ኣ-final verb (ገብ_አ, ተ_ነስ_አ),
 #   which is part of Level 4's stem ገባ;
-# - ኦ, ኣት and ኢ, which on a noun are derivation (ጉዝ_ኦ, ል_ም_አት, መር_ኢ)
-#   and on a verb the gerund, the object and the 2fs (ሆን_ኦ). They are peeled when Level
+# - ኦ, ኣት, ኢ and ት, which on a noun are derivation (ጉዝ_ኦ, ል_ም_አት, መር_ኢ,
+#   መ_ንግስ_ት) and on a verb the gerund, the object, the 2fs and the ቶ-gerund's
+#   ት (ሆን_ኦ, ሰጥ_ት_አል). They are peeled when Level
 #   4's stem is a verb. See VERB_INFLECTIONAL_SUFFIXES.
 _DERIVATION_LOOKALIKES = {"ኤ", "ኣ"}
-_VERB_LOOKALIKES = {"ኦ", "ኣት", "ኢ"}
+_VERB_LOOKALIKES = {"ኦ", "ኣት", "ኢ", "ት"}
 # Prefixes peeled on a verb: every row of the prefix table. On a noun only
 # CORPUS_PREFIXES, because the reference also writes nominal derivation
 # with the letters of the person prefixes (ት_ምህር_ት).

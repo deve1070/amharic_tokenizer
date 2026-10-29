@@ -30919,5 +30919,41 @@
     "source": "native_speaker",
     "validated": true,
     "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "መጠን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ጥ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "amount; not መጣ + ን"
+  },
+  {
+    "word": "ጠረን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ር",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "smell; not ጠራ + ን (whose 1pl gerund is ጠርተን)"
   }
 ]
