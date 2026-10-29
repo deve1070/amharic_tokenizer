@@ -55,11 +55,11 @@ from amharic_morph.levels import (
 )
 from amharic_morph.lexicon_builder import ROOT_SOURCE_SKELETON
 from amharic_morph.morphology import (
-    DEFAULT_PREFIXES,
+    CORPUS_PREFIXES,
     RULE_AMBIGUOUS_FUSION,
     RULE_PLURAL_FUSION,
     RULE_PREFIX,
-    SUFFIX_TABLE,
+    CORPUS_SUFFIXES,
     detach_prefix,
     detach_suffix,
     detach_suffix_with_rule,
@@ -148,7 +148,7 @@ def coverage_curve(
 
 
 def candidate_stems_with_rules(
-    word: str, prefixes=DEFAULT_PREFIXES, suffixes=SUFFIX_TABLE
+    word: str, prefixes=CORPUS_PREFIXES, suffixes=CORPUS_SUFFIXES
 ) -> dict[str, str]:
     """
     Stems reachable from a surface form, tagged with the rule that
@@ -178,7 +178,7 @@ def candidate_stems_with_rules(
 
 
 def candidate_stems(
-    word: str, prefixes=DEFAULT_PREFIXES, suffixes=SUFFIX_TABLE
+    word: str, prefixes=CORPUS_PREFIXES, suffixes=CORPUS_SUFFIXES
 ) -> set[str]:
     """
     All stems reachable from a surface form by removing one affix.
@@ -263,8 +263,8 @@ def derived_stems(
 def derived_lexicon_entries(
     words,
     counts: Counter,
-    prefixes=DEFAULT_PREFIXES,
-    suffixes=SUFFIX_TABLE,
+    prefixes=CORPUS_PREFIXES,
+    suffixes=CORPUS_SUFFIXES,
 ) -> dict[str, tuple[str, str]]:
     """
     Lexicon entries that are an inflection of another lexicon entry.
@@ -316,8 +316,8 @@ def generate_candidates(
     min_standalone_ratio: float = 0.05,
     max_ambiguous_inflection_ratio: float = 0.5,
     min_stem_length: int = 2,
-    prefixes=DEFAULT_PREFIXES,
-    suffixes=SUFFIX_TABLE,
+    prefixes=CORPUS_PREFIXES,
+    suffixes=CORPUS_SUFFIXES,
 ) -> list[dict]:
     """
     Rank independent word candidates by morphological productivity.

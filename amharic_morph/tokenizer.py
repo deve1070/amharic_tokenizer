@@ -44,7 +44,7 @@ from pathlib import Path
 
 from amharic_morph.levels import level2_sound, level3_fidel
 from amharic_morph.lexicon_builder import entry_root, lexicon_index, load_lexicon
-from amharic_morph.morphology import Segmentation, segment_word
+from amharic_morph.morphology import Segmentation, anchor_starts, segment_word, verb_stems
 from amharic_morph.normalizer import normalize
 from amharic_morph.punctuation import normalize_punctuation
 from amharic_morph.script_classifier import classify_text
@@ -107,8 +107,14 @@ class AmharicTokenizer:
         self.lexicon = lexicon_index(load_lexicon(path), validated_only)
         # Segmentation is frozen, so one cached object can be handed to
         # every caller.
+        stems = verb_stems(self.lexicon)
         self._segment = lru_cache(maxsize=cache_size)(
-            partial(segment_word, lexicon=self.lexicon)
+            partial(
+                segment_word,
+                lexicon=self.lexicon,
+                stems=stems,
+                starts=anchor_starts(self.lexicon, stems),
+            )
         )
 
     def words(self, text: str) -> list[str]:
@@ -180,7 +186,9 @@ class AmharicTokenizer:
             word: A single normalized word.
 
         Returns:
-            Dict with word, morpheme, fidel, sound, root and known.
+            Dict with word, morpheme, fidel, sound, root, known, and
+            aspect (which verb stem the word is built on, None for a
+            non-verb).
 
         Examples:
             >>> AmharicTokenizer().analyze("ቤቶች")["morpheme"]
@@ -194,6 +202,7 @@ class AmharicTokenizer:
             "sound": level2_sound(word),
             "root": self.root(word),
             "known": analysis.known,
+            "aspect": analysis.aspect,
         }
 
     def tokenize(self, text: str, level: str = MORPHEME) -> list[str]:

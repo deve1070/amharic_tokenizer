@@ -54,9 +54,9 @@ from amharic_morph.levels import (
     to_order,
 )
 from amharic_morph.morphology import (
-    DEFAULT_PREFIXES,
-    NEGATIVE_PREFIX,
+    CORPUS_PREFIXES,
     NEGATIVE_SUFFIX,
+    PREFIX_TABLE,
     SUFFIX_TABLE,
 )
 from amharic_morph.normalizer import normalize
@@ -89,11 +89,19 @@ _ALTERNATIVE = re.compile(f"\\[({_ANALYSIS})\\]")
 # - bare ኣ. On a noun the reference uses it for derivation (ከተም_ኣ), and
 #   on a verb for the 3ms ending of an ኣ-final verb (ገብ_አ, ተ_ነስ_አ),
 #   which is part of Level 4's stem ገባ;
-# - ኦ and ኣት, which on a noun are derivation (ጉዝ_ኦ, አመት_አት) and on a
-#   verb the gerund and the object (ሆን_ኦ). They are peeled when Level
+# - ኦ, ኣት and ኢ, which on a noun are derivation (ጉዝ_ኦ, አመት_አት, መር_ኢ)
+#   and on a verb the gerund, the object and the 2fs (ሆን_ኦ). They are peeled when Level
 #   4's stem is a verb. See VERB_INFLECTIONAL_SUFFIXES.
 _DERIVATION_LOOKALIKES = {"ኤ", "ኣ"}
-_VERB_LOOKALIKES = {"ኦ", "ኣት"}
+_VERB_LOOKALIKES = {"ኦ", "ኣት", "ኢ"}
+# Prefixes peeled on a verb: every row of the prefix table. On a noun only
+# CORPUS_PREFIXES, because the reference also writes nominal derivation
+# with the letters of the person prefixes (ት_ምህር_ት).
+VERB_PREFIXES = tuple(dict.fromkeys(p.morpheme for p in PREFIX_TABLE))
+# Prefixes that count only when ም follows in the same reading. In አል_ኧ
+# (አለ) አል is the verb stem, not the negative.
+_PAIRED_PREFIXES = {p.morpheme: p.pairs_with for p in PREFIX_TABLE if p.pairs_with}
+
 INFLECTIONAL_SUFFIXES = tuple(
     dict.fromkeys(
         normalize(s.morpheme)
@@ -216,7 +224,7 @@ def load_reference(path: str | Path) -> dict[str, tuple[ReferenceAnalysis, ...]]
 
 def outer_affixes(
     analysis: ReferenceAnalysis,
-    prefixes=DEFAULT_PREFIXES,
+    prefixes=CORPUS_PREFIXES,
     suffixes=INFLECTIONAL_SUFFIXES,
 ) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     """
@@ -247,9 +255,10 @@ def outer_affixes(
     m = analysis.morphemes
     start, end = 0, len(m)
     while start < end - 1 and m[start] in prefixes:
-        # አል is the negative only when ም follows it, as Level 4 requires.
-        # In አል_ኧ (አለ) it is the verb stem.
-        if m[start] == NEGATIVE_PREFIX and NEGATIVE_SUFFIX not in m[start + 1:]:
+        # አል and አይ are the negative only when ም follows, as Level 4
+        # requires. In አል_ኧ (አለ) አል is the verb stem.
+        paired = _PAIRED_PREFIXES.get(m[start])
+        if paired and paired not in m[start + 1:]:
             break
         start += 1
     while end - 1 > start and m[end - 1] in suffixes:
@@ -260,7 +269,7 @@ def outer_affixes(
 def affixes_agree(
     segmentation,
     analysis: ReferenceAnalysis,
-    prefixes=DEFAULT_PREFIXES,
+    prefixes=CORPUS_PREFIXES,
     suffixes=INFLECTIONAL_SUFFIXES,
 ) -> bool:
     """
@@ -285,6 +294,8 @@ def affixes_agree(
     """
     if segmentation.category == "verb" and suffixes is INFLECTIONAL_SUFFIXES:
         suffixes = VERB_INFLECTIONAL_SUFFIXES
+    if segmentation.category == "verb" and prefixes is CORPUS_PREFIXES:
+        prefixes = VERB_PREFIXES
     pre, _, suf = outer_affixes(analysis, prefixes, suffixes)
     return pre == tuple(normalize(p) for p in segmentation.prefixes) and suf == tuple(
         normalize(s) for s in segmentation.suffixes
@@ -320,7 +331,7 @@ def inflection_agreement(
     segment,
     reference: dict[str, tuple[ReferenceAnalysis, ...]],
     counts: Counter,
-    prefixes=DEFAULT_PREFIXES,
+    prefixes=CORPUS_PREFIXES,
     suffixes=INFLECTIONAL_SUFFIXES,
 ) -> Agreement:
     """

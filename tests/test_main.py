@@ -47,3 +47,6 @@ class TestCommand:
 
     def test_summary_line(self):
         assert "words analysed" in run("ቤቶች ኮምፒውተር").stdout
+
+    def test_aspect_of_a_verb_is_shown(self):
+        assert "[verb, perfective]" in run("ሄድኩ").stdout

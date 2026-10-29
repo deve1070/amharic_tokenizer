@@ -279,6 +279,12 @@ class TestInflectionAgreement:
         segment = segmenter({"ጉዞ": Segmentation("ጉዞ", "ጉዞ", category="noun")})
         assert inflection_agreement(segment, reference, {"ጉዞ": 3}).agreeing_tokens == 3
 
+    def test_i_on_a_noun_is_left_as_derivation(self):
+        # መሪ is መር_ኢ in the reference; ኢ is the 2fs only on a verb.
+        reference = {"መሪ": (ReferenceAnalysis(("መር", "ኢ"), ()),)}
+        segment = segmenter({"መሪ": Segmentation("መሪ", "መሪ", category="noun")})
+        assert inflection_agreement(segment, reference, {"መሪ": 2}).agreeing_tokens == 2
+
     def test_rate(self):
         reference = {"ቤቶች": (ReferenceAnalysis(("ቤት", "ኦች"), ()),)}
         segment = segmenter({"ቤቶች": Segmentation("ቤቶች", "ቤት", suffixes=("ኦች",))})

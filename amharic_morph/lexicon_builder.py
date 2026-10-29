@@ -63,6 +63,7 @@ import json
 from dataclasses import dataclass
 
 from amharic_morph.levels import bare_consonant, consonant_skeleton, is_ethiopic
+from amharic_morph.morphology import STEM_KINDS
 
 # Spec section 3.3 field order.
 SCHEMA_FIELDS = (
@@ -109,14 +110,6 @@ VALID_ROOT_SOURCES = (SOURCE_NATIVE_SPEAKER, ROOT_SOURCE_SKELETON)
 # ሆነ the jussive ሁን (ይሁን), ሰጠ the gerund ሰጥ (ሰጥቶ). The palatal stems
 # are the ones the 1s gerund (ሄጄ), the 2fs imperfective (ትሄጂ) and the
 # 2fs imperative (ሂጂ) are built on.
-STEM_KINDS = (
-    "imperfective",
-    "jussive",
-    "gerund",
-    "imperfective_palatal",
-    "jussive_palatal",
-    "gerund_palatal",
-)
 
 
 def to_schema_entry(entry: dict) -> dict:

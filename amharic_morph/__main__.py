@@ -29,6 +29,8 @@ def describe(tok: AmharicTokenizer, word: str) -> list[str]:
     analysis = tok.segment(word)
     root = tok.root(word)
     status = "" if analysis.known else "   [unknown: not segmented]"
+    if analysis.aspect:
+        status += f"   [verb, {analysis.aspect}]"
     return [
         f"{word}{status}",
         f"    morphemes  {_morphemes(analysis)}",

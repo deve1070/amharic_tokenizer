@@ -305,14 +305,12 @@ class TestDerivationRules:
     def test_plural_fusion_rule(self):
         assert candidate_stems_with_rules("ቤቶች")["ቤት"] == RULE_PLURAL_FUSION
 
-    def test_bare_a_is_marked_ambiguous(self):
-        # Bare ኣ restores only to a verb's order 1 (ሆና = ሆነ + ኣ), and the
-        # shape still produces false positives, so it is marked ambiguous.
-        assert candidate_stems_with_rules("ስራ")["ስረ"] == RULE_AMBIGUOUS_FUSION
-
-    def test_bare_a_does_not_reach_a_consonant_final_stem(self):
-        # Ruled 2026-10-22: ኣ is not a noun suffix, so ስራ is not ስር + ኣ.
-        assert "ስር" not in candidate_stems_with_rules("ስራ")
+    def test_bare_a_is_not_read_by_the_corpus_analysis(self):
+        # Ruled 2026-10-22: ኣ is not a noun suffix, and as the gerund it
+        # attaches to a reviewed verb stem, which a corpus candidate does
+        # not have. So ስራ is neither ስር + ኣ nor ስረ + ኣ.
+        stems = candidate_stems_with_rules("ስራ")
+        assert "ስር" not in stems and "ስረ" not in stems
 
 
 class TestStandaloneRatio:
@@ -355,10 +353,12 @@ class TestAmbiguousFusionGuard:
         candidates = {c["stem"]: c for c in generate_candidates(counts)}
         assert "ስራ" not in candidates.get("ስር", {}).get("forms", [])
 
-    def test_rare_gerund_accepted(self):
-        counts = Counter({"ሆነ": 100_000, "ሆና": 2_000, "ሆኑ": 30_000})
+    def test_gerund_is_not_evidence_for_the_perfective(self):
+        # ሆና is built on the gerund stem ሆን, not on ሆነ.
+        counts = Counter({"ሆነ": 100_000, "ሆና": 2_000, "ሆኑ": 30_000, "የሆነ": 5_000})
         candidates = {c["stem"]: c for c in generate_candidates(counts)}
-        assert "ሆና" in candidates["ሆነ"]["forms"]
+        assert "ሆና" not in candidates["ሆነ"]["forms"]
+        assert "ሆኑ" in candidates["ሆነ"]["forms"]
 
     def test_unambiguous_plural_not_guarded(self):
         # The plural rule is exempt: no word ends in order-7 + ች by chance.

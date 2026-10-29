@@ -111,26 +111,10 @@ from dataclasses import dataclass, field
 
 from amharic_morph.levels import fidel_order, is_ethiopic, to_order, to_order6
 
-# Per CLAUDE.md, minus ም and ና. Both inventories are open questions, so
-# they are parameters rather than constants baked into the algorithm.
-#
-# ም and ና are listed as prefixes in the open questions but do not behave
-# as prefixes in the corpus. Being single characters they strip the front
-# off ordinary words: ምግብ (food) -> ግብ, ምድር (earth) -> ድር, ናት -> ት, ምን
-# -> ን. In Amharic both are conjunctions or suffixes (ና "and", ም "also"),
-# which is consistent with the corpus evidence.
-#
-# በየ is the distributive "each, every" (በየአመቱ "every year"), one
-# morpheme. Read as በ + የ the word would mean "in the year's". The IRIT
-# annotation writes it as one prefix too.
-#
-# አል is the negative of the perfective verb (አልሆነም). It is gated: see
-# NEGATIVE_PREFIX.
-DEFAULT_PREFIXES = ("ስለ", "ወደ", "እንደ", "እስከ", "በየ", "አል", "የ", "በ", "ከ", "ለ")
-
 # The negative perfective prefix and the suffix it pairs with. Without
 # the pairing, አል would strip the front off every word that happens to
-# start with those letters.
+# start with those letters. The imperfective negative አይ pairs the same
+# way: አይሆንም.
 NEGATIVE_PREFIX = "አል"
 NEGATIVE_SUFFIX = "ም"
 
@@ -185,16 +169,29 @@ VERB = "verb"
 #
 #   noun   stem + ADJECTIVE + PLURAL + POSSESSIVE + CASE + ALSO + AND
 #          ውጤት + ኣማ + ዎች;  ቤት + ኦች + ኡ + ን + ም
-#   verb   stem + SUBJECT + OBJECT + ALSO + AND
-#          ሰጠ + ኡ + ኝ "they gave me";  አል + ሄደ + ኩ + ም
+#   verb   stem + SUBJECT + OBJECT + AUX + AUX_PERSON + ALSO + AND
+#          ሰጠ + ኡ + ኝ "they gave me";  አል + ሄደ + ኩ + ም;
+#          እ + ሆነ + ኣል + ሁ "I will become"
 #
 # POSSESSIVE holds the definite too: a noun takes one or the other.
 ADJECTIVE = 0
 PLURAL = SUBJECT = 1
 POSSESSIVE = OBJECT = 2
-CASE = 3
-ALSO = 4
-AND = 5
+CASE = AUX = 3
+AUX_PERSON = 4
+ALSO = 5
+AND = 6
+
+# Verb stems by aspect. A verb entry is its perfective; the other stems
+# are reviewed fields on the entry (lexicon_builder.STEM_KINDS), each
+# with a palatal variant for the forms that palatalize its last
+# consonant (ሄጄ, ትሄጂ).
+PERFECTIVE = "perfective"
+IMPERFECTIVE = ("imperfective", "imperfective_palatal")
+JUSSIVE = ("jussive", "jussive_palatal")
+GERUND = ("gerund", "gerund_palatal")
+STEM_KINDS = (*IMPERFECTIVE[:1], *JUSSIVE[:1], *GERUND[:1],
+              IMPERFECTIVE[1], JUSSIVE[1], GERUND[1])
 
 
 @dataclass(frozen=True)
@@ -220,6 +217,11 @@ class SuffixShape:
         after_orders:   For a plain row, the orders the letter before it
                         may have, or None for any.
         rule:           RULE_* reported to the corpus analysis.
+        aspects:        For a verb, the stem aspects it attaches to, or
+                        None for any. ኩ needs the perfective (ሄድኩ), ኦ the
+                        gerund stem (ፈልጎ on ፈልግ), ኣል the imperfective.
+        bound:          True if another suffix must follow it: the ኣል
+                        written ...ለ in እሆናለሁ is never word-final.
     """
 
     morpheme: str
@@ -231,6 +233,8 @@ class SuffixShape:
     restore_orders: tuple[int, ...] = ()
     after_orders: tuple[int, ...] | None = None
     rule: str = RULE_SUFFIX
+    aspects: tuple[str, ...] | None = None
+    bound: bool = False
 
     def position(self, category: str | None) -> int:
         """The row's position after a stem of this category."""
@@ -239,15 +243,21 @@ class SuffixShape:
         return self.slot
 
 
-def _plain(morpheme, kind, slot, verb_slot=None, after_orders=None):
-    return SuffixShape(morpheme, kind, morpheme, slot, verb_slot, after_orders=after_orders)
+def _plain(morpheme, kind, slot, verb_slot=None, after_orders=None, aspects=None):
+    return SuffixShape(morpheme, kind, morpheme, slot, verb_slot, after_orders=after_orders,
+                       aspects=aspects)
 
 
 def _fused(morpheme, kind, slot, carrier_order, tail, restore_orders, verb_slot=None,
-           rule=RULE_FUSION):
+           rule=RULE_FUSION, aspects=None, bound=False):
     return SuffixShape(
-        morpheme, kind, tail, slot, verb_slot, carrier_order, restore_orders, rule=rule
+        morpheme, kind, tail, slot, verb_slot, carrier_order, restore_orders, rule=rule,
+        aspects=aspects, bound=bound,
     )
+
+
+_PERFECTIVE = (PERFECTIVE,)
+_IMPERFECTIVE_OR_JUSSIVE = IMPERFECTIVE + JUSSIVE
 
 
 # The suffix inventory. Rows are tried in order; the lexicon and the
@@ -259,7 +269,7 @@ SUFFIX_TABLE = (
     _plain("ና", ANY, AND),
     # The 3fs subject (ሄደች). On a non-verb it produced only wrong
     # analyses (ማርች -> ማር + ች), so it is verb-only.
-    _plain("ች", VERB, PLURAL, SUBJECT),
+    _plain("ች", VERB, PLURAL, SUBJECT, aspects=_PERFECTIVE),
     _plain("ው", ANY, POSSESSIVE, OBJECT),
     _plain("ዋ", ANY, POSSESSIVE, OBJECT),
     _plain("ዎ", ANY, POSSESSIVE, OBJECT),
@@ -278,8 +288,8 @@ SUFFIX_TABLE = (
     # The adjective ending after an ኣ-final noun: ጤናማ.
     _plain("ማ", NOUN, ADJECTIVE, after_orders=(4,)),
     # I, after an ኣ-final verb (ገባሁ); me, after any verb (ሰጠኝ).
-    _plain("ሁ", VERB, SUBJECT, after_orders=(4,)),
-    _plain("ኝ", VERB, OBJECT, after_orders=_VOWEL_ORDERS),
+    _plain("ሁ", VERB, SUBJECT, after_orders=(4,), aspects=_PERFECTIVE),
+    _plain("ኝ", VERB, OBJECT, after_orders=_VOWEL_ORDERS, aspects=_PERFECTIVE),
     # The plural: ቤት + ኦች -> ቤቶች, the ኦ riding on the stem's last letter.
     _fused("ኦች", ANY, PLURAL, 7, "ች", _CARRIER_ORDERS, rule=RULE_PLURAL_FUSION),
     # The definite on a noun, 3pl agreement on a verb: ቤቱ, ሆኑ.
@@ -294,22 +304,129 @@ SUFFIX_TABLE = (
     # The adjective ending: ውጤት + ኣማ -> ውጤታማ.
     _fused("ኣማ", NOUN, ADJECTIVE, 4, "ማ", (6,)),
     # Her, as an object: ሰጠ + ኣት -> ሰጣት.
-    _fused("ኣት", VERB, OBJECT, 4, "ት", (1,)),
+    _fused("ኣት", VERB, OBJECT, 4, "ት", (1,), aspects=_PERFECTIVE),
     # Perfective subjects delete the stem's last vowel: ሄደ + ኩ -> ሄድኩ.
-    *(_fused(m, VERB, SUBJECT, 6, m, (1,)) for m in ("ኩ", "ክ", "ሽ", "ን")),
-    # Gerunds. Bare ኣ is the 3fs (ሆና), and on a noun ኣ is never a suffix
-    # of its own, so it restores only to a verb's order 1. ስራ is not the
-    # "definite" of ስር.
-    _fused("ኣ", VERB, SUBJECT, 4, "", (1,), rule=RULE_AMBIGUOUS_FUSION),
-    _fused("ኦ", VERB, SUBJECT, 7, "", (1,)),
-    # After an ኣ-final verb, and after some order-1 verbs, the gerund is a
-    # separate letter: ገባ -> ገብቶ, ሰጠ -> ሰጥቶ, ቀረ -> ቀርቶ.
-    _fused("ቶ", VERB, SUBJECT, 6, "ቶ", (4, 1)),
-    _fused("ታ", VERB, SUBJECT, 6, "ታ", (4, 1)),
+    *(_fused(m, VERB, SUBJECT, 6, m, (1,), aspects=_PERFECTIVE) for m in ("ኩ", "ክ", "ሽ", "ን")),
+    # Gerunds, on the reviewed gerund stem: ሆን + ኦ -> ሆኖ, ፈልግ + ኦ -> ፈልጎ,
+    # ሆን + ኣ -> ሆና (3fs), ሰጥ + ቶ -> ሰጥቶ. On a noun ኣ is never a suffix
+    # of its own: ስራ is not the "definite" of ስር.
+    _fused("ኣ", VERB, SUBJECT, 4, "", (6,), rule=RULE_AMBIGUOUS_FUSION, aspects=GERUND),
+    _fused("ኦ", VERB, SUBJECT, 7, "", (6,), aspects=GERUND),
+    _plain("ቶ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
+    _plain("ታ", VERB, SUBJECT, after_orders=(6,), aspects=GERUND),
+    # The 1s gerund on the palatal stem: ሄጅ + ኤ -> ሄጄ.
+    _fused("ኤ", VERB, SUBJECT, 5, "", (6,), aspects=(GERUND[1],)),
+    # The 2fs on the palatal imperfective or jussive stem: ት + ሄጅ + ኢ.
+    _fused("ኢ", VERB, SUBJECT, 3, "", (6,), aspects=(IMPERFECTIVE[1], JUSSIVE[1])),
+    # The relative or object ው after a linking ኧ: የሚኖረው, IRIT
+    # የ_ሚ_ኖር_ኧ_ው. The ኧ rides on the stem's last letter.
+    _fused("ው", VERB, OBJECT, 1, "ው", (6,), aspects=_IMPERFECTIVE_OR_JUSSIVE + GERUND),
+    # The auxiliary of the main-clause imperfective, fused onto the stem:
+    # ይ + ሆን + ኣል -> ይሆናል. Before a person ending it is written ...ለ.
+    _fused("ኣል", VERB, AUX, 4, "ል", (6,), aspects=IMPERFECTIVE),
+    _fused("ኣል", VERB, AUX, 4, "ለ", (6,), aspects=IMPERFECTIVE, bound=True),
+    # Person endings after the auxiliary, as IRIT: ኣል + ሁ, ኣል + ኡ.
+    *(_plain(m, VERB, AUX_PERSON, after_orders=(1,), aspects=IMPERFECTIVE)
+      for m in ("ሁ", "ህ", "ሽ", "ች", "ን")),
+    _fused("ኡ", VERB, AUX_PERSON, 2, "", (6,), aspects=IMPERFECTIVE),
+    _fused("ኣችሁ", VERB, AUX_PERSON, 4, "ችሁ", (6,), aspects=IMPERFECTIVE),
 )
 
 
-def strip_prefixes(word: str, prefixes=DEFAULT_PREFIXES) -> set[str]:
+# The rows the corpus analysis reads: those that attach to a lexicon entry
+# itself. Rows that need a reviewed verb stem (the gerunds, the
+# imperfective) say nothing about a corpus candidate, which has no stems,
+# and the gerund ኣ restoring to order 6 would read ስራ as ስር + ኣ.
+CORPUS_SUFFIXES = tuple(s for s in SUFFIX_TABLE if s.aspects in (None, _PERFECTIVE))
+
+
+# ── Prefixes ─────────────────────────────────────────────────────────────
+#
+# Prefixes take a fixed order too, as IRIT segments them:
+#
+#   PREPOSITION + SUBORDINATOR + NEGATION + PERSON + stem
+#   የ + ማ + ይ + ሆነ (የማይሆን);  እንደ + ሚ + ሆነ;  ስ + ት + ሄደ
+#
+# ሚ ሲ ሊ ቢ እንዲ ሳይ and አይ already carry the 3ms person (ስ + ይ -> ሲ);
+# ስ ል ብ እንድ and ማ need a person prefix after them.
+PREPOSITION = 0
+SUBORDINATOR = 1
+NEGATION = 2
+PERSON = 3
+
+
+@dataclass(frozen=True)
+class PrefixShape:
+    """
+    One prefix.
+
+    Attributes:
+        morpheme:     The prefix.
+        kind:         ANY or VERB.
+        slot:         PREPOSITION, SUBORDINATOR, NEGATION or PERSON.
+        aspects:      For a verb, the stem aspects it attaches to, or None.
+        person:       True if it marks the subject's person (ይ, or ሲ,
+                      which contains it).
+        needs_person: True if a person prefix must follow (ስ in ስትሄድ).
+        pairs_with:   A suffix the word must also carry (ም for አል, አይ).
+        readings:     What it means, or None where nothing is recorded.
+    """
+
+    morpheme: str
+    kind: str
+    slot: int
+    aspects: tuple[str, ...] | None = None
+    person: bool = False
+    needs_person: bool = False
+    pairs_with: str | None = None
+    readings: tuple[str, ...] | None = None
+
+
+def _sub(morpheme, reading, person):
+    return PrefixShape(morpheme, VERB, SUBORDINATOR, IMPERFECTIVE, person=person,
+                       needs_person=not person, readings=(reading,))
+
+
+def _person(morpheme, *readings, aspects=_IMPERFECTIVE_OR_JUSSIVE):
+    return PrefixShape(morpheme, VERB, PERSON, aspects, person=True, readings=readings)
+
+
+# Prepositions attach to nouns and to verbs, a verb's perfective (የሆነ)
+# or its imperfective after a subordinator (የሚሆን).
+_PREPOSITIONS = ("ስለ", "ወደ", "እንደ", "እስከ", "በየ", "የ", "በ", "ከ", "ለ")
+
+PREFIX_TABLE = (
+    *(PrefixShape(p, ANY, PREPOSITION, (PERFECTIVE, *IMPERFECTIVE)) for p in _PREPOSITIONS),
+    _sub("ሚ", "relative", True),
+    _sub("ሲ", "when", True),
+    _sub("ሊ", "purpose", True),
+    _sub("ቢ", "if", True),
+    _sub("እንዲ", "so_that", True),
+    _sub("ሳይ", "without", True),
+    _sub("ማ", "relative_negative", False),
+    _sub("ስ", "when", False),
+    _sub("ል", "purpose", False),
+    _sub("ብ", "if", False),
+    _sub("እንድ", "so_that", False),
+    PrefixShape(NEGATIVE_PREFIX, VERB, NEGATION, (PERFECTIVE,), pairs_with=NEGATIVE_SUFFIX,
+                readings=("negative",)),
+    PrefixShape("አይ", VERB, NEGATION, IMPERFECTIVE, person=True, pairs_with=NEGATIVE_SUFFIX,
+                readings=("negative", "subject_3ms")),
+    _person("ይ", "subject_3ms"),
+    _person("ት", "subject_2ms", "subject_3fs"),
+    _person("እ", "subject_1s"),
+    _person("እን", "subject_1pl"),
+    _person("ን", "subject_1pl"),
+    _person("ል", "subject_1s", aspects=JUSSIVE),
+)
+
+# What the corpus analysis peels. It has no categories, so it takes only
+# the prefixes that can precede any word, plus the negative it always
+# peeled.
+CORPUS_PREFIXES = (*_PREPOSITIONS, NEGATIVE_PREFIX)
+
+
+def strip_prefixes(word: str, prefixes=CORPUS_PREFIXES) -> set[str]:
     """
     Candidate stems obtained by removing one prefix.
 
@@ -334,7 +451,7 @@ def strip_prefixes(word: str, prefixes=DEFAULT_PREFIXES) -> set[str]:
     return stems
 
 
-def detach_prefix(word: str, prefixes=DEFAULT_PREFIXES) -> list[tuple[str, str]]:
+def detach_prefix(word: str, prefixes=CORPUS_PREFIXES) -> list[tuple[str, str]]:
     """
     Prefixes removable from a surface form, with the remainder.
 
@@ -354,6 +471,52 @@ def detach_prefix(word: str, prefixes=DEFAULT_PREFIXES) -> list[tuple[str, str]]
         for prefix in prefixes
         if word.startswith(prefix) and len(word) > len(prefix)
     ]
+
+
+def detach_prefix_shapes(word: str, prefixes=PREFIX_TABLE) -> list[tuple[str, PrefixShape]]:
+    """
+    Prefix rows removable from a surface form, with the remainder.
+
+    Examples:
+        >>> [(r, p.morpheme) for r, p in detach_prefix_shapes("የሚሆን")]
+        [('ሚሆን', 'የ')]
+    """
+    return [
+        (word[len(p.morpheme):], p)
+        for p in prefixes
+        if word.startswith(p.morpheme) and len(word) > len(p.morpheme)
+    ]
+
+
+# Per-table index of the rows by the letter they end on. Keyed by the
+# table's id; the table itself is kept in the value so the id stays valid.
+_SUFFIX_INDEXES: dict[int, tuple] = {}
+
+
+def _rows_ending(word: str, suffixes) -> list:
+    """
+    The rows of a table that can match the end of a word, in table order.
+
+    A row with a tail can match only if the word ends with the tail's last
+    letter. A purely fused row (ኡ, ኦ) can match only if the word's last
+    letter is at the row's carrier order. Testing just these rows is what
+    keeps the search fast as the table grows.
+    """
+    cached = _SUFFIX_INDEXES.get(id(suffixes))
+    if cached is None or cached[0] is not suffixes:
+        by_last: dict[str, list] = {}
+        by_order: dict[int, list] = {}
+        for position, shape in enumerate(suffixes):
+            if shape.tail:
+                by_last.setdefault(shape.tail[-1], []).append((position, shape))
+            else:
+                by_order.setdefault(shape.carrier_order, []).append((position, shape))
+        cached = (suffixes, by_last, by_order)
+        _SUFFIX_INDEXES[id(suffixes)] = cached
+    _, by_last, by_order = cached
+    last = word[-1]
+    rows = by_last.get(last, []) + by_order.get(fidel_order(last), [])
+    return [shape for _, shape in sorted(rows, key=lambda item: item[0])]
 
 
 def detach_suffix_shapes(
@@ -392,7 +555,9 @@ def detach_suffix_shapes(
             seen.add((stem, shape))
             found.append((stem, shape))
 
-    for shape in suffixes:
+    if not word:
+        return found
+    for shape in _rows_ending(word, suffixes):
         if not word.endswith(shape.tail):
             continue
         rest = word[: len(word) - len(shape.tail)]
@@ -417,7 +582,7 @@ def detach_suffix_shapes(
     return found
 
 
-def detach_suffix(word: str, suffixes=SUFFIX_TABLE) -> list[tuple[str, str]]:
+def detach_suffix(word: str, suffixes=CORPUS_SUFFIXES) -> list[tuple[str, str]]:
     """
     Suffixes removable from a surface form, with the remainder.
 
@@ -441,7 +606,7 @@ def detach_suffix(word: str, suffixes=SUFFIX_TABLE) -> list[tuple[str, str]]:
     return list(dict.fromkeys((stem, s.morpheme) for stem, s in detach_suffix_shapes(word, suffixes)))
 
 
-def detach_suffix_with_rule(word: str, suffixes=SUFFIX_TABLE) -> list[tuple[str, str, str]]:
+def detach_suffix_with_rule(word: str, suffixes=CORPUS_SUFFIXES) -> list[tuple[str, str, str]]:
     """
     detach_suffix() with the rule that produced each remainder.
 
@@ -469,7 +634,7 @@ def detach_suffix_with_rule(word: str, suffixes=SUFFIX_TABLE) -> list[tuple[str,
     )
 
 
-def strip_suffixes(word: str, suffixes=SUFFIX_TABLE) -> set[str]:
+def strip_suffixes(word: str, suffixes=CORPUS_SUFFIXES) -> set[str]:
     """
     Candidate stems obtained by removing one suffix.
 
@@ -566,7 +731,9 @@ _READINGS = {
     "ኣማ": (("adjectivizer",), ()),
     "ማ": (("adjectivizer", "topic"), ()),
     "ዋ": (("definite_f", "possessive_3fs"), ()),
-    "ኤ": (("possessive_1s",), ()),
+    "ኤ": (("possessive_1s",), ("gerund_1s",)),
+    "ኢ": ((), ("subject_2fs",)),
+    "ኣል": ((), ("auxiliary",)),
     "ዬ": (("possessive_1s",), ()),
     "ህ": (("possessive_2ms",), ("subject_2ms", "object_2ms")),
     "ሽ": (("possessive_2fs",), ("subject_2fs", "object_2fs")),
@@ -627,6 +794,18 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
     return _READINGS[suffix][1 if is_verb else 0]
 
 
+def _prefix_readings(prefix: str, segmentation: "Segmentation") -> tuple[str, ...] | None:
+    """The readings of a prefix row that fits this analysis's aspect."""
+    for row in PREFIX_TABLE:
+        if row.morpheme != prefix:
+            continue
+        if row.kind == VERB and segmentation.category != VERB:
+            continue
+        if row.aspects is None or segmentation.aspect in row.aspects:
+            return row.readings
+    return None
+
+
 @dataclass(frozen=True)
 class Morpheme:
     """
@@ -669,6 +848,11 @@ class Segmentation:
                   word was returned whole, not that it was guessed at.
         category: The stem entry's category, which picks each suffix's
                   readings. None when unfilled.
+        aspect:   For a verb, which of its stems the word is built on:
+                  PERFECTIVE, or one of IMPERFECTIVE, JUSSIVE, GERUND.
+                  The stem is still reported in its lexicon form
+                  (ይሆናል = ይ + ሆነ + ኣል, aspect imperfective). None for
+                  a non-verb.
     """
 
     word: str
@@ -678,6 +862,7 @@ class Segmentation:
     infix: str | None = None
     known: bool = True
     category: str | None = None
+    aspect: str | None = None
 
     @property
     def parts(self) -> list[Morpheme]:
@@ -689,10 +874,7 @@ class Segmentation:
             >>> [(p.text, p.readings) for p in seg.parts]
             [('ቤት', None), ('ኡ', ('definite', 'possessive_3ms'))]
         """
-        parts = [
-            Morpheme(p, PREFIX, _NEGATIVE if p == NEGATIVE_PREFIX and self.category == VERB else None)
-            for p in self.prefixes
-        ]
+        parts = [Morpheme(p, PREFIX, _prefix_readings(p, self)) for p in self.prefixes]
         parts.append(Morpheme(self.stem, INDEPENDENT))
         if self.infix:
             parts.append(Morpheme(self.infix, INFIX))
@@ -733,6 +915,8 @@ class _Node:
     depth_suffix: int = 0
     # The table row of each suffix, parallel to suffixes.
     shapes: tuple[SuffixShape, ...] = ()
+    # The table row of each prefix, parallel to prefixes.
+    prefix_shapes: tuple[PrefixShape, ...] = ()
 
 
 def _kind_allows(kind: str, category: str | None) -> bool:
@@ -744,67 +928,190 @@ def _kind_allows(kind: str, category: str | None) -> bool:
     return (category == VERB) == (kind == VERB)
 
 
-def _compatible(node: _Node, category: str | None) -> bool:
+def _compatible(node: _Node, category: str | None, aspect: str | None) -> bool:
     """
-    Whether every affix of a finished analysis fits its stem: each row's
-    kind admits the category, and the suffixes are in strictly
-    increasing position.
+    Whether every affix of a finished analysis fits its stem.
+
+    - Each row's kind admits the category, and on a verb each row's
+      aspects admit the stem's aspect.
+    - Suffixes are in strictly increasing position. Prefixes are too,
+      except that prepositions may stack.
+    - A bound suffix is followed by another, a prefix that needs a
+      person is followed by one, and a paired prefix (አል, አይ) has its ም.
+    - Per aspect: an imperfective needs a person, and after a
+      preposition a subordinator as well (የሚሆን, not የይሆናል). A jussive
+      needs a person prefix and takes no other. A gerund takes no prefix
+      and needs a verb ending (ሆኖ, not ሆን). No verb takes the infix.
     """
-    if not all(_kind_allows(s.kind, category) for s in node.shapes):
+    shapes, prefixes = node.shapes, node.prefix_shapes
+    is_verb = category == VERB
+    if not all(_kind_allows(s.kind, category) for s in shapes):
         return False
-    positions = [s.position(category) for s in node.shapes]
+    if not all(_kind_allows(p.kind, category) for p in prefixes):
+        return False
+    if is_verb and any(r.aspects is not None and aspect not in r.aspects for r in (*shapes, *prefixes)):
+        return False
+
+    positions = [s.position(category) for s in shapes]
     if any(a >= b for a, b in zip(positions, positions[1:])):
         return False
-    if NEGATIVE_PREFIX in node.prefixes:
-        return category == VERB and NEGATIVE_SUFFIX in node.suffixes
+    slots = [p.slot for p in prefixes]
+    if any(a > b or (a == b and a != PREPOSITION) for a, b in zip(slots, slots[1:])):
+        return False
+    if shapes and shapes[-1].bound:
+        return False
+    for i, p in enumerate(prefixes):
+        if p.needs_person and not any(q.slot == PERSON for q in prefixes[i + 1:]):
+            return False
+        if p.pairs_with and p.pairs_with not in node.suffixes:
+            return False
+
+    if not is_verb:
+        return True
+    # The infix is the plural-adjective copy (ትላልቅ). On a verb the same
+    # letters are the auxiliary: ይመስላል is ይ + መሰለ + ኣል.
+    if node.infix:
+        return False
+    if aspect in IMPERFECTIVE:
+        if not any(p.person for p in prefixes):
+            return False
+        if any(p.slot == PREPOSITION for p in prefixes) and not any(p.slot == SUBORDINATOR for p in prefixes):
+            return False
+    elif aspect in JUSSIVE:
+        # A person prefix is required. A jussive stem alone would be the
+        # imperative, but it collides with ordinary words (ድረስ "until",
+        # ስር "under"), so it is not guessed.
+        if not prefixes or any(p.slot != PERSON for p in prefixes):
+            return False
+    elif aspect in GERUND:
+        if prefixes or not any(s.aspects is not None for s in shapes):
+            return False
     return True
+
+
+def verb_stems(lexicon: dict) -> dict[str, tuple[tuple[str, str], ...]]:
+    """
+    Every reviewed verb stem, mapped to its (verb, aspect) pairs.
+
+    A word anchors on these as well as on the entries themselves, so
+    ይሆናል finds ሆነ through its imperfective stem ሆን. One stem can serve
+    several aspects (ሆን is ሆነ's imperfective and its gerund).
+
+    Args:
+        lexicon: Word to lexicon entry.
+
+    Returns:
+        Stem to a tuple of (verb, aspect).
+
+    Examples:
+        >>> verb_stems({"ሆነ": {"category": "verb", "stems": {"jussive": "ሁን"}}})
+        {'ሁን': (('ሆነ', 'jussive'),)}
+    """
+    index: dict[str, list[tuple[str, str]]] = {}
+    for word, entry in lexicon.items():
+        if entry.get("category") != VERB:
+            continue
+        for aspect, stem in (entry.get("stems") or {}).items():
+            index.setdefault(stem, []).append((word, aspect))
+    return {stem: tuple(pairs) for stem, pairs in index.items()}
+
+
+def _family(char: str) -> int:
+    return ord(char) - ord(char) % 8
+
+
+def anchor_starts(lexicon: dict, stems: dict) -> frozenset:
+    """
+    How every possible anchor begins: (first letter, family of the second).
+
+    A prefix is stripped from the front, and nothing later changes the
+    front of the text: fusion rewrites only the last letter, within its
+    family, and the infix sits after the first letter. So a text left by
+    a prefix can reach an anchor only if it begins as one does, or begins
+    with another prefix, and the search drops the ones that cannot. A one-letter anchor is recorded
+    with None for the second.
+
+    Args:
+        lexicon: Word to lexicon entry.
+        stems:   verb_stems(lexicon).
+
+    Returns:
+        The set of (letter, family or None) pairs.
+    """
+    return frozenset(
+        (a[0], _family(a[1]) if len(a) > 1 else None) for a in (*lexicon, *stems) if a
+    )
+
+
+def _can_reach_an_anchor(text: str, starts: frozenset) -> bool:
+    if (text[0], None) in starts:
+        return True
+    if len(text) > 1 and (text[0], _family(text[1])) in starts:
+        return True
+    # An infix right after the first letter hides the anchor's second.
+    return len(text) > 2 and (text[0], _family(text[2])) in starts
 
 
 def _analyses(
     word: str,
     lexicon: dict,
+    stems: dict,
+    starts: frozenset,
     max_prefixes: int,
     max_suffixes: int,
     prefixes,
     suffixes,
 ) -> list[Segmentation]:
-    """Every analysis whose stem is a lexicon entry and whose affixes fit it."""
+    """Every analysis whose stem is a lexicon entry or a verb stem and whose affixes fit it."""
     found: dict[Segmentation, None] = {}
     seen: set[tuple] = set()
     queue = [_Node(word)]
 
     while queue:
         node = queue.pop()
-        key = (node.text, node.prefixes, node.suffixes, node.infix, node.shapes)
+        key = (node.text, node.prefix_shapes, node.infix, node.shapes)
         if key in seen:
             continue
         seen.add(key)
 
+        anchors = []
         if node.text in lexicon:
             category = lexicon[node.text].get("category")
-            if _compatible(node, category):
+            anchors.append((node.text, category, PERFECTIVE if category == VERB else None))
+        for verb, aspect in stems.get(node.text, ()):
+            anchors.append((verb, VERB, aspect))
+        for stem, category, aspect in anchors:
+            if _compatible(node, category, aspect):
                 found.setdefault(
                     Segmentation(
                         word=word,
-                        stem=node.text,
+                        stem=stem,
                         prefixes=node.prefixes,
                         suffixes=node.suffixes,
                         infix=node.infix,
                         category=category,
+                        aspect=aspect,
                     )
                 )
 
         if node.depth_prefix < max_prefixes:
-            for rest, prefix in detach_prefix(node.text, prefixes):
+            for rest, prefix in detach_prefix_shapes(node.text, prefixes):
+                # Keep a text that can still reach an anchor, or that
+                # begins with a further prefix (የ + ሚሆን).
+                if not _can_reach_an_anchor(rest, starts) and not any(
+                    rest.startswith(p.morpheme) for p in prefixes
+                ):
+                    continue
                 queue.append(
                     _Node(
                         rest,
-                        node.prefixes + (prefix,),
+                        node.prefixes + (prefix.morpheme,),
                         node.suffixes,
                         node.infix,
                         node.depth_prefix + 1,
                         node.depth_suffix,
                         node.shapes,
+                        node.prefix_shapes + (prefix,),
                     )
                 )
 
@@ -819,6 +1126,7 @@ def _analyses(
                         node.depth_prefix,
                         node.depth_suffix + 1,
                         (shape,) + node.shapes,
+                        node.prefix_shapes,
                     )
                 )
 
@@ -835,6 +1143,7 @@ def _analyses(
                         node.depth_prefix,
                         node.depth_suffix,
                         node.shapes,
+                        node.prefix_shapes,
                     )
                 )
 
@@ -860,8 +1169,14 @@ def rank_analyses(
     Order competing analyses best first.
 
     Fewest morphemes, then whether every affix is attested for that
-    entry, then longest stem, then the morpheme sequence itself so the
-    order is deterministic. See the module docstring for why.
+    entry, then an analysis anchored on an entry itself before one
+    anchored on a derived verb stem, then longest stem, then the
+    morpheme sequence itself so the order is deterministic. See the
+    module docstring for why.
+
+    The third criterion keeps ባለው as ባለ + ው: through the stem ባል, ተባለ
+    + ው has as many morphemes and a longer stem as reported, though the
+    stem actually matched is shorter.
 
     Args:
         analyses: Analyses of one word.
@@ -875,6 +1190,7 @@ def rank_analyses(
         key=lambda a: (
             a.morpheme_count,
             not _attested(a, lexicon),
+            a.aspect not in (None, PERFECTIVE),
             -len(a.stem),
             a.morphemes,
         ),
@@ -884,10 +1200,12 @@ def rank_analyses(
 def segment_word(
     word: str,
     lexicon: dict,
-    max_prefixes: int = 2,
+    max_prefixes: int = 3,
     max_suffixes: int = 4,
-    prefixes=DEFAULT_PREFIXES,
+    prefixes=PREFIX_TABLE,
     suffixes=SUFFIX_TABLE,
+    stems: dict | None = None,
+    starts: frozenset | None = None,
 ) -> Segmentation:
     """
     Level 4: split a surface word into its morphemes.
@@ -901,8 +1219,11 @@ def segment_word(
                       unconfirmed corpus statistics.
         max_prefixes: Most prefixes to strip from one word.
         max_suffixes: Most suffixes to strip from one word.
-        prefixes:     Prefix inventory.
+        prefixes:     Prefix table.
         suffixes:     Suffix table.
+        stems:        verb_stems(lexicon), precomputed by a caller that
+                      segments many words; built here when omitted.
+        starts:       anchor_starts(lexicon, stems), likewise.
 
     Returns:
         The best Segmentation. When no analysis has a stem in the
@@ -921,9 +1242,11 @@ def segment_word(
     if not word:
         return Segmentation(word=word, stem=word, known=False)
 
-    found = _analyses(
-        word, lexicon, max_prefixes, max_suffixes, prefixes, suffixes
-    )
+    if stems is None:
+        stems = verb_stems(lexicon)
+    if starts is None:
+        starts = anchor_starts(lexicon, stems)
+    found = _analyses(word, lexicon, stems, starts, max_prefixes, max_suffixes, prefixes, suffixes)
     if not found:
         return Segmentation(word=word, stem=word, known=False)
     return rank_analyses(found, lexicon)[0]
@@ -932,10 +1255,12 @@ def segment_word(
 def segment_all(
     word: str,
     lexicon: dict,
-    max_prefixes: int = 2,
+    max_prefixes: int = 3,
     max_suffixes: int = 4,
-    prefixes=DEFAULT_PREFIXES,
+    prefixes=PREFIX_TABLE,
     suffixes=SUFFIX_TABLE,
+    stems: dict | None = None,
+    starts: frozenset | None = None,
 ) -> list[Segmentation]:
     """
     Every Level 4 analysis of a word, best first.
@@ -948,13 +1273,17 @@ def segment_all(
         lexicon:      Word to lexicon entry.
         max_prefixes: Most prefixes to strip from one word.
         max_suffixes: Most suffixes to strip from one word.
-        prefixes:     Prefix inventory.
+        prefixes:     Prefix table.
         suffixes:     Suffix table.
+        stems:        verb_stems(lexicon), or None to build it here.
+        starts:       anchor_starts(lexicon, stems), or None likewise.
 
     Returns:
         Ranked analyses. Empty when the word has no lexicon anchor.
     """
-    found = _analyses(
-        word, lexicon, max_prefixes, max_suffixes, prefixes, suffixes
-    )
+    if stems is None:
+        stems = verb_stems(lexicon)
+    if starts is None:
+        starts = anchor_starts(lexicon, stems)
+    found = _analyses(word, lexicon, stems, starts, max_prefixes, max_suffixes, prefixes, suffixes)
     return rank_analyses(found, lexicon)

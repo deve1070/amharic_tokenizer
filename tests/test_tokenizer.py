@@ -218,6 +218,7 @@ class TestAnalyze:
             "sound",
             "root",
             "known",
+            "aspect",
         }
 
     def test_agrees_with_tokenize(self, small):

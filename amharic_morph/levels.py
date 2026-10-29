@@ -73,6 +73,7 @@ Two rules, applied together:
 """
 
 import unicodedata
+from functools import lru_cache
 
 _FAMILY_SIZE = 8
 _ORDER6 = 6
@@ -116,6 +117,9 @@ _LABIOVELAR_GLIDES = {1: "ወ", 3: "ዊ", 4: "ዋ", 5: "ዌ", 6: "ው"}
 _GLOTTAL_BASE = ord("አ") - ord("አ") % _FAMILY_SIZE
 
 
+# Cached: the answer depends on the character alone, and the search asks
+# about the same few hundred characters millions of times.
+@lru_cache(maxsize=None)
 def is_ethiopic(char: str) -> bool:
     """
     True if char is an assigned Ethiopic character.
@@ -138,6 +142,7 @@ def is_ethiopic(char: str) -> bool:
     )
 
 
+@lru_cache(maxsize=None)
 def fidel_order(char: str) -> int:
     """
     Vowel order of an Ethiopic syllable, 1-8.

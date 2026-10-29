@@ -170,11 +170,11 @@ class TestDetachSuffix:
     def test_fused_definite_names_the_morpheme(self):
         assert ("ቤት", "ኡ") in detach_suffix("ቤቱ")
 
-    def test_bare_a_restores_only_a_verb_stem(self):
-        # Bare ኣ is the 3fs gerund, ሆና = ሆነ + ኣ, so the carrier goes back
-        # to order 1, where a 3ms perfective ends.
-        assert ("ቤተ", "ኣ") in detach_suffix("ቤታ")
-        assert ("ቤት", "ኣ") not in detach_suffix("ቤታ")
+    def test_bare_a_is_not_in_the_corpus_view(self):
+        # Bare ኣ is the 3fs gerund on a reviewed gerund stem (ሆን + ኣ ->
+        # ሆና). The corpus view has no stems, so it never offers it.
+        assert all(m != "ኣ" for _, m in detach_suffix("ቤታ"))
+        assert ("ቤት", "ኣ") in [(s, r.morpheme) for s, r in detach_suffix_shapes("ቤታ")]
 
     def test_no_suffix(self):
         assert detach_suffix("ቤት") == []
@@ -544,6 +544,7 @@ from amharic_morph.morphology import (  # noqa: E402
     RULE_SUFFIX,
     detach_suffix_with_rule,
 )
+from amharic_morph.morphology import SUFFIX_TABLE, detach_suffix_shapes  # noqa: E402
 
 
 class TestDetachSuffixWithRule:
@@ -559,10 +560,9 @@ class TestDetachSuffixWithRule:
         assert ("ቤት", "ኡ", RULE_DEFINITE_FUSION) in detach_suffix_with_rule("ቤቱ")
 
     def test_bare_a_is_ambiguous(self):
-        # ስራ is a word in its own right. Bare ኣ now restores only to the
-        # verb's order 1, and still never counts as a derivation.
-        assert ("ስረ", "ኣ", RULE_AMBIGUOUS_FUSION) in detach_suffix_with_rule("ስራ")
-        assert ("ስር", "ኣ", RULE_AMBIGUOUS_FUSION) not in detach_suffix_with_rule("ስራ")
+        # Read from the full table, the gerund ኣ is tagged ambiguous, so it
+        # never counts as a derivation: ስራ is a word in its own right.
+        assert ("ስር", "ኣ", RULE_AMBIGUOUS_FUSION) in detach_suffix_with_rule("ስራ", SUFFIX_TABLE)
 
     def test_new_fused_rows_use_the_guarded_rule(self):
         assert ("ቤት", "ኣችን", RULE_FUSION) in detach_suffix_with_rule("ቤታችን")
@@ -655,17 +655,16 @@ class TestSuffixTable:
     def test_object_her(self):
         assert ("ሰጠ", "ኣት") in detach_suffix("ሰጣት")
 
-    def test_gerunds(self):
-        assert ("ሆነ", "ኦ") in detach_suffix("ሆኖ")
-        assert ("ሆነ", "ኣ") in detach_suffix("ሆና")
-        assert ("ገባ", "ቶ") in detach_suffix("ገብቶ")
-        assert ("ገባ", "ታ") in detach_suffix("ገብታ")
+    def test_gerunds_leave_the_gerund_stem(self):
+        assert ("ሆን", "ኦ") in detach_suffix("ሆኖ", SUFFIX_TABLE)
+        assert ("ሆን", "ኣ") in detach_suffix("ሆና", SUFFIX_TABLE)
+        assert ("ገብ", "ቶ") in detach_suffix("ገብቶ", SUFFIX_TABLE)
+        assert ("ገብ", "ታ") in detach_suffix("ገብታ", SUFFIX_TABLE)
 
-    def test_to_gerund_also_follows_an_order1_verb(self):
-        # ሰጠ -> ሰጥቶ, ቀረ -> ቀርቶ: the carrier restores to order 1 as well
-        # as to the order 4 of ገባ -> ገብቶ.
-        assert ("ሰጠ", "ቶ") in detach_suffix("ሰጥቶ")
-        assert ("ቀረ", "ታ") in detach_suffix("ቀርታ")
+    def test_to_gerund_leaves_the_gerund_stem(self):
+        # ሰጥቶ = ሰጥ + ቶ, the reviewed gerund stem of ሰጠ.
+        assert ("ሰጥ", "ቶ") in detach_suffix("ሰጥቶ", SUFFIX_TABLE)
+        assert ("ቀር", "ታ") in detach_suffix("ቀርታ", SUFFIX_TABLE)
 
     def test_gerund_o_is_not_the_plural(self):
         # Both leave the carrier at order 7; the plural needs ች after it.
@@ -727,15 +726,13 @@ class TestCategoryGating:
     def test_possessive_is_refused_on_a_verb(self):
         assert segment_word("ቤቴ", typed(ቤት="verb")).known is False
 
-    def test_gerunds_on_a_verb(self):
+    def test_gerunds_need_a_reviewed_stem(self):
+        # Without a stored gerund stem nothing is guessed; TestGerund
+        # covers the forms with one.
         lex = typed(ሆነ="verb", ገባ="verb")
-        assert segment_word("ሆና", lex).morphemes == ["ሆነ", "ኣ"]
-        assert segment_word("ሆኖ", lex).morphemes == ["ሆነ", "ኦ"]
-        assert segment_word("ገብቶ", lex).morphemes == ["ገባ", "ቶ"]
+        assert segment_word("ሆኖ", lex).known is False
+        assert segment_word("ገብቶ", lex).known is False
 
-    def test_to_gerund_on_an_order1_verb_is_one_suffix(self):
-        # Without order 1 the search reached ሰጠ only through ሰጣ + ኣ.
-        assert segment_word("ሰጥቶ", typed(ሰጠ="verb")).morphemes == ["ሰጠ", "ቶ"]
 
     def test_gerunds_are_refused_on_a_noun(self):
         lex = typed(ሆነ="noun")
@@ -843,3 +840,225 @@ class TestFourSuffixes:
     def test_with_a_possessive(self):
         result = segment_word("ልጆቻቸውንና", typed(ልጅ="noun"))
         assert result.morphemes == ["ልጅ", "ኦች", "ኣቸው", "ን", "ና"]
+
+
+# ── Verb aspects: imperfective, jussive, gerund ──────────────────────────────
+
+from amharic_morph.morphology import (  # noqa: E402
+    CORPUS_PREFIXES,
+    PREFIX_TABLE,
+    verb_stems,
+)
+
+
+def verbs():
+    """A lexicon with reviewed stems, as the stem review produces."""
+    def verb(word, **stems):
+        return {"word": word, "category": "verb", "allows_prefix": [], "allows_suffix": [],
+                "stems": stems}
+    index = {
+        "ሆነ": verb("ሆነ", imperfective="ሆን", jussive="ሁን", gerund="ሆን",
+                   imperfective_palatal="ሆኝ", gerund_palatal="ሆኝ"),
+        "ሄደ": verb("ሄደ", imperfective="ሄድ", jussive="ሂድ", gerund="ሄድ",
+                   imperfective_palatal="ሄጅ", jussive_palatal="ሂጅ", gerund_palatal="ሄጅ"),
+        "ፈለገ": verb("ፈለገ", imperfective="ፈልግ", jussive="ፈልግ", gerund="ፈልግ"),
+        "ገባ": verb("ገባ", imperfective="ገብ", gerund="ገብ"),
+        "ሰጠ": verb("ሰጠ", gerund="ሰጥ"),
+        "ኖረ": verb("ኖረ", imperfective="ኖር"),
+        "መሰለ": verb("መሰለ", imperfective="መስል"),
+        "ደረሰ": verb("ደረሰ", imperfective="ደርስ", jussive="ድረስ"),
+    }
+    index["ቤት"] = {"word": "ቤት", "category": "noun", "allows_prefix": [], "allows_suffix": []}
+    return index
+
+
+def seg(word):
+    return segment_word(word, verbs())
+
+
+class TestVerbStemIndex:
+    def test_maps_each_stem_to_its_verb_and_aspect(self):
+        index = verb_stems(verbs())
+        assert ("ሆነ", "imperfective") in index["ሆን"]
+        assert ("ሆነ", "gerund") in index["ሆን"]
+        assert index["ሂድ"] == (("ሄደ", "jussive"),)
+
+    def test_a_noun_has_no_stems(self):
+        assert "ቤት" not in verb_stems(verbs())
+
+
+class TestMainImperfective:
+    """person + imperfective stem + ኣል (+ person ending), as IRIT: ይ_ሆን_አል"""
+
+    def test_third_person(self):
+        result = seg("ይሆናል")
+        assert result.morphemes == ["ይ", "ሆነ", "ኣል"]
+        assert result.aspect == "imperfective"
+
+    def test_stem_is_reported_in_lexicon_form(self):
+        assert seg("ይፈልጋል").morphemes == ["ይ", "ፈለገ", "ኣል"]
+        assert seg("ይገባል").morphemes == ["ይ", "ገባ", "ኣል"]
+
+    def test_plural(self):
+        assert seg("ይሆናሉ").morphemes == ["ይ", "ሆነ", "ኣል", "ኡ"]
+
+    def test_first_person(self):
+        assert seg("እሆናለሁ").morphemes == ["እ", "ሆነ", "ኣል", "ሁ"]
+
+    def test_third_feminine(self):
+        assert seg("ትሆናለች").morphemes == ["ት", "ሆነ", "ኣል", "ች"]
+
+    def test_second_plural(self):
+        assert seg("ትሆናላችሁ").morphemes == ["ት", "ሆነ", "ኣል", "ኣችሁ"]
+
+    def test_bound_auxiliary_needs_a_person_ending(self):
+        # ...ናለ without an ending after it is not a word.
+        assert seg("ይሆናለ").known is False
+
+
+class TestBoundImperfective:
+    def test_relative(self):
+        result = seg("የሚሆን")
+        assert result.morphemes == ["የ", "ሚ", "ሆነ"]
+        assert result.aspect == "imperfective"
+
+    def test_subordinators_carry_the_third_person(self):
+        for word, sub in (("ሲሆን", "ሲ"), ("ሊሆን", "ሊ"), ("ቢሆን", "ቢ"), ("እንዲሆን", "እንዲ")):
+            assert seg(word).morphemes == [sub, "ሆነ"]
+
+    def test_subordinator_then_person(self):
+        assert seg("ስትሄድ").morphemes == ["ስ", "ት", "ሄደ"]
+
+    def test_subordinator_needing_a_person_alone_is_refused(self):
+        assert seg("ስሄድ").known is False
+
+    def test_preposition_before_the_relative(self):
+        assert seg("እንደሚሆን").morphemes == ["እንደ", "ሚ", "ሆነ"]
+
+    def test_plural_on_the_bound_stem(self):
+        assert seg("የሚሆኑ").morphemes == ["የ", "ሚ", "ሆነ", "ኡ"]
+
+    def test_relative_with_the_linking_vowel(self):
+        # የሚኖረው: IRIT የ_ሚ_ኖር_ኧ_ው.
+        assert seg("የሚኖረው").morphemes == ["የ", "ሚ", "ኖረ", "ው"]
+
+    def test_imperfective_stem_alone_is_refused(self):
+        assert seg("ሄድ").known is False
+
+
+class TestNegativeImperfective:
+    def test_ai_with_m(self):
+        result = seg("አይሆንም")
+        assert result.morphemes == ["አይ", "ሆነ", "ም"]
+        assert result.aspect == "imperfective"
+
+    def test_ai_without_m_is_refused(self):
+        assert seg("አይሆን").known is False
+
+    def test_negative_relative(self):
+        assert seg("የማይሆን").morphemes == ["የ", "ማ", "ይ", "ሆነ"]
+
+    def test_without(self):
+        assert seg("ሳይሆን").morphemes == ["ሳይ", "ሆነ"]
+
+
+class TestJussive:
+    def test_jussive(self):
+        result = seg("ይሁን")
+        assert result.morphemes == ["ይ", "ሆነ"]
+        assert result.aspect == "jussive"
+
+    def test_bare_jussive_stem_is_not_taken_as_an_imperative(self):
+        # A stem alone collides with ordinary words: ድረስ is "until" far
+        # more often than "arrive!". The imperative is not guessed.
+        assert seg("ሂድ").known is False
+        assert seg("ድረስ").known is False
+
+    def test_first_person_jussive(self):
+        assert seg("ልሂድ").morphemes == ["ል", "ሄደ"]
+
+
+class TestGerund:
+    def test_o(self):
+        result = seg("ሆኖ")
+        assert result.morphemes == ["ሆነ", "ኦ"]
+        assert result.aspect == "gerund"
+
+    def test_o_on_a_three_radical_stem(self):
+        assert seg("ፈልጎ").morphemes == ["ፈለገ", "ኦ"]
+
+    def test_to(self):
+        assert seg("ሰጥቶ").morphemes == ["ሰጠ", "ቶ"]
+        assert seg("ገብቶ").morphemes == ["ገባ", "ቶ"]
+
+    def test_third_feminine(self):
+        assert seg("ሆና").morphemes == ["ሆነ", "ኣ"]
+
+    def test_first_person_on_the_palatal_stem(self):
+        result = seg("ሄጄ")
+        assert result.morphemes == ["ሄደ", "ኤ"]
+        assert result.aspect == "gerund_palatal"
+
+    def test_gerund_needs_its_stem(self):
+        # ኖረ has no reviewed gerund stem, so ኖሮ is not guessed.
+        assert seg("ኖሮ").known is False
+
+    def test_gerund_takes_no_prefix(self):
+        assert seg("የሆኖ").known is False
+
+
+class TestPalatal:
+    def test_second_feminine(self):
+        result = seg("ትሄጂ")
+        assert result.morphemes == ["ት", "ሄደ", "ኢ"]
+        assert result.aspect == "imperfective_palatal"
+
+    def test_second_feminine_with_the_auxiliary(self):
+        assert seg("ትሄጃለሽ").morphemes == ["ት", "ሄደ", "ኣል", "ሽ"]
+
+
+class TestVerbsAndTheInfix:
+    def test_no_infix_on_a_verb(self):
+        # ...ላል looks like the plural-adjective copy (ትላልቅ), but on a verb
+        # it is the auxiliary: ይ + መሰለ + ኣል.
+        assert seg("ይመስላል").morphemes == ["ይ", "መሰለ", "ኣል"]
+
+
+class TestDirectEntryRanksFirst:
+    def test_entry_beats_a_derived_stem_of_equal_length(self):
+        direct = Segmentation("w", "ባለ", suffixes=("ው",), category="other")
+        derived = Segmentation("w", "ተባለ", suffixes=("ው",), category="verb", aspect="gerund")
+        assert rank_analyses([derived, direct], {})[0] is direct
+
+
+class TestPerfectiveIsUnchanged:
+    def test_perfective_suffix(self):
+        result = seg("ሄድኩ")
+        assert result.morphemes == ["ሄደ", "ኩ"]
+        assert result.aspect == "perfective"
+
+    def test_relative_perfective(self):
+        assert seg("የሆነ").morphemes == ["የ", "ሆነ"]
+
+    def test_person_prefix_on_the_perfective_is_refused(self):
+        assert seg("ይሆነ").known is False
+
+    def test_nouns_have_no_aspect(self):
+        result = seg("ቤቶች")
+        assert result.morphemes == ["ቤት", "ኦች"]
+        assert result.aspect is None
+
+
+class TestPrefixTable:
+    def test_corpus_prefixes_are_the_prepositions_and_al(self):
+        # The corpus analysis has no categories, so it peels only what can
+        # safely precede any word, plus the negative it always peeled.
+        assert set(CORPUS_PREFIXES) == {"ስለ", "ወደ", "እንደ", "እስከ", "በየ", "የ", "በ", "ከ", "ለ", "አል"}
+
+    def test_every_prefix_is_ethiopic(self):
+        for row in PREFIX_TABLE:
+            assert all(is_ethiopic(c) for c in row.morpheme)
+
+    def test_prefix_readings(self):
+        parts = seg("የሚሆን").parts
+        assert [(p.text, p.readings) for p in parts][:2] == [("የ", None), ("ሚ", ("relative",))]
