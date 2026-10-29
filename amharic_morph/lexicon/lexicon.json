@@ -29916,5 +29916,76 @@
     "source": "native_speaker",
     "validated": true,
     "notes": ""
+  },
+  {
+    "word": "የለ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "negative of the existential አለ; ም is its negative"
+  },
+  {
+    "word": "እልህ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ል",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "spite; not እ + አለ + ህ"
+  },
+  {
+    "word": "እልም",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ል",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "ideophone (እልም ብሎ); not እ + አለ + ም"
+  },
+  {
+    "word": "የለሽ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ል",
+      "ሽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "'-less' (ትርጉም የለሽ); not የለ + ሽ, whose form is የለሽም"
   }
 ]

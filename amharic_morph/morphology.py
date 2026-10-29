@@ -117,6 +117,9 @@ from amharic_morph.levels import fidel_order, is_ethiopic, to_order, to_order6
 # way: አይሆንም.
 NEGATIVE_PREFIX = "አል"
 NEGATIVE_SUFFIX = "ም"
+# The negative of the existential አለ is a verb of its own, and ም is its
+# negative too: የለ + ው + ም -> የለውም "he does not have".
+NEGATIVE_EXISTENTIAL = "የለ"
 
 # The order an infix always surfaces at. See detach_infix().
 _INFIX_ORDER = 4
@@ -810,7 +813,9 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
     if category is None:
         return None
     is_verb = category == VERB
-    if is_verb and suffix == NEGATIVE_SUFFIX and NEGATIVE_PREFIX in segmentation.prefixes:
+    if is_verb and suffix == NEGATIVE_SUFFIX and (
+        NEGATIVE_PREFIX in segmentation.prefixes or segmentation.stem == NEGATIVE_EXISTENTIAL
+    ):
         return _NEGATIVE
     if is_verb and suffix == STEM_VOWEL and segmentation.aspect in _IMPERFECTIVE_OR_JUSSIVE:
         return _STEM_VOWEL_READING

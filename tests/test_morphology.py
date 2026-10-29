@@ -868,6 +868,7 @@ def verbs():
         "መሰለ": verb("መሰለ", imperfective="መስል"),
         "ደረሰ": verb("ደረሰ", imperfective="ደርስ", jussive="ድረስ"),
         "አለ": verb("አለ", imperfective="ል", jussive="በል", gerund="ብል", gerund_palatal="ብይ"),
+        "የለ": verb("የለ"),
     }
     index["ቤት"] = {"word": "ቤት", "category": "noun", "allows_prefix": [], "allows_suffix": []}
     return index
@@ -1034,6 +1035,22 @@ class TestSubordinateClauseShape:
         # ማይል is "mile"; the negative relative is የማይል, እንደማይል.
         assert seg("ማይል").known is False
         assert seg("የማይል").morphemes == ["የ", "ማ", "ይ", "አለ"]
+
+
+class TestNegativeExistential:
+    """የለ "is not": its family is the ordinary perfective suffixes plus ም."""
+
+    def test_family(self):
+        assert seg("የለም").morphemes == ["የለ", "ም"]
+        assert seg("የሉም").morphemes == ["የለ", "ኡ", "ም"]
+        assert seg("የለውም").morphemes == ["የለ", "ው", "ም"]
+        assert seg("የለኝም").morphemes == ["የለ", "ኝ", "ም"]
+
+    def test_m_is_negative(self):
+        assert suffix_readings(seg("የለም"), "ም") == ("negative",)
+
+    def test_m_elsewhere_is_also(self):
+        assert suffix_readings(seg("ሆነም"), "ም") == ("also",)
 
 
 class TestNegativeImperfective:
