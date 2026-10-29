@@ -263,12 +263,13 @@
     "allows_infix": null,
     "root_consonants": [
       "ህ",
+      "ው",
       "ን"
     ],
     "root_source": "native_speaker",
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": "infinitive (verbal noun) of ሆነ"
+    "notes": "infinitive (verbal noun) of ሆነ; same root as ሆነ (Q1)"
   },
   {
     "word": "አገር",
@@ -15853,12 +15854,13 @@
     "allows_infix": null,
     "root_consonants": [
       "ህ",
+      "ው",
       "ን"
     ],
     "root_source": "native_speaker",
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "same root as ሆነ (Q1)"
   },
   {
     "word": "እግዚአብሄር",
