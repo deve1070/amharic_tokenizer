@@ -90,6 +90,14 @@ class TestInstalledTokenizer:
             "root": ["ብ", "ት"],
         }
 
+    def test_command_is_installed(self, installed_python, tmp_path):
+        command = installed_python.parent / ("amharic-morph.exe" if sys.platform == "win32" else "amharic-morph")
+        result = subprocess.run(
+            [str(command), "ቤቶች"], cwd=tmp_path, check=True, capture_output=True,
+            text=True, encoding="utf-8",
+        )
+        assert "ቤት + ኦች" in result.stdout
+
     def test_reviewed_verb_stems_are_shipped(self, installed_python, tmp_path):
         code = (
             "from amharic_morph import AmharicTokenizer\n"

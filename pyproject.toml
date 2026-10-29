@@ -28,6 +28,9 @@ classifiers = [
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "build>=1.2", "hatchling>=1.25", "twine>=5.0"]
 
+[project.scripts]
+amharic-morph = "amharic_morph.__main__:main"
+
 [project.urls]
 Repository = "https://github.com/deve1070/amharic_tokenizer"
 

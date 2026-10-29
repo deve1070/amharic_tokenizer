@@ -1,5 +1,6 @@
 """
-Try the tokenizer on text: `python -m amharic_morph "ቤቶቹን አየሁ።"`.
+Try the tokenizer on text: `amharic-morph "ቤቶቹን አየሁ።"`, or
+`python -m amharic_morph "ቤቶቹን አየሁ።"`.
 
 With no argument the text is read from standard input, so a file can be
 piped in. Every word is shown at all four levels, with each suffix's
@@ -40,7 +41,9 @@ def describe(tok: AmharicTokenizer, word: str) -> list[str]:
     ]
 
 
-def main(argv: list[str]) -> int:
+def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
     text = " ".join(argv) if argv else sys.stdin.read()
     tok = AmharicTokenizer()
     words = tok.words(text)
@@ -55,4 +58,4 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())
