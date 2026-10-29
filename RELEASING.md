@@ -19,8 +19,8 @@ cat corpus/corpus.txt corpus/gpac/corpus.txt > corpus/combined.txt
 python scripts/train_bpe.py corpus/combined.txt corpus/bpe_full --vocab 16000 --lines 3500000 --threads 8
 ```
 
-Writing the training text takes about 25 minutes and needs about 2.7 GB
-of disk. If training runs out of memory, use `--lines 3000000`. The last
+Writing the training text takes about an hour (about 1,700 lines per
+second) and needs about 2 GB of disk. If training runs out of memory, use `--lines 3000000`. The last
 line printed must say `0 of 5000 lines fail the round trip`.
 
 The files to copy to the 16 GB machine are the repository and
