@@ -5,8 +5,10 @@ corpus. Everything else below is ready.
 
 ## 1. Train the subword model (16 GB machine)
 
-Each 300K training lines needs about 1.1 GB of memory, so a 16 GB machine
-can train on every line of CC-100 and GPAC together.
+The two corpora together are 5.95M sentences: CC-100 2,918,058 and the
+GPAC sentences not already in CC-100, 3,030,231. Training needs about
+1.1 GB of memory per 300K lines sampled, so all of them (about 22 GB) do
+not fit in 16 GB. Sample 3.5M lines, about 13 GB:
 
 ```bash
 pip install -e ".[dev]"
@@ -14,10 +16,16 @@ pip install -e ".[dev]"
 # One corpus file, CC-100 then the GPAC sentences not already in it.
 cat corpus/corpus.txt corpus/gpac/corpus.txt > corpus/combined.txt
 
-python scripts/train_bpe.py corpus/combined.txt corpus/bpe_full --vocab 16000 --lines 0 --threads 8
+python scripts/train_bpe.py corpus/combined.txt corpus/bpe_full --vocab 16000 --lines 3500000 --threads 8
 ```
 
-The last line printed must say `0 of 5000 lines fail the round trip`.
+Writing the training text takes about 25 minutes and needs about 2.7 GB
+of disk. If training runs out of memory, use `--lines 3000000`. The last
+line printed must say `0 of 5000 lines fail the round trip`.
+
+The files to copy to the 16 GB machine are the repository and
+`corpus/corpus.txt` and `corpus/gpac/corpus.txt` (1.3 GB together; both
+are gitignored).
 
 Rebuilding `corpus/gpac/corpus.txt` from the raw file, if needed:
 
