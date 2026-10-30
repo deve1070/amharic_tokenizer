@@ -239,3 +239,6 @@ verb_candidates.json
 # with the authors' permission for evaluation; downloaded, not committed.
 # Links in resource/resouce.txt.
 resource/irit/
+
+# Files copied back from the training PC; models are copied into the package on purpose.
+/dawit/

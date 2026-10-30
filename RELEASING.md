@@ -1,41 +1,36 @@
 # Releasing
 
-Steps 1 and 2 are done (2026-10-30): `morph_16k.model` was trained on a
-16 GB machine and ships in `src/amharic_morph/models/`. They are kept here
-so the model can be retrained. Next is step 3.
+Steps 1 and 2 are kept here so the model can be retrained whenever Level 4
+changes, since the model is trained on Level 4's cuts.
 
-## 1. Train the subword model (16 GB machine)
+## 1. Train the subword model
 
-The two corpora together are 5.95M sentences: CC-100 2,918,058 and the
-GPAC sentences not already in CC-100, 3,030,231. Training needs about
-1.1 GB of memory per 300K lines sampled, so all of them (about 22 GB) do
-not fit in 16 GB. Sample 3.5M lines, about 13 GB:
+The corpus is reduced to a table of distinct segments and their counts, and
+the model trains on that table, so every line is used and a few gigabytes of
+memory are enough. Start from the raw corpora, `corpus/am.txt` (CC-100) and
+`corpus/GPAC.txt`, both gitignored.
+
+On Windows, one script does all of it, with a log per step in `logs\`:
+
+```bat
+scripts\train_all.bat
+```
+
+On Linux, the same steps:
 
 ```bash
-pip install -e ".[dev]"
-
-# One corpus file, CC-100 then the GPAC sentences not already in it.
+python -m amharic_morph.corpus_runner corpus/am.txt --output corpus/corpus.txt \
+    --metadata corpus/metadata.jsonl --statistics corpus/statistics.json --drop-tigrinya
+python -m amharic_morph.corpus_runner corpus/GPAC.txt --output corpus/gpac/corpus.txt \
+    --metadata corpus/gpac/metadata.jsonl --statistics corpus/gpac/statistics.json \
+    --source gpac --drop-tigrinya --dedup-against corpus/corpus.txt
 cat corpus/corpus.txt corpus/gpac/corpus.txt > corpus/combined.txt
-
-python scripts/train_bpe.py corpus/combined.txt corpus/bpe_full --vocab 16000 --lines 3500000 --threads 8
+python scripts/train_bpe.py corpus/combined.txt corpus/bpe_full --vocab 16000 --threads 8
+python scripts/train_bpe.py corpus/combined.txt corpus/bpe_full --vocab 16000 --threads 8 --plain
 ```
 
-Writing the training text takes about an hour (about 1,700 lines per
-second) and needs about 2 GB of disk. If training runs out of memory, use `--lines 3000000`. The last
-line printed must say `0 of 5000 lines fail the round trip`.
-
-The files to copy to the 16 GB machine are the repository and
-`corpus/corpus.txt` and `corpus/gpac/corpus.txt` (1.3 GB together; both
-are gitignored).
-
-Rebuilding `corpus/gpac/corpus.txt` from the raw file, if needed:
-
-```bash
-python -m amharic_morph.corpus_runner corpus/GPAC.txt \
-    --output corpus/gpac/corpus.txt --metadata corpus/gpac/metadata.jsonl \
-    --statistics corpus/gpac/statistics.json --source gpac --drop-tigrinya \
-    --dedup-against corpus/corpus.txt
-```
+The last line each training prints must say `0 of 5000 lines fail the round
+trip`. The plain model is the comparison baseline and is not shipped.
 
 ## 2. Ship the model
 

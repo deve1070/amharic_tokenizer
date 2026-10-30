@@ -21,11 +21,11 @@ if errorlevel 1 goto failed
 copy /b corpus\corpus.txt + corpus\gpac\corpus.txt corpus\combined.txt > nul
 
 echo [%time%] 3/4 morpheme-aware model
-python -u scripts\train_bpe.py corpus\combined.txt corpus\bpe_full --vocab 16000 --lines 3500000 --threads 8 > logs\3_morph.log 2>&1
+python -u scripts\train_bpe.py corpus\combined.txt corpus\bpe_full --vocab 16000 --threads 8 > logs\3_morph.log 2>&1
 if errorlevel 1 goto failed
 
 echo [%time%] 4/4 plain baseline
-python -u scripts\train_bpe.py corpus\combined.txt corpus\bpe_full --vocab 16000 --lines 3500000 --threads 8 --plain > logs\4_plain.log 2>&1
+python -u scripts\train_bpe.py corpus\combined.txt corpus\bpe_full --vocab 16000 --threads 8 --plain > logs\4_plain.log 2>&1
 if errorlevel 1 goto failed
 
 echo [%time%] ALL DONE > logs\DONE.txt

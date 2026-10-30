@@ -17,6 +17,8 @@ pieces join back into exactly the text they came from. Level 4 and Level
 1 still report the lexicon form and the root.
 """
 
+from collections import Counter
+
 from amharic_morph.levels import fidel_order, from_sound_text, sound_text, to_order6
 from amharic_morph.morphology import Segmentation
 
@@ -121,37 +123,58 @@ def sound_segments(segmentation: Segmentation) -> list[str]:
     return [s for s in prefixes + stem + suffixes if s]
 
 
-# ── Training text ────────────────────────────────────────────────────────────
+# ── Training input ───────────────────────────────────────────────────────────
 #
-# One corpus line becomes one training line. Words stay separated by
-# spaces; inside a word the morpheme-aware text separates segments with
-# DELIMITER, which training is told no piece may cross. Each line starts
-# with a space, so that the first word is marked ▁ like every other.
+# Training sees exactly what encoding encodes: each segment on its own, the
+# word's first one with a leading space, which becomes the word mark ▁. The
+# corpus is reduced to a table of distinct segments and their counts, and
+# SentencePiece never forms a piece across two rows of it.
+#
+# Running text with the segments marked by a delimiter does not work: its
+# pretokenization_delimiter still lets pieces form across the delimiter
+# (measured, sentencepiece 0.2.1: ▁ይኣልኧው from ይ|ኣልኧ|ው). Those pieces can
+# never be used, since encoding never sees the segments joined, and they
+# crowd out the segments it does see.
 
-DELIMITER = "|"
 # The corpus tags (Layer 4) are kept as single pieces.
 TAGS = ("<LATIN>", "</LATIN>", "<URL>", "</URL>")
 
 
-def _word_text(word: str, tokenizer, morphemes: bool) -> str:
-    if morphemes:
-        return DELIMITER.join(sound_segments(tokenizer.segment(word)))
-    return sound_text(word)
-
-
-def training_line(line: str, tokenizer, morphemes: bool) -> str:
+def word_segments(word: str, tokenizer, morphemes: bool) -> list[str]:
     """
-    One corpus line as SentencePiece training text.
+    The strings a word is encoded as: its sound text, cut at its morpheme
+    boundaries for the morpheme-aware model, the first with a leading space.
+
+    Examples:
+        >>> from amharic_morph import AmharicTokenizer
+        >>> word_segments("ቤቶች", AmharicTokenizer(), morphemes=True)
+        [' ብኤት', 'ኦች']
+    """
+    segments = sound_segments(tokenizer.segment(word)) if morphemes else [sound_text(word)]
+    return [" " + segments[0]] + segments[1:]
+
+
+def count_segments(lines, tokenizer, morphemes: bool) -> Counter:
+    """
+    How often each training segment occurs in the lines.
 
     Args:
-        line:       A corpus line, words separated by spaces.
-        tokenizer:  The AmharicTokenizer whose Level 4 cuts the words.
-        morphemes:  True for the morpheme-aware model, False for plain.
-
-    Returns:
-        The line in sound text, with a leading space.
+        lines:     Corpus lines, words separated by spaces.
+        tokenizer: The AmharicTokenizer whose Level 4 cuts the words.
+        morphemes: True for the morpheme-aware model, False for plain.
     """
-    return " " + " ".join(_word_text(w, tokenizer, morphemes) for w in line.split())
+    counts: Counter = Counter()
+    for line in lines:
+        for word in line.split():
+            counts.update(word_segments(word, tokenizer, morphemes))
+    return counts
+
+
+def write_segment_counts(counts: Counter, path) -> None:
+    """Write segment counts as SentencePiece's tab-separated input."""
+    with open(path, "w", encoding="utf-8") as f:
+        for segment, count in counts.most_common():
+            f.write(f"{segment}\t{count}\n")
 
 
 # ── Training ─────────────────────────────────────────────────────────────────
@@ -167,40 +190,37 @@ def _sentencepiece():
     return sentencepiece
 
 
-def train(text_path, model_prefix, vocab_size: int, input_sentence_size: int = 0,
-          num_threads: int = 4) -> None:
+def train(counts_path, model_prefix, vocab_size: int, num_threads: int = 4) -> None:
     """
-    Train a unigram SentencePiece model on training text.
+    Train a unigram SentencePiece model on segment counts.
 
     The settings that make the model lossless and boundary-respecting:
-    no piece crosses DELIMITER; the leading space of each line marks the
-    first word, so no dummy prefix is added and spaces are kept as they
-    are; every character seen is kept (character_coverage 1.0), and an
-    unseen one is written as its UTF-8 bytes rather than <unk>. The text
-    is not normalized again: Layer 0 already has, and SentencePiece's
-    default NFKC would turn the labiovelar mark ʷ into w.
+    each row is one segment, so no piece crosses a morpheme boundary; the
+    leading space of a word's first segment is the word mark, so no dummy
+    prefix is added and spaces are kept as they are; every character seen
+    is kept (character_coverage 1.0), and an unseen one is written as its
+    UTF-8 bytes rather than <unk>. The text is not normalized again: Layer 0
+    already has, and SentencePiece's default NFKC would turn the
+    labiovelar mark ʷ into w.
 
     Args:
-        text_path:           Training text, one training_line() per line.
-        model_prefix:        Writes model_prefix.model and .vocab.
-        vocab_size:          Pieces in the vocabulary.
-        input_sentence_size: Lines sampled for training; 0 for all.
-        num_threads:         Training threads.
+        counts_path:  Segment counts written by write_segment_counts().
+        model_prefix: Writes model_prefix.model and .vocab.
+        vocab_size:   Pieces in the vocabulary.
+        num_threads:  Training threads.
     """
     _sentencepiece().SentencePieceTrainer.train(
-        input=str(text_path),
+        input=str(counts_path),
+        input_format="tsv",
         model_prefix=str(model_prefix),
         vocab_size=vocab_size,
         model_type="unigram",
         character_coverage=1.0,
         byte_fallback=True,
         normalization_rule_name="identity",
-        pretokenization_delimiter=DELIMITER,
         add_dummy_prefix=False,
         remove_extra_whitespaces=False,
         user_defined_symbols=list(TAGS),
-        input_sentence_size=input_sentence_size,
-        shuffle_input_sentence=True,
         hard_vocab_limit=False,
         num_threads=num_threads,
         minloglevel=2,
@@ -237,14 +257,11 @@ class SubwordModel:
 
     def encode_word(self, word: str) -> list[str]:
         """The pieces of one word, in sound text."""
-        if self.morphemes:
-            segments = sound_segments(self._tokenizer.segment(word))
-        else:
-            segments = [sound_text(word)]
-        pieces = self._sp.encode(" " + segments[0], out_type=str)
-        for segment in segments[1:]:
-            pieces.extend(self._sp.encode(segment, out_type=str))
-        return pieces
+        return [
+            piece
+            for segment in word_segments(word, self._tokenizer, self.morphemes)
+            for piece in self._sp.encode(segment, out_type=str)
+        ]
 
     def encode(self, text: str) -> list[str]:
         """The pieces of a text whose words are separated by spaces."""

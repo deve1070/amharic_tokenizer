@@ -85,10 +85,12 @@ class TestSoundSegments:
 # ── Training text, training and encoding ─────────────────────────────────────
 
 from amharic_morph.bpe import (  # noqa: E402
-    DELIMITER,
+    TAGS,
     SubwordModel,
-    training_line,
+    count_segments,
     train,
+    word_segments,
+    write_segment_counts,
 )
 
 LINES = [
@@ -99,17 +101,24 @@ LINES = [
 ]
 
 
-class TestTrainingLine:
-    def test_morpheme_aware_line(self, tok):
-        assert training_line("ቤቶች ይሆናል", tok, morphemes=True) == (
-            f" ብኤት{DELIMITER}ኦች ይ{DELIMITER}ህኦን{DELIMITER}ኣል"
-        )
+class TestTrainingSegments:
+    """
+    Training sees what encoding encodes: each segment on its own, the
+    word's first one marked with a leading space (▁).
+    """
 
-    def test_plain_line(self, tok):
-        assert training_line("ቤቶች ይሆናል", tok, morphemes=False) == " ብኤትኦች ይህኦንኣል"
+    def test_morpheme_aware_word(self, tok):
+        assert word_segments("ቤቶች", tok, morphemes=True) == [" ብኤት", "ኦች"]
 
-    def test_non_ethiopic_tokens_pass_through(self, tok):
-        assert training_line("<LATIN>mast</LATIN> ።", tok, morphemes=True) == " <LATIN>mast</LATIN> ።"
+    def test_plain_word(self, tok):
+        assert word_segments("ቤቶች", tok, morphemes=False) == [" ብኤትኦች"]
+
+    def test_non_ethiopic_token_is_one_segment(self, tok):
+        assert word_segments("<LATIN>mast</LATIN>", tok, morphemes=True) == [" <LATIN>mast</LATIN>"]
+
+    def test_counts(self, tok):
+        counts = count_segments(["ቤቶች ይሆናል", "ቤቶች"], tok, morphemes=True)
+        assert counts == {" ብኤት": 2, "ኦች": 2, " ይ": 1, "ህኦን": 1, "ኣል": 1}
 
 
 @pytest.fixture(scope="module")
@@ -118,10 +127,10 @@ def model_files(tok, tmp_path_factory):
     out = tmp_path_factory.mktemp("models")
     files = {}
     for morphemes in (True, False):
-        text = out / f"{morphemes}.txt"
-        text.write_text("\n".join(training_line(l, tok, morphemes) for l in LINES * 50) + "\n", encoding="utf-8")
+        counts = out / f"{morphemes}.tsv"
+        write_segment_counts(count_segments(LINES * 50, tok, morphemes), counts)
         prefix = out / ("morph" if morphemes else "plain")
-        train(text, prefix, vocab_size=400)
+        train(counts, prefix, vocab_size=400)
         files[morphemes] = f"{prefix}.model"
     return files
 
@@ -132,6 +141,18 @@ def models(tok, model_files):
 
 
 class TestSubwordModel:
+    def test_no_learned_piece_crosses_a_segment(self, model_files, tok):
+        # Every piece is part of one training segment: training can never
+        # learn ▁ይኣልኧው when ያለው is always cut ይ | ኣልኧ | ው.
+        import sentencepiece as spm
+        sp = spm.SentencePieceProcessor(model_file=model_files[True])
+        segments = list(count_segments(LINES, tok, morphemes=True))
+        for i in range(sp.get_piece_size()):
+            piece = sp.id_to_piece(i).replace("▁", " ")
+            if sp.is_control(i) or sp.is_byte(i) or sp.is_unknown(i) or piece.strip() in TAGS:
+                continue
+            assert any(piece in s for s in segments), piece
+
     def test_pieces_never_cross_a_morpheme_boundary(self, models, tok):
         model = models[True]
         for word in ("ቤቶቹን", "ይሆናል", "ቋንቋዎች"):
