@@ -8,6 +8,7 @@ Amharic text: numbers, abbreviations, ellipsis, and URLs.
 
 from amharic_morph.punctuation import (
     convert_latin_periods,
+    is_abbreviation,
     normalize_punctuation,
     normalize_punctuation_lines,
     normalize_whitespace,
@@ -329,3 +330,20 @@ class TestRealCorpusPatterns:
     def test_mixed_punctuation_sentence(self):
         result = normalize_punctuation("ቤት፣ ሰው፣ ውሻ ወዘተ. አሉ፡፡")
         assert result == "ቤት ፣ ሰው ፣ ውሻ ወዘተ. አሉ ።"
+
+
+class TestSlashAbbreviations:
+    """
+    A slash separates abbreviation segments as a period does: ዶ/ር (Dr.),
+    ወ/ሮ (Mrs.), ጽ/ቤት (office), ት/ቤት (school). Ruled 2026-10-30.
+    """
+
+    def test_slash_abbreviations(self):
+        for token in ("ዶ/ር", "ወ/ሮ", "ጽ/ቤት", "ት/ቤት", "ጠ/ሚ"):
+            assert is_abbreviation(token), token
+
+    def test_slash_between_words_is_not_one(self):
+        assert not is_abbreviation("ወንድ/ሴት")
+
+    def test_period_abbreviations_unchanged(self):
+        assert is_abbreviation("ዓ.ም") and not is_abbreviation("ነው.")

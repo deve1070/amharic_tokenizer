@@ -78,6 +78,8 @@ _URL_HINT_PATTERN = re.compile(
 # abbreviation. ኃ.የተ.የግ.ማ has segments of length 1 and 2; ordinary words
 # that end a sentence (ነው. ናቸው. ይችላል.) are longer.
 _MAX_ABBREVIATION_SEGMENT = 2
+# A period or a slash separates the segments: ዓ.ም, ዶ/ር.
+_ABBREVIATION_SEPARATORS = re.compile(r"[./]")
 
 
 def _is_ethiopic(char: str) -> bool:
@@ -102,10 +104,11 @@ def is_abbreviation(token: str) -> bool:
 
     - By name, for abbreviations with segments too long for the
       structural rule (ወዘተ).
-    - Structurally, when every period-separated segment is one or two
-      Ethiopic characters. This covers ዓ.ም, እ.ኤ.አ, ኪ.ሜ, ኤፍ.ቢ.ሲ and
-      ኃ.የተ.የግ.ማ while excluding ordinary sentence-final words, whose
-      stems are longer.
+    - Structurally, when every segment between periods or slashes is one
+      or two Ethiopic characters. This covers ዓ.ም, እ.ኤ.አ, ኪ.ሜ, ኤፍ.ቢ.ሲ,
+      ኃ.የተ.የግ.ማ and the slash forms ዶ/ር, ወ/ሮ, ጽ/ቤት, while excluding
+      ordinary sentence-final words, whose stems are longer, and a slash
+      between two words (ወንድ/ሴት).
 
     A single Ethiopic character followed by a period (ቁ. ሚ. ም.) is also
     an abbreviation — a one-character sentence is not plausible.
@@ -125,11 +128,11 @@ def is_abbreviation(token: str) -> bool:
     if core in _KNOWN_ABBREVIATIONS:
         return True
 
-    if "." not in core:
+    if "." not in core and "/" not in core:
         # A lone Ethiopic character with a trailing period, e.g. ቁ.
         return len(core) == 1 and _is_ethiopic(core)
 
-    segments = core.split(".")
+    segments = _ABBREVIATION_SEPARATORS.split(core)
     return all(
         seg
         and len(seg) <= _MAX_ABBREVIATION_SEGMENT

@@ -284,3 +284,15 @@ class TestAbbreviationsStayAtomic:
 
     def test_latin_still_tagged(self):
         assert classify_token("Biden") == "<LATIN>Biden</LATIN>"
+
+
+class TestSlashAndHyphen:
+    def test_slash_abbreviation_stays_whole(self):
+        # Splitting it left ዶ and ር as "words" (27,277 times in the corpus).
+        assert classify_text("ዶ/ር አብይ ጽ/ቤት") == "ዶ/ር አብይ ጽ/ቤት"
+
+    def test_hyphen_between_ethiopic_words_is_its_own_token(self):
+        # A compound written with a hyphen then analyses as the spaced one:
+        # ቤተ - ክርስቲያን = ቤት + ኧ | - | ክርስቲያን. Ruled 2026-10-30.
+        assert classify_text("ቤተ-ክርስቲያን") == "ቤተ - ክርስቲያን"
+        assert classify_text("ጸረ-ሙስና") == "ጸረ - ሙስና"
