@@ -242,3 +242,5 @@ resource/irit/
 
 # Files copied back from the training PC; models are copied into the package on purpose.
 /dawit/
+# Logs from scripts/train_all.bat and training runs.
+/logs/
