@@ -34312,5 +34312,588 @@
     "validated": true,
     "notes": "scholar; construct ሊቀ (ሊቀ ጳጳሳት); takes the construct ኧ (ruled 2026-10-30)",
     "takes_construct": true
+  },
+  {
+    "word": "በለጠ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ል",
+      "ጥ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "በልጥ",
+      "jussive": "ብለጥ",
+      "gerund": "በልጥ",
+      "imperfective_palatal": "በልጭ",
+      "jussive_palatal": "ብለጭ",
+      "gerund_palatal": "በልጭ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተቆጠረ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ው",
+      "ጥ",
+      "ር"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ቆጠር",
+      "jussive": "ቆጠር",
+      "gerund": "ተቆጥር",
+      "imperfective_palatal": "ቆጠር",
+      "jussive_palatal": "ቆጠር",
+      "gerund_palatal": "ተቆጥር"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አገኘ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ግ",
+      "ኝ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አገኝ",
+      "jussive": "አግኝ",
+      "gerund": "አግኝ",
+      "imperfective_palatal": "አገኝ",
+      "jussive_palatal": "አግኝ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ገዛ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ዝ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ገዝ",
+      "jussive": "ግዝ",
+      "gerund": "ገዝ",
+      "imperfective_palatal": "ገዥ",
+      "jussive_palatal": "ግዥ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ዋለ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ል"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ውል",
+      "jussive": "ዋል",
+      "gerund": "ውል",
+      "imperfective_palatal": "ውይ",
+      "jussive_palatal": "ዋይ",
+      "gerund_palatal": "ውይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ሞከረ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ው",
+      "ክ",
+      "ር"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ሞክር",
+      "jussive": "ሞክር",
+      "gerund": "ሞክር",
+      "imperfective_palatal": "ሞክር",
+      "jussive_palatal": "ሞክር",
+      "gerund_palatal": "ሞክር"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተጠቀመ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ቅ",
+      "ም"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ጠቀም",
+      "jussive": "ጠቀም",
+      "gerund": "ተጠቅም",
+      "imperfective_palatal": "ጠቀም",
+      "jussive_palatal": "ጠቀም",
+      "gerund_palatal": "ተጠቅም"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አመነ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ም",
+      "ን"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አምን",
+      "gerund": "አምን",
+      "imperfective_palatal": "አምኝ",
+      "gerund_palatal": "አምኝ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ከፈለ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ፍ",
+      "ል"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ከፍል",
+      "jussive": "ክፈል",
+      "gerund": "ከፍል",
+      "imperfective_palatal": "ከፍይ",
+      "jussive_palatal": "ክፈይ",
+      "gerund_palatal": "ከፍይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተከፈለ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ፍ",
+      "ል"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ከፈል",
+      "jussive": "ከፈል",
+      "gerund": "ተከፍል",
+      "imperfective_palatal": "ከፈይ",
+      "jussive_palatal": "ከፈይ",
+      "gerund_palatal": "ተከፍይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አደገ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ድ",
+      "ግ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አድግ",
+      "jussive": "አድግ",
+      "gerund": "አድግ",
+      "imperfective_palatal": "አድግ",
+      "jussive_palatal": "አድግ",
+      "gerund_palatal": "አድግ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አለፈ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ል",
+      "ፍ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አልፍ",
+      "gerund": "አልፍ",
+      "imperfective_palatal": "አልፍ",
+      "gerund_palatal": "አልፍ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተከበረ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ብ",
+      "ር"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ከበር",
+      "jussive": "ከበር",
+      "gerund": "ተከብር",
+      "imperfective_palatal": "ከበር",
+      "jussive_palatal": "ከበር",
+      "gerund_palatal": "ተከብር"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "በቃ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ቅ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "በቅ",
+      "jussive": "ብቅ",
+      "gerund": "በቅ",
+      "imperfective_palatal": "በቅ",
+      "jussive_palatal": "ብቅ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተጓዘ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ው",
+      "ዝ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ጓዝ",
+      "jussive": "ጓዝ",
+      "gerund": "ተጉዝ",
+      "imperfective_palatal": "ጓዥ",
+      "jussive_palatal": "ጓዥ",
+      "gerund_palatal": "ተጉዥ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተለያየ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ል",
+      "ይ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ለያይ",
+      "jussive": "ለያይ",
+      "gerund": "ተለያይ",
+      "imperfective_palatal": "ለያይ",
+      "jussive_palatal": "ለያይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ጨመረ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጭ",
+      "ም",
+      "ር"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ጨምር",
+      "jussive": "ጨምር",
+      "gerund": "ጨምር",
+      "imperfective_palatal": "ጨምር",
+      "jussive_palatal": "ጨምር",
+      "gerund_palatal": "ጨምር"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተመለከተ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ል",
+      "ክ",
+      "ት"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "መለከት",
+      "jussive": "መለከት",
+      "gerund": "ተመልክት",
+      "imperfective_palatal": "መለከች",
+      "jussive_palatal": "መለከች",
+      "gerund_palatal": "ተመልክች"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተከተለ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ት",
+      "ል"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ከተል",
+      "jussive": "ከተል",
+      "gerund": "ተከትል",
+      "imperfective_palatal": "ከተይ",
+      "jussive_palatal": "ከተይ",
+      "gerund_palatal": "ተከትይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አስፈለገ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ፍ",
+      "ል",
+      "ግ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አስፈልግ",
+      "jussive": "አስፈልግ",
+      "gerund": "አስፈልግ",
+      "imperfective_palatal": "አስፈልግ",
+      "jussive_palatal": "አስፈልግ",
+      "gerund_palatal": "አስፈልግ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ታወሰ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ው",
+      "ስ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ታወስ",
+      "jussive": "ታወስ",
+      "imperfective_palatal": "ታወሽ",
+      "jussive_palatal": "ታወሽ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "ተያያዘ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ዝ"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "ያያዝ",
+      "jussive": "ያያዝ",
+      "gerund": "ተያይዝ",
+      "imperfective_palatal": "ያያዥ",
+      "jussive_palatal": "ያያዥ",
+      "gerund_palatal": "ተያይዥ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አስቻለ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ች",
+      "ል"
+    ],
+    "root_source": "native_speaker",
+    "stems": {
+      "imperfective": "አስችል",
+      "jussive": "አስችል",
+      "gerund": "አስችል",
+      "imperfective_palatal": "አስችይ",
+      "jussive_palatal": "አስችይ",
+      "gerund_palatal": "አስችይ"
+    },
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "added 2026-10-30 from IRIT and corpus forms; approved by the native speaker"
+  },
+  {
+    "word": "አስመልክቶ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ስ",
+      "ም",
+      "ል",
+      "ክ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "regarding; the gerund of አስመለከተ used as an adverb (6,428 tokens)"
   }
 ]
