@@ -123,7 +123,7 @@ $ amharic-morph "ልጆቹ ትምህርት ቤት ሄዱ።"
 
 ## How it works
 
-**The lexicon.** Every Amharic word has exactly one independent morpheme, and affixes never appear alone, so a lexicon of independent words is enough to anchor the analysis. The lexicon has 948 entries drawn from the most frequent stems in the corpus. A native speaker reviewed each entry's category and root, and the stems of its 70 verbs.
+**The lexicon.** Every Amharic word has exactly one independent morpheme, and affixes never appear alone, so a lexicon of independent words is enough to anchor the analysis. The lexicon has 1,146 entries drawn from the most frequent stems and function words in the corpus. A native speaker reviewed each entry's category and root, and the stems of its 93 verbs.
 
 **Level 4 is constructive.** Affixes are removed to build candidate stems, and the lexicon decides which candidates are real. Fused suffixes are undone with fidel arithmetic: ቶ is restored to ት, and the candidate ቤት is looked up. The stem's category gates which affixes may attach, and a fixed affix order rules out impossible stacks. When several analyses survive, the one with the fewest morphemes wins. A word with no lexicon anchor is returned whole and marked unknown; it is never split on a guess.
 
@@ -137,8 +137,8 @@ Corpus: CC-100 Amharic after cleaning and deduplication, 2.9M sentences and 42.9
 
 **Level 4.**
 
-- **Coverage:** 50% of corpus tokens are analysed; the remaining words are returned whole.
-- **Agreement with a hand-annotated reference:** 92.6% on the inflectional affixes, over 20.3M compared tokens. The reference is a set of hand-annotated Amharic lexicons; it also marks derivation, which this package keeps inside the stem by design: it writes the causative ያደርጋል as ያ_ደርግ_አል and the passive ይታወቃል as ይ_ት_አወቅ_አል, where this package gives ይ + አደረገ + ኣል and ይ + ታወቀ + ኣል.
+- **Coverage:** 65% of corpus tokens are analysed; the remaining words are returned whole.
+- **Agreement with a hand-annotated reference:** 91.3% on the inflectional affixes, over 26.7M compared tokens. The reference is a set of hand-annotated Amharic lexicons; it also marks derivation, which this package keeps inside the stem by design: it writes the causative ያደርጋል as ያ_ደርግ_አል and the passive ይታወቃል as ይ_ት_አወቅ_አል, where this package gives ይ + አደረገ + ኣል and ይ + ታወቀ + ኣል.
 
 **Level 1.** Agreement with the reference's roots: 93.0% of tokens.
 
@@ -155,11 +155,12 @@ The plain model's boundary rate falls as its vocabulary grows: on a smaller trai
 
 ## Limitations
 
-- **Coverage.** About half of corpus tokens come back unknown, because the lexicon has 948 stems. Reaching 90% coverage needs closer to 10,000.
-- **Verbs.** Verb forms are analysed for the 70 verbs whose stems have been reviewed. For a verb beginning with አ, the first person singular is written without its prefix: አውቃለሁ "I know" gets the right morphemes (አወቀ + ኣል + ሁ) but is labelled as the present perfect, and the negative አላውቅም "I don't know" is not analysed. Some irregular jussives (ይወቅ, ይይ) are not covered yet.
+- **Coverage.** About a third of corpus tokens come back unknown: names, rarer stems, and verbs not yet reviewed. Reaching 90% coverage needs closer to 10,000 stems.
+- **Verbs.** Verb forms are analysed for the 93 verbs whose stems have been reviewed. For a verb beginning with አ, the first person singular is written without its prefix: አውቃለሁ "I know" gets the right morphemes (አወቀ + ኣል + ሁ) but is labelled as the present perfect, and the negative አላውቅም "I don't know" is not analysed. Some irregular jussives (ይወቅ, ይይ) are not covered yet.
 - **Prepositions written as separate words** (ወደ, ስለ when written apart from the next word) are not yet analysed; they are recognised only as prefixes.
 - **Ambiguity.** A word with two analyses (ትል, "worm" or "she says") gets one from `segment()`; `segment_all()` returns them all. Choosing between them needs context, which a word-level analyser does not have.
-- **Gemination** is not represented: Amharic spelling does not mark it.
+- **Gemination** is not represented: Amharic spelling does not mark it, so pairs such as ይሰጣል "gives" and "is given" are written alike, and `segment()` picks one reading.
+- **Compounds** keep their written form. A compound written as one word (ቤተክርስቲያን) is one entry; written apart or with a hyphen (ቤተ ክርስቲያን, ቤተ-ክርስቲያን) each part is analysed, the construct form as its noun plus ኧ (ቤት + ኧ).
 
 ## Data
 
