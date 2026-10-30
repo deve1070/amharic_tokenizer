@@ -19,7 +19,7 @@ pieces join back into exactly the text they came from. Level 4 and Level
 
 from collections import Counter
 
-from amharic_morph.levels import fidel_order, from_sound_text, sound_text, to_order6
+from amharic_morph.levels import fidel_order, from_sound_text, is_syllable, sound_text, to_order6
 from amharic_morph.morphology import Segmentation
 
 # A fused suffix rewrites its carrier to this order and adds no vowel of
@@ -190,7 +190,27 @@ def _sentencepiece():
     return sentencepiece
 
 
-def train(counts_path, model_prefix, vocab_size: int, num_threads: int = 4) -> None:
+# A one-character word (። ፣ ( 1) is a row of the count table on its own, and
+# SentencePiece proposes its candidate pieces from the distinct rows, so ▁።
+# is rarely proposed though ። is the commonest word in the corpus. The
+# frequent ones are given as pieces.
+_MIN_SYMBOL_COUNT = 1000
+
+
+def _word_symbols(counts_path, min_count: int) -> list[str]:
+    """The frequent one-character words, as pieces with their word mark."""
+    symbols = []
+    with open(counts_path, encoding="utf-8") as f:
+        for line in f:
+            segment, count = line.rstrip("\n").split("\t")
+            if len(segment) == 2 and segment[0] == " " and int(count) >= min_count \
+                    and not is_syllable(segment[1]):
+                symbols.append(_WORD_MARK + segment[1])
+    return symbols
+
+
+def train(counts_path, model_prefix, vocab_size: int, num_threads: int = 4,
+          min_symbol_count: int = _MIN_SYMBOL_COUNT) -> None:
     """
     Train a unigram SentencePiece model on segment counts.
 
@@ -208,6 +228,8 @@ def train(counts_path, model_prefix, vocab_size: int, num_threads: int = 4) -> N
         model_prefix: Writes model_prefix.model and .vocab.
         vocab_size:   Pieces in the vocabulary.
         num_threads:  Training threads.
+        min_symbol_count: A one-character word at least this frequent is
+                      given as a piece with its word mark (▁።).
     """
     _sentencepiece().SentencePieceTrainer.train(
         input=str(counts_path),
@@ -220,7 +242,7 @@ def train(counts_path, model_prefix, vocab_size: int, num_threads: int = 4) -> N
         normalization_rule_name="identity",
         add_dummy_prefix=False,
         remove_extra_whitespaces=False,
-        user_defined_symbols=list(TAGS),
+        user_defined_symbols=list(TAGS) + _word_symbols(counts_path, min_symbol_count),
         hard_vocab_limit=False,
         num_threads=num_threads,
         minloglevel=2,

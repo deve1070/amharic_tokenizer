@@ -142,14 +142,14 @@ Corpus: CC-100 Amharic after cleaning and deduplication, 2.9M sentences and 42.9
 
 **Level 1.** Agreement with the reference's roots: 93.0% of tokens.
 
-**Subword level**, on 20,000 held-out sentences (294,454 Amharic words) that neither model was trained on:
+**Subword level**, on 20,000 held-out sentences (293,447 Amharic words) that neither model was trained on. Level 4 cuts 34% of these words at one or more morpheme boundaries:
 
 | method | vocabulary | pieces per word | morpheme boundaries kept | words with every boundary kept | exact round trip |
 |---|---|---|---|---|---|
-| unigram over decomposed fidel | 16K | 1.49 | 21.0% | 12.3% | 100% |
-| **amharic-morph** | **16K** | 1.80 | **100%** | **100%** | **100%** |
+| unigram over decomposed fidel | 16K | 1.49 | 19.2% | 11.0% | 100% |
+| **amharic-morph** | **16K** | 1.97 | **100%** | **100%** | **100%** |
 
-The decomposed-fidel model follows the approach existing Amharic subword tokenizers take. It was trained on exactly the same 5.9M sentences, with the same settings and the same lossless encoding, so the difference is the morpheme boundaries alone. Keeping every boundary costs about 0.3 pieces per word.
+The decomposed-fidel model follows the approach existing Amharic subword tokenizers take. It was trained on exactly the same sentences, with the same settings and the same lossless encoding, so the difference is the morpheme boundaries alone. Keeping every boundary costs about 0.5 pieces per word. Most of the remaining pieces come from words Level 4 does not analyse, which any subword model has to split.
 
 The plain model's boundary rate falls as its vocabulary grows: on a smaller training sample it kept 40% of the boundaries at 4K, 30% at 8K, 22% at 16K and 15% at 32K. A larger vocabulary learns longer letter sequences, which span more morpheme boundaries.
 

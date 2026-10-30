@@ -130,7 +130,7 @@ def model_files(tok, tmp_path_factory):
         counts = out / f"{morphemes}.tsv"
         write_segment_counts(count_segments(LINES * 50, tok, morphemes), counts)
         prefix = out / ("morph" if morphemes else "plain")
-        train(counts, prefix, vocab_size=400)
+        train(counts, prefix, vocab_size=400, min_symbol_count=10)
         files[morphemes] = f"{prefix}.model"
     return files
 
@@ -141,6 +141,11 @@ def models(tok, model_files):
 
 
 class TestSubwordModel:
+    def test_frequent_punctuation_is_one_piece_with_its_word_mark(self, models):
+        # " ።" is its own row of the count table, so training rarely proposes
+        # ▁። as a piece; frequent one-character words are given as pieces.
+        assert models[True].encode("ቤቶች ።")[-1:] == ["▁።"]
+
     def test_no_learned_piece_crosses_a_segment(self, model_files, tok):
         # Every piece is part of one training segment: training can never
         # learn ▁ይኣልኧው when ያለው is always cut ይ | ኣልኧ | ው.
