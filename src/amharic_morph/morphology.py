@@ -122,8 +122,13 @@ NEGATIVE_SUFFIX = "ም"
 # negative too: የለ + ው + ም -> የለውም "he does not have".
 NEGATIVE_EXISTENTIAL = "የለ"
 
-# The shortest noun a preposition fuses onto. See _compatible().
+# The shortest noun a preposition fuses onto, the two-letter words the እ
+# fusion accepts anyway, and the categories it never fuses onto. See
+# _compatible().
 _MIN_FUSED_NOUN = 3
+_SHORT_FUSABLE = frozenset({"እኔ", "እኛ", "እሱ", "እሷ"})
+_UNFUSABLE_CATEGORIES = ("preposition", "conjunction")
+_MAX_PREPOSITIONS = 2
 
 # The only category that takes the infix. See _compatible().
 _INFIX_CATEGORY = "adjective"
@@ -560,6 +565,10 @@ def detach_prefix(word: str, prefixes=CORPUS_PREFIXES) -> list[tuple[str, str]]:
 _FUSING_ORDERS = (1, 6)
 _FUSED_ORDER = 4
 _GLOTTAL_A = "አ"
+# A preposition also drops a stem's initial እ, keeping its own vowel:
+# በ + እዚህ -> በዚህ, የ + እኔ -> የኔ. As IRIT (በ_እዚህ). Ruled 2026-10-30.
+_GLOTTAL_E = "እ"
+_PREPOSITION_ORDER = 1
 
 
 # Cached: it depends on the prefix alone, and the search asks for every
@@ -587,30 +596,58 @@ def _prefix_spellings(prefixes) -> tuple[str, ...]:
     return cached[1]
 
 
-def detach_prefix_shapes(word: str, prefixes=PREFIX_TABLE) -> list[tuple[str, PrefixShape, bool]]:
+def detach_prefix_shapes(word: str, prefixes=PREFIX_TABLE) -> list[tuple[str, PrefixShape, str]]:
     """
     Prefix rows removable from a surface form, with the remainder.
 
-    A prefix is removed as written, or in its fused form, which gives the
-    stem back its initial አ (see _fused_form).
+    A prefix is removed as written, or fused: in its fused form, which gives
+    the stem back its initial አ (see _fused_form), or as a preposition that
+    dropped the stem's initial እ (በዚህ = በ + እዚህ).
 
     Returns:
-        (remainder, row, fused) for every match.
+        (remainder, row, fusion) for every match. fusion is "" when the
+        prefix was written as is, else the letter it absorbed: "አ" or "እ".
 
     Examples:
-        >>> [(r, p.morpheme) for r, p, _ in detach_prefix_shapes("የሚሆን")]
+        >>> [(r, p.morpheme) for r, p, f in detach_prefix_shapes("የሚሆን") if not f]
         [('ሚሆን', 'የ')]
-        >>> ("አውቃል", "ይ", True) in [(r, p.morpheme, f) for r, p, f in detach_prefix_shapes("ያውቃል")]
+        >>> ("አውቃል", "ይ", "አ") in [(r, p.morpheme, f) for r, p, f in detach_prefix_shapes("ያውቃል")]
+        True
+        >>> ("እዚህ", "በ", "እ") in [(r, p.morpheme, f) for r, p, f in detach_prefix_shapes("በዚህ")]
         True
     """
     found = []
-    for p in prefixes:
-        if word.startswith(p.morpheme) and len(word) > len(p.morpheme):
-            found.append((word[len(p.morpheme):], p, False))
-        fused = _fused_form(p.morpheme)
-        if fused and word.startswith(fused) and len(word) > len(fused):
-            found.append((_GLOTTAL_A + word[len(fused):], p, True))
+    for spelling, p, fusion in _prefix_index(prefixes).get(word[:1], ()):
+        if word.startswith(spelling) and len(word) > len(spelling):
+            found.append((fusion + word[len(spelling):], p, fusion))
     return found
+
+
+_PREFIX_INDEXES: dict[int, tuple] = {}
+
+
+def _prefix_index(prefixes) -> dict[str, list]:
+    """
+    Every way each prefix of a table is written, by first letter.
+
+    Each item is (spelling, row, fusion), in table order: the prefix as
+    written; for a preposition, the same spelling having dropped a stem's
+    እ; and its fused spelling before a stem's አ. Testing only the items
+    for a word's first letter keeps the search fast.
+    """
+    cached = _PREFIX_INDEXES.get(id(prefixes))
+    if cached is None or cached[0] is not prefixes:
+        index: dict[str, list] = {}
+        for p in prefixes:
+            index.setdefault(p.morpheme[0], []).append((p.morpheme, p, ""))
+            if p.slot == PREPOSITION and fidel_order(p.morpheme[-1]) == _PREPOSITION_ORDER:
+                index[p.morpheme[0]].append((p.morpheme, p, _GLOTTAL_E))
+            fused = _fused_form(p.morpheme)
+            if fused:
+                index.setdefault(fused[0], []).append((fused, p, _GLOTTAL_A))
+        cached = (prefixes, index)
+        _PREFIX_INDEXES[id(prefixes)] = cached
+    return cached[1]
 
 
 # Per-table index of the rows by the letter they end on. Keyed by the
@@ -1020,9 +1057,9 @@ class Segmentation:
                   word in different places, so the BPE level needs it.
                   Not part of equality: two analyses with the same
                   morphemes are the same analysis.
-        prefix_fused: Whether each prefix was fused with the stem's
-                  initial አ (ያለው = የ + አለ + ው), parallel to prefixes. Not
-                  part of equality, for the same reason.
+        prefix_fused: The letter each prefix absorbed, or "", parallel
+                  to prefixes: "አ" in ያለው = የ + አለ + ው, "እ" in በዚህ =
+                  በ + እዚህ. Not part of equality, for the same reason.
     """
 
     word: str
@@ -1034,7 +1071,7 @@ class Segmentation:
     category: str | None = None
     aspect: str | None = None
     suffix_shapes: tuple[SuffixShape, ...] = field(default=(), compare=False, repr=False)
-    prefix_fused: tuple[bool, ...] = field(default=(), compare=False, repr=False)
+    prefix_fused: tuple[str, ...] = field(default=(), compare=False, repr=False)
 
     @property
     def parts(self) -> list[Morpheme]:
@@ -1089,8 +1126,9 @@ class _Node:
     shapes: tuple[SuffixShape, ...] = ()
     # The table row of each prefix, parallel to prefixes.
     prefix_shapes: tuple[PrefixShape, ...] = ()
-    # Whether each prefix was fused with the stem's initial አ (ያለ = የ + አለ).
-    prefix_fused: tuple[bool, ...] = ()
+    # The letter each prefix absorbed from what follows, or "": "አ" in
+    # ያለ = የ + አለ, "እ" in በዚህ = በ + እዚህ.
+    prefix_fused: tuple[str, ...] = ()
 
 
 def _kind_allows(kind: str, category: str | None) -> bool:
@@ -1164,10 +1202,21 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
     if node.infix and category != _INFIX_CATEGORY:
         return False
 
-    # A preposition fuses onto a noun only of three letters or more: on a
-    # two-letter stem the match is an accident (ካሳ is not ከ + አሳ, ካፌ is not
-    # ከ + አፍ + ኤ), while ያገር, ባንድ, እስካሁን are real. Verbs are exempt: ያየ.
-    if not is_verb and any(node.prefix_fused) and len(stem) < _MIN_FUSED_NOUN:
+    # A preposition fuses with an initial አ only on a noun of three letters
+    # or more: on a two-letter stem the match is an accident (ካሳ is not
+    # ከ + አሳ, ካፌ is not ከ + አፍ + ኤ), while ያገር, ባንድ, እስካሁን are real.
+    # Verbs are exempt (ያየ). The እ fusion has the same limit, except for
+    # the personal pronouns (የኔ, ለኛ), and never fuses onto a preposition or
+    # a conjunction (ለንደን is not ለ + እንደ + ን). No word stacks more than two
+    # prepositions (የለበሱ is not የ + ለ + በ + እሱ).
+    if not is_verb and _GLOTTAL_A in node.prefix_fused and len(stem) < _MIN_FUSED_NOUN:
+        return False
+    if _GLOTTAL_E in node.prefix_fused and (
+        category in _UNFUSABLE_CATEGORIES
+        or (len(stem) < _MIN_FUSED_NOUN and stem not in _SHORT_FUSABLE)
+    ):
+        return False
+    if sum(1 for p in prefixes if p.slot == PREPOSITION) > _MAX_PREPOSITIONS:
         return False
 
     if not is_verb:
@@ -1352,9 +1401,10 @@ def _analyses(
             for rest, prefix, fused in detach_prefix_shapes(node.text, prefixes):
                 # Keep a text that can still reach an anchor, or that
                 # begins with a further prefix, as written (የ + ሚሆን) or
-                # fused (የ + ሚ + ያውቅ).
-                if not _can_reach_an_anchor(rest, starts) and not rest.startswith(
-                    _prefix_spellings(prefixes)
+                # fused (የ + ሚ + ያውቅ). A dropped እ is a stem's, never a
+                # further prefix's, so that text must reach an anchor.
+                if not _can_reach_an_anchor(rest, starts) and (
+                    fused == _GLOTTAL_E or not rest.startswith(_prefix_spellings(prefixes))
                 ):
                     continue
                 queue.append(
@@ -1425,11 +1475,14 @@ def rank_analyses(
     """
     Order competing analyses best first.
 
-    Fewest morphemes, then whether every affix is attested for that
-    entry, then an analysis anchored on an entry itself before one
-    anchored on a derived verb stem, then longest stem, then the
-    morpheme sequence itself so the order is deterministic. See the
-    module docstring for why.
+    Fewest morphemes, then fewest fused prefixes, then whether every
+    affix is attested for that entry, then an analysis anchored on an
+    entry itself before one anchored on a derived verb stem, then
+    longest stem, then the morpheme sequence itself so the order is
+    deterministic. See the module docstring for why.
+
+    The second criterion prefers the word as written: የድል is የ + ድል "of
+    victory", not የ + እድል "of chance", though the fused stem is longer.
 
     The third criterion keeps ባለው as ባለ + ው: through the stem ባል, ተባለ
     + ው has as many morphemes and a longer stem as reported, though the
@@ -1446,6 +1499,7 @@ def rank_analyses(
         analyses,
         key=lambda a: (
             a.morpheme_count,
+            sum(1 for f in a.prefix_fused if f),
             not _attested(a, lexicon),
             a.aspect not in (None, PERFECTIVE),
             -len(a.stem),

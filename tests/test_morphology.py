@@ -1300,6 +1300,39 @@ class TestPrefixFusion:
         assert segment_word("ካሳ", lex).known is False
         assert segment_word("ባገሩ", lex).morphemes == ["በ", "አገር", "ኡ"]
 
+    def test_preposition_drops_a_stem_initial_e(self):
+        # As IRIT: በዚህ = በ_እዚህ, ከዚያ = ከ_እዚያ. The preposition keeps its vowel.
+        lex = typed(እዚህ="adverb", እዚያ="adverb", እኔ="other", እናት="noun")
+        assert segment_word("በዚህ", lex).morphemes == ["በ", "እዚህ"]
+        assert segment_word("ከዚያ", lex).morphemes == ["ከ", "እዚያ"]
+        assert segment_word("የናት", lex).morphemes == ["የ", "እናት"]
+
+    def test_e_fusion_allows_two_letter_pronouns(self):
+        lex = typed(እኔ="other")
+        assert segment_word("የኔ", lex).morphemes == ["የ", "እኔ"]
+
+    def test_plain_reading_beats_a_fused_one(self):
+        # የድል "of victory" is not የ + እድል "of chance".
+        lex = typed(ድል="noun", እድል="noun")
+        assert segment_word("የድል", lex).morphemes == ["የ", "ድል"]
+
+    def test_e_fusion_needs_three_letters_except_pronouns(self):
+        # በቃ "enough" is not በ + እቃ "item"; የኔ is የ + እኔ.
+        lex = typed(እቃ="noun", እኔ="other")
+        assert segment_word("በቃ", lex).known is False
+        assert segment_word("የኔ", lex).morphemes == ["የ", "እኔ"]
+
+    def test_no_fusion_onto_a_preposition_or_conjunction(self):
+        # ለንደን "London" is not ለ + እንደ + ን.
+        assert segment_word("ለንደን", typed(እንደ="preposition")).known is False
+
+    def test_at_most_two_prepositions(self):
+        # የለበሱ is not የ + ለ + በ + እሱ.
+        assert segment_word("የለበሱ", typed(እሱ="other")).known is False
+
+    def test_e_written_out_still_works(self):
+        assert segment_word("በእዚህ", typed(እዚህ="adverb")).morphemes == ["በ", "እዚህ"]
+
     def test_unfused_prefixes_still_work(self):
         assert seg("ይሆናል").morphemes == ["ይ", "ሆነ", "ኣል"]
 

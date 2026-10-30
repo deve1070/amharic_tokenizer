@@ -36,16 +36,17 @@ def _suffix_length(shape) -> int:
     return vowel + len(sound_text(shape.tail))
 
 
-def _prefix_sound(prefix: str, fused: bool, absorbed: bool) -> str:
+def _prefix_sound(prefix: str, fusion: str, absorbed: bool) -> str:
     """
     A prefix's sound text as written.
 
-    A fused prefix stops at its consonant; the ኣ after it stands for the
-    absorbed አ of what follows: ያለ = ይ | ኣልኧ. When what follows is itself
-    a prefix (ካልሆነም = ከ + አል + ...), that prefix starts with this ኣ in
-    place of its own አ (እኧ).
+    A prefix fused with an አ stops at its consonant; the ኣ after it stands
+    for the absorbed አ of what follows: ያለ = ይ | ኣልኧ. When what follows is
+    itself a prefix (ካልሆነም = ከ + አል + ...), that prefix starts with this ኣ
+    in place of its own አ (እኧ). A preposition that dropped an እ is written
+    whole: በዚህ = ብኧ | ዝኢህ.
     """
-    text = prefix[:-1] + to_order6(prefix[-1]) if fused else prefix
+    text = prefix[:-1] + to_order6(prefix[-1]) if fusion == _GLOTTAL_A else prefix
     sound = sound_text(text)
     if absorbed:
         sound = _ABSORBED + sound[len(sound_text(_GLOTTAL_A)):]
@@ -79,12 +80,12 @@ def sound_segments(segmentation: Segmentation) -> list[str]:
     if not segmentation.known:
         return [whole]
 
-    fused = segmentation.prefix_fused or (False,) * len(segmentation.prefixes)
+    fused = segmentation.prefix_fused or ("",) * len(segmentation.prefixes)
     prefixes = []
     absorbed = False
-    for prefix, is_fused in zip(segmentation.prefixes, fused):
-        prefixes.append(_prefix_sound(prefix, is_fused, absorbed))
-        absorbed = is_fused
+    for prefix, fusion in zip(segmentation.prefixes, fused):
+        prefixes.append(_prefix_sound(prefix, fusion, absorbed))
+        absorbed = fusion == _GLOTTAL_A
     suffix_lengths = [_suffix_length(s) for s in segmentation.suffix_shapes]
     start = sum(len(p) for p in prefixes)
     end = len(whole) - sum(suffix_lengths)

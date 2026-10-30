@@ -62,6 +62,10 @@ class TestSoundSegments:
         assert cut(tok, "የሚያውቅ") == ["ይኧ", "ምኢ", "ይ", "ኣውቅ"]
         assert cut(tok, "እስካሁን") == ["እስክ", "ኣህኡን"]
 
+    def test_e_fusion_keeps_the_prefix_vowel(self, tok):
+        # በዚህ = በ + እዚህ: the preposition is written whole, the እ is gone.
+        assert cut(tok, "በዚህ") == ["ብኧ", "ዝኢህ"]
+
     def test_fused_onto_another_prefix(self, tok):
         # ካልሆነም: ከ absorbs the አ of the negative አል, not of the stem.
         assert cut(tok, "ካልሆነም") == ["ክ", "ኣል", "ህኦንኧ", "ም"]
