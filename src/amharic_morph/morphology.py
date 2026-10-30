@@ -292,6 +292,12 @@ STEM_VOWEL = "ኣ"
 # row serves both, so the search detaches ን once. See _compatible().
 _ACCUSATIVE = "ን"
 _DEFINITE = "ው"
+# ት after a plural subject ኡ: the 3ms object, ሰጡት "they gave him", and on a
+# relative verb also its definite, የሆኑት = የ + ሆነ + ኡ + ት, where the
+# singular has ው (የሆነው). As IRIT, የ_ሆን_ኡ_ት. The accusative may follow it
+# on a relative verb: ያሉትን. See _compatible().
+_PLURAL = "ኡ"
+_RELATIVE_PLURAL_ROW = SuffixShape("ት", VERB, "ት", OBJECT, after_orders=(2,))
 
 # The Ge'ez construct state: the noun's last consonant takes ኧ (-ä), linking
 # it to the next noun as "X of Y": ቤት + ኧ -> ቤተ (ቤተ ክርስቲያን). Ruled
@@ -316,6 +322,7 @@ _STEM_VOWEL_ROW = SuffixShape(
 SUFFIX_TABLE = (
     # ን is the case ending on a noun and the 1pl object on a verb (ሰጠን).
     _plain("ን", ANY, CASE, OBJECT),
+    _RELATIVE_PLURAL_ROW,
     _plain("ም", ANY, ALSO),
     _plain("ና", ANY, AND),
     # The 3fs subject (ሄደች). On a non-verb it produced only wrong
@@ -952,17 +959,26 @@ _NEGATIVE = ("negative",)
 _STEM_VOWEL_READING = ("stem_vowel",)
 # ኣል on the gerund stem; on the imperfective stem it is the auxiliary.
 _PRESENT_PERFECT_READING = ("present_perfect",)
+# ት after a plural ኡ: the 3ms object, and the definite on a relative verb.
+# On a ቶ-gerund ት is the gerund marker.
+_OBJECT_3MS_READING = ("object_3ms",)
+_DEFINITE_OBJECT_READING = ("definite", "object_3ms")
+
+
+def _has_relative_prefix(segmentation: "Segmentation") -> bool:
+    """Whether a verb carries a preposition or a subordinator: የሆነው, ሲሉት."""
+    return any(
+        p.morpheme in segmentation.prefixes and p.slot in (PREPOSITION, SUBORDINATOR)
+        for p in PREFIX_TABLE
+    )
 
 
 def _is_relative_case(segmentation: "Segmentation") -> bool:
     """Whether a verb's ን is the accusative after a relative verb's ው."""
     suffixes = segmentation.suffixes
-    relative = any(
-        p.morpheme in segmentation.prefixes and p.slot in (PREPOSITION, SUBORDINATOR)
-        for p in PREFIX_TABLE
-    )
-    return relative and any(
-        a == _DEFINITE and b == _ACCUSATIVE for a, b in zip(suffixes, suffixes[1:])
+    return _has_relative_prefix(segmentation) and any(
+        a in (_DEFINITE, _RELATIVE_PLURAL_ROW.morpheme) and b == _ACCUSATIVE
+        for a, b in zip(suffixes, suffixes[1:])
     )
 
 
@@ -1003,6 +1019,8 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
         return _PRESENT_PERFECT_READING
     if is_verb and suffix == _ACCUSATIVE and _is_relative_case(segmentation):
         return _READINGS[suffix][0]
+    if is_verb and suffix == _RELATIVE_PLURAL_ROW.morpheme and _PLURAL in segmentation.suffixes:
+        return _DEFINITE_OBJECT_READING if _has_relative_prefix(segmentation) else _OBJECT_3MS_READING
     return _READINGS[suffix][1 if is_verb else 0]
 
 
@@ -1184,13 +1202,19 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
         return False
 
     positions = [s.position(category) for s in shapes]
-    if is_verb and any(p.slot in (PREPOSITION, SUBORDINATOR) for p in prefixes):
-        # A relative verb's ው + ን: the ን is the accusative, in case position.
+    relative = is_verb and any(p.slot in (PREPOSITION, SUBORDINATOR) for p in prefixes)
+    if relative:
+        # A relative verb's ው + ን or ት + ን: the ን is the accusative, in case
+        # position.
         positions = [
             CASE if i and s.morpheme == _ACCUSATIVE and s.carrier_order is None
-            and shapes[i - 1].morpheme == _DEFINITE else position
+            and (shapes[i - 1].morpheme == _DEFINITE or shapes[i - 1] == _RELATIVE_PLURAL_ROW)
+            else position
             for i, (s, position) in enumerate(zip(shapes, positions))
         ]
+    for i, s in enumerate(shapes):
+        if s == _RELATIVE_PLURAL_ROW and (i == 0 or shapes[i - 1].morpheme != _PLURAL):
+            return False
     if any(a >= b for a, b in zip(positions, positions[1:])):
         return False
     slots = [p.slot for p in prefixes]

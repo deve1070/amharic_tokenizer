@@ -1360,6 +1360,27 @@ class TestRelativeVerbTakesCase:
     def test_object_n_is_unchanged(self):
         assert seg("ሰጠን").morphemes == ["ሰጠ", "ን"]
 
+    def test_plural_relative_takes_t(self):
+        # As IRIT: ያሉት = የ_አል_ኡት, የሆኑት = የ_ሆን_ኡ_ት. The plural's ት is where
+        # the singular has ው (የሆነው).
+        assert seg("የሆኑት").morphemes == ["የ", "ሆነ", "ኡ", "ት"]
+        assert seg("ያሉት").morphemes == ["የ", "አለ", "ኡ", "ት"]
+        assert seg("የሚሆኑት").morphemes == ["የ", "ሚ", "ሆነ", "ኡ", "ት"]
+        assert suffix_readings(seg("የሆኑት"), "ት") == ("definite", "object_3ms")
+
+    def test_plural_relative_then_accusative(self):
+        assert seg("ያሉትን").morphemes == ["የ", "አለ", "ኡ", "ት", "ን"]
+
+    def test_after_a_plural_subject_t_is_the_object(self):
+        # ሰጡት "they gave him": after ኡ, "him" is written ት.
+        result = seg("ሰጡት")
+        assert result.morphemes == ["ሰጠ", "ኡ", "ት"]
+        assert suffix_readings(result, "ት") == ("object_3ms",)
+
+    def test_t_follows_only_the_plural(self):
+        # "He gave her" is ሰጣት (ኣት); ት alone after the stem is no suffix.
+        assert seg("ሰጠት").known is False
+
 
 class TestNegativeImperfective:
     def test_ai_with_m(self):
