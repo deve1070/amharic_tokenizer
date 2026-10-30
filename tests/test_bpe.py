@@ -66,6 +66,10 @@ class TestSoundSegments:
         # በዚህ = በ + እዚህ: the preposition is written whole, the እ is gone.
         assert cut(tok, "በዚህ") == ["ብኧ", "ዝኢህ"]
 
+    def test_e_dropped_from_another_prefix(self, tok):
+        # በንደዚህ: በ drops the እ of እንደ, and እንደ drops the እ of እዚህ.
+        assert cut(tok, "በንደዚህ") == ["ብኧ", "ንድኧ", "ዝኢህ"]
+
     def test_fused_onto_another_prefix(self, tok):
         # ካልሆነም: ከ absorbs the አ of the negative አል, not of the stem.
         assert cut(tok, "ካልሆነም") == ["ክ", "ኣል", "ህኦንኧ", "ም"]

@@ -27,6 +27,7 @@ _BARE = 6
 _INFIX_ORDER = 4
 # A fused prefix takes the next morpheme's initial አ as this vowel.
 _GLOTTAL_A = "አ"
+_GLOTTAL_E = "እ"
 _ABSORBED = "ኣ"
 
 
@@ -36,7 +37,7 @@ def _suffix_length(shape) -> int:
     return vowel + len(sound_text(shape.tail))
 
 
-def _prefix_sound(prefix: str, fusion: str, absorbed: bool) -> str:
+def _prefix_sound(prefix: str, fusion: str, absorbed: str) -> str:
     """
     A prefix's sound text as written.
 
@@ -44,12 +45,20 @@ def _prefix_sound(prefix: str, fusion: str, absorbed: bool) -> str:
     for the absorbed አ of what follows: ያለ = ይ | ኣልኧ. When what follows is
     itself a prefix (ካልሆነም = ከ + አል + ...), that prefix starts with this ኣ
     in place of its own አ (እኧ). A preposition that dropped an እ is written
-    whole: በዚህ = ብኧ | ዝኢህ.
+    whole: በዚህ = ብኧ | ዝኢህ; when what follows is a prefix, that prefix
+    has lost its እ (በንደዚህ = ብኧ | ንድኧ | ዝኢህ).
+
+    Args:
+        prefix:   The prefix morpheme.
+        fusion:   The letter this prefix absorbed from what follows, or "".
+        absorbed: The letter the previous prefix took from this one, or "".
     """
     text = prefix[:-1] + to_order6(prefix[-1]) if fusion == _GLOTTAL_A else prefix
     sound = sound_text(text)
-    if absorbed:
+    if absorbed == _GLOTTAL_A:
         sound = _ABSORBED + sound[len(sound_text(_GLOTTAL_A)):]
+    elif absorbed == _GLOTTAL_E:
+        sound = sound[len(sound_text(_GLOTTAL_E)):]
     return sound
 
 
@@ -82,10 +91,10 @@ def sound_segments(segmentation: Segmentation) -> list[str]:
 
     fused = segmentation.prefix_fused or ("",) * len(segmentation.prefixes)
     prefixes = []
-    absorbed = False
+    absorbed = ""
     for prefix, fusion in zip(segmentation.prefixes, fused):
         prefixes.append(_prefix_sound(prefix, fusion, absorbed))
-        absorbed = fusion == _GLOTTAL_A
+        absorbed = fusion
     suffix_lengths = [_suffix_length(s) for s in segmentation.suffix_shapes]
     start = sum(len(p) for p in prefixes)
     end = len(whole) - sum(suffix_lengths)
