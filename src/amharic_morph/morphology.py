@@ -287,9 +287,11 @@ AUXILIARY = "ኣል"
 # never a suffix of its own: ስራ is not the "definite" of ስር.
 STEM_VOWEL = "ኣ"
 # The accusative on a relative verb, used as a noun: ያለው + ን -> ያለውን,
-# IRIT የ_አል_ው_ን. It takes the case position, after the definite ው, which
-# on a verb is the object position. See _compatible().
-_RELATIVE_CASE_ROW = SuffixShape("ን", VERB, "ን", CASE)
+# IRIT የ_አል_ው_ን. On a verb ን is the object, in the same position as ው;
+# after a relative verb's ው it takes the case position instead. The same
+# row serves both, so the search detaches ን once. See _compatible().
+_ACCUSATIVE = "ን"
+_DEFINITE = "ው"
 
 # The Ge'ez construct state: the noun's last consonant takes ኧ (-ä), linking
 # it to the next noun as "X of Y": ቤት + ኧ -> ቤተ (ቤተ ክርስቲያን). Ruled
@@ -314,7 +316,6 @@ _STEM_VOWEL_ROW = SuffixShape(
 SUFFIX_TABLE = (
     # ን is the case ending on a noun and the 1pl object on a verb (ሰጠን).
     _plain("ን", ANY, CASE, OBJECT),
-    _RELATIVE_CASE_ROW,
     _plain("ም", ANY, ALSO),
     _plain("ና", ANY, AND),
     # The 3fs subject (ሄደች). On a non-verb it produced only wrong
@@ -953,6 +954,18 @@ _STEM_VOWEL_READING = ("stem_vowel",)
 _PRESENT_PERFECT_READING = ("present_perfect",)
 
 
+def _is_relative_case(segmentation: "Segmentation") -> bool:
+    """Whether a verb's ን is the accusative after a relative verb's ው."""
+    suffixes = segmentation.suffixes
+    relative = any(
+        p.morpheme in segmentation.prefixes and p.slot in (PREPOSITION, SUBORDINATOR)
+        for p in PREFIX_TABLE
+    )
+    return relative and any(
+        a == _DEFINITE and b == _ACCUSATIVE for a, b in zip(suffixes, suffixes[1:])
+    )
+
+
 def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...] | None:
     """
     What a suffix means in a given analysis.
@@ -988,7 +1001,7 @@ def suffix_readings(segmentation: "Segmentation", suffix: str) -> tuple[str, ...
         return _STEM_VOWEL_READING
     if is_verb and suffix == AUXILIARY and segmentation.aspect in GERUND:
         return _PRESENT_PERFECT_READING
-    if is_verb and _RELATIVE_CASE_ROW in segmentation.suffix_shapes and suffix == _RELATIVE_CASE_ROW.morpheme:
+    if is_verb and suffix == _ACCUSATIVE and _is_relative_case(segmentation):
         return _READINGS[suffix][0]
     return _READINGS[suffix][1 if is_verb else 0]
 
@@ -1171,6 +1184,13 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
         return False
 
     positions = [s.position(category) for s in shapes]
+    if is_verb and any(p.slot in (PREPOSITION, SUBORDINATOR) for p in prefixes):
+        # A relative verb's ው + ን: the ን is the accusative, in case position.
+        positions = [
+            CASE if i and s.morpheme == _ACCUSATIVE and s.carrier_order is None
+            and shapes[i - 1].morpheme == _DEFINITE else position
+            for i, (s, position) in enumerate(zip(shapes, positions))
+        ]
     if any(a >= b for a, b in zip(positions, positions[1:])):
         return False
     slots = [p.slot for p in prefixes]
@@ -1182,14 +1202,6 @@ def _compatible(node: _Node, stem: str, category: str | None, aspect: str | None
         return False
     if shapes and shapes[-1].bound:
         return False
-    # The accusative on a verb follows its definite ው, on a relative verb.
-    for i, shape in enumerate(shapes):
-        if shape == _RELATIVE_CASE_ROW and (
-            i == 0
-            or shapes[i - 1].morpheme != "ው"
-            or not any(p.slot in (PREPOSITION, SUBORDINATOR) for p in prefixes)
-        ):
-            return False
     for i, p in enumerate(prefixes):
         if p.needs_person and not any(q.slot == PERSON for q in prefixes[i + 1:]):
             return False
