@@ -1,2 +1,4 @@
 # Trained SentencePiece models are binary; never convert line endings.
 *.model binary
+# Windows batch files need CRLF line endings, or goto and labels misbehave.
+*.bat text eol=crlf
