@@ -15,8 +15,6 @@ Morphologically aware tokenization for Amharic. Every word is available at four 
 ['ብ', 'ት']
 ```
 
-> **Status: pre-release (0.1.0).** All five levels are complete and tested, and the subword model ships with the package.
-
 ## Why
 
 Amharic builds words by attaching prefixes and suffixes to a stem, and some suffixes fuse into the stem's last letter. ቤቶች ("houses") is ቤት ("house") with the plural ኦች, whose vowel ኦ rides on the stem's ት and makes ቶ. The same stem then appears in the following words, and many more:
