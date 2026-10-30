@@ -215,6 +215,13 @@ class TestSchemaErrors:
     def test_empty_word(self):
         assert any("word is empty" in p for p in schema_errors(entry(word="")))
 
+    def test_takes_construct_must_be_a_boolean(self):
+        good, bad = entry(), entry()
+        good["takes_construct"] = True
+        bad["takes_construct"] = "yes"
+        assert schema_errors(good) == []
+        assert any("takes_construct" in p for p in schema_errors(bad))
+
     def test_unknown_category(self):
         broken = entry(category="thing")
         assert any("category" in p for p in schema_errors(broken))

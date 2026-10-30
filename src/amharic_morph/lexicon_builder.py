@@ -280,6 +280,11 @@ def schema_errors(entry: dict) -> list[str]:
         if unknown:
             problems.append(f"stems kind not recognised: {unknown}")
 
+    # Optional, a native speaker's ruling: the noun has a construct form
+    # (ቤት -> ቤተ, as in ቤተ ክርስቲያን). Absent means it has none.
+    if "takes_construct" in entry and not isinstance(entry["takes_construct"], bool):
+        problems.append("takes_construct must be true or false")
+
     root_source = entry.get("root_source")
     if root_source not in VALID_ROOT_SOURCES:
         problems.append(f"root_source not recognised: {root_source}")

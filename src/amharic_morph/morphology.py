@@ -191,6 +191,7 @@ CASE = AUX = 3
 AUX_PERSON = 4
 ALSO = 5
 AND = 6
+CONSTRUCT = 7
 
 # Verb stems by aspect. A verb entry is its perfective; the other stems
 # are reviewed fields on the entry (lexicon_builder.STEM_KINDS), each
@@ -285,6 +286,13 @@ STEM_VOWEL = "ኣ"
 # on a verb is the object position. See _compatible().
 _RELATIVE_CASE_ROW = SuffixShape("ን", VERB, "ን", CASE)
 
+# The Ge'ez construct state: the noun's last consonant takes ኧ (-ä), linking
+# it to the next noun as "X of Y": ቤት + ኧ -> ቤተ (ቤተ ክርስቲያን). Ruled
+# 2026-10-30. A perfective verb has the same shape (ሰበረ), so it attaches
+# only to an entry marked takes_construct, and alone. See _analyses().
+CONSTRUCT_MARK = "ኧ"
+_CONSTRUCT_ROW = SuffixShape(CONSTRUCT_MARK, NOUN, "", CONSTRUCT, carrier_order=1, restore_orders=(6,))
+
 # Order 8 is the "wa" form of a family (ሏ, ቷ). A labiovelar's order-4 letter
 # (ቋ, ጓ, ኳ) is the same sound for the velars.
 _LABIALIZED_ORDER = 8
@@ -344,6 +352,7 @@ SUFFIX_TABLE = (
     _fused("ኣችን", NOUN, POSSESSIVE, 4, "ችን", (6,)),
     _fused("ኣችሁ", ANY, POSSESSIVE, 4, "ችሁ", (6, 1), OBJECT),
     _fused("ኣቸው", ANY, POSSESSIVE, 4, "ቸው", (6, 1), OBJECT),
+    _CONSTRUCT_ROW,
     # The adjective ending: ውጤት + ኣማ -> ውጤታማ.
     _fused("ኣማ", NOUN, ADJECTIVE, 4, "ማ", (6,)),
     # Her, as an object: ሰጠ + ኣት -> ሰጣት.
@@ -394,7 +403,9 @@ SUFFIX_TABLE = (
 # itself. Rows that need a reviewed verb stem (the gerunds, the
 # imperfective) say nothing about a corpus candidate, which has no stems,
 # and the gerund ኣ restoring to order 6 would read ስራ as ስር + ኣ.
-CORPUS_SUFFIXES = tuple(s for s in SUFFIX_TABLE if s.aspects in (None, _PERFECTIVE))
+CORPUS_SUFFIXES = tuple(
+    s for s in SUFFIX_TABLE if s.aspects in (None, _PERFECTIVE) and s is not _CONSTRUCT_ROW
+)
 
 
 # ── Prefixes ─────────────────────────────────────────────────────────────
@@ -857,6 +868,7 @@ _READINGS = {
     "ታ": ((), ("gerund_3fs",)),
     "ቼ": ((), ("gerund_1s",)),
     "ኣማ": (("adjectivizer",), ()),
+    "ኧ": (("construct",), ()),
     "ማ": (("adjectivizer", "topic"), ()),
     "ዋ": (("definite_f", "possessive_3fs"), ()),
     "ኤ": (("possessive_1s",), ("gerund_1s",)),
@@ -1311,6 +1323,10 @@ def _analyses(
         for verb, aspect in stems.get(node.text, ()):
             anchors.append((verb, VERB, aspect))
         for stem, category, aspect in anchors:
+            if _CONSTRUCT_ROW in node.shapes and not (
+                node.shapes == (_CONSTRUCT_ROW,) and lexicon.get(stem, {}).get("takes_construct")
+            ):
+                continue
             if _compatible(node, stem, category, aspect):
                 found.setdefault(
                     Segmentation(

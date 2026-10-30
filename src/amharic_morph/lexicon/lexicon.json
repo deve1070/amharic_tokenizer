@@ -39,7 +39,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ህዝብ",
@@ -236,7 +237,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "መሆን",
@@ -316,7 +318,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ሀገር",
@@ -356,7 +359,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": "spelling variant of አገር"
+    "notes": "spelling variant of አገር; takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ከተማ",
@@ -826,7 +830,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ሀይል",
@@ -903,7 +908,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "መብት",
@@ -1631,7 +1637,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ብዙ",
@@ -2613,7 +2620,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ጀርመን",
@@ -3797,7 +3805,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ቃል",
@@ -3834,7 +3843,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ዘመን",
@@ -5085,7 +5095,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "እግር",
@@ -11914,7 +11925,8 @@
     "stems": {},
     "source": "corpus_bootstrap",
     "validated": true,
-    "notes": ""
+    "notes": "takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   },
   {
     "word": "ወርቅ",
@@ -34282,5 +34294,23 @@
     "source": "native_speaker",
     "validated": true,
     "notes": "6,171 tokens of የበላይነት; without it የ + በ + ለ + አይነት"
+  },
+  {
+    "word": "ሊቅ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ል",
+      "ቅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "scholar; construct ሊቀ (ሊቀ ጳጳሳት); takes the construct ኧ (ruled 2026-10-30)",
+    "takes_construct": true
   }
 ]

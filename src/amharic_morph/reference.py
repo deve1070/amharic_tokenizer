@@ -92,7 +92,7 @@ _ALTERNATIVE = re.compile(f"\\[({_ANALYSIS})\\]")
 #   መ_ንግስ_ት) and on a verb the gerund, the object, the 2fs and the ቶ-gerund's
 #   ት (ሆን_ኦ, ሰጥ_ት_አል). They are peeled when Level
 #   4's stem is a verb. See VERB_INFLECTIONAL_SUFFIXES.
-_DERIVATION_LOOKALIKES = {"ኤ", "ኣ"}
+_DERIVATION_LOOKALIKES = {"ኤ", "ኣ", "ኧ"}
 _VERB_LOOKALIKES = {"ኦ", "ኣት", "ኢ", "ት"}
 # Prefixes peeled on a verb: every row of the prefix table. On a noun only
 # CORPUS_PREFIXES, because the reference also writes nominal derivation
@@ -116,8 +116,10 @@ VERB_INFLECTIONAL_SUFFIXES = INFLECTIONAL_SUFFIXES + tuple(
 # derivation (ል_ም_አት, ልማት). It is peeled only when Level 4 also splits
 # it, so a whole entry is not charged for the derivation inside it, and a
 # split the reference does not make still disagrees.
-_PLURAL_AT = normalize("ኣት")
-NOUN_PLURAL_SUFFIXES = INFLECTIONAL_SUFFIXES + (_PLURAL_AT,)
+#
+# The construct ኧ is the same case: the reference also writes ኧ as a
+# verb's linking vowel (የ_ሚ_ኖር_ኧ_ው).
+_PEELED_WHEN_SPLIT = ("ኣት", "ኧ")
 # On a derived verb stem (ገብ) the ኣ is a morpheme of its own: የ_ሚ_ገብ_ኣ,
 # ሆን_ኣ. A perfective entry (ገባ) already holds it.
 DERIVED_STEM_SUFFIXES = VERB_INFLECTIONAL_SUFFIXES + (normalize(STEM_VOWEL),)
@@ -304,8 +306,10 @@ def affixes_agree(
     if segmentation.category == "verb" and suffixes is INFLECTIONAL_SUFFIXES:
         derived = segmentation.aspect not in (None, PERFECTIVE)
         suffixes = DERIVED_STEM_SUFFIXES if derived else VERB_INFLECTIONAL_SUFFIXES
-    elif suffixes is INFLECTIONAL_SUFFIXES and segmentation.suffixes[:1] == ("ኣት",):
-        suffixes = NOUN_PLURAL_SUFFIXES
+    elif suffixes is INFLECTIONAL_SUFFIXES and set(segmentation.suffixes) & set(_PEELED_WHEN_SPLIT):
+        suffixes = INFLECTIONAL_SUFFIXES + tuple(
+            normalize(s) for s in _PEELED_WHEN_SPLIT if s in segmentation.suffixes
+        )
     if segmentation.category == "verb" and prefixes is CORPUS_PREFIXES:
         prefixes = VERB_PREFIXES
     pre, _, suf = outer_affixes(analysis, prefixes, suffixes)

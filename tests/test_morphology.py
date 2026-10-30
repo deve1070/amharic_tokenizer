@@ -798,6 +798,39 @@ class TestLabiovelarCarrier:
         assert segment_word("ልኳ", typed(ልክ="noun")).morphemes == ["ልክ", "ዋ"]
 
 
+class TestConstruct:
+    """
+    The Ge'ez construct state: the noun's last consonant takes ኧ (-ä) to
+    link it to the next noun as "X of Y". ቤተ ክርስቲያን = ቤት + ኧ | ክርስቲያን.
+    Only on nouns whose entry is marked takes_construct, because a
+    perfective verb has the same shape (ሰበረ is not ሰበር + ኧ). Ruled
+    2026-10-30.
+    """
+
+    @staticmethod
+    def lex():
+        index = typed(ቤት="noun", ሰበር="noun", ክፍል="noun")
+        index["ቤት"]["takes_construct"] = True
+        index["ክፍል"]["takes_construct"] = True
+        return index
+
+    def test_construct_form(self):
+        result = segment_word("ቤተ", self.lex())
+        assert result.morphemes == ["ቤት", "ኧ"]
+        assert suffix_readings(result, "ኧ") == ("construct",)
+        assert segment_word("ክፍለ", self.lex()).morphemes == ["ክፍል", "ኧ"]
+
+    def test_after_a_preposition(self):
+        assert segment_word("በቤተ", self.lex()).morphemes == ["በ", "ቤት", "ኧ"]
+
+    def test_only_on_a_marked_noun(self):
+        assert segment_word("ሰበረ", self.lex()).known is False
+
+    def test_is_the_only_suffix(self):
+        # The construct links to the next word; nothing follows it.
+        assert segment_word("ቤቶቸ", self.lex()).known is False
+
+
 class TestNegativePerfective:
     """አል ... ም: a prefix accepted only on a verb that also carries ም"""
 

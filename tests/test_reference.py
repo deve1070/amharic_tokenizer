@@ -278,6 +278,16 @@ class TestInflectionAgreement:
         segment = segmenter({"ጉዳት": Segmentation("ጉዳት", "ጉድ", suffixes=("ኣት",), category="noun")})
         assert inflection_agreement(segment, reference, {"ጉዳት": 1}).agreeing_tokens == 0
 
+    def test_construct_is_compared_only_when_level4_has_it(self):
+        reference = {"ቤተ": (ReferenceAnalysis(("ቤት", "ኧ"), ()),),
+                     "የሚኖረው": (ReferenceAnalysis(("የ", "ሚ", "ኖር", "ኧ", "ው"), ()),)}
+        segment = segmenter({
+            "ቤተ": Segmentation("ቤተ", "ቤት", suffixes=("ኧ",), category="noun"),
+            "የሚኖረው": Segmentation("የሚኖረው", "ኖረ", prefixes=("የ", "ሚ"), suffixes=("ው",),
+                                    category="verb", aspect="imperfective"),
+        })
+        assert inflection_agreement(segment, reference, {"ቤተ": 1, "የሚኖረው": 1}).agreeing_tokens == 2
+
     def test_any_alternative_may_agree(self):
         reference = {"በላይ": (
             ReferenceAnalysis(("በ", "ላይ"), ()),
