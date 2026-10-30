@@ -31092,5 +31092,3195 @@
     "source": "native_speaker",
     "validated": true,
     "notes": "eye; not አየ + ን (አይናቸው = አይን + ኣቸው)"
+  },
+  {
+    "word": "ነው",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "704,347 tokens; copula; IRIT keeps it whole; reviewed 2026-10-30"
+  },
+  {
+    "word": "እና",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "360,349 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጋር",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "173,691 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ግን",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "170,780 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ይህ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "115,473 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ደግሞ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ግ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "115,414 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ብቻ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ች"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "100,344 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወይም",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ይ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "94,755 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሁሉ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ህ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "91,886 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ናቸው",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ች",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "86,754 tokens; copula; IRIT ን_አቸው; reviewed 2026-10-30"
+  },
+  {
+    "word": "አቶ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "77,019 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አይደለም",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ይ",
+      "ድ",
+      "ል",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "59,395 tokens; negative copula; IRIT whole; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንጂ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ጅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "55,769 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ከፍተኛ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ፍ",
+      "ት",
+      "ኝ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "50,135 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "መካከል",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ክ",
+      "ክ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "48,232 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በጣም",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ጥ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "48,049 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አይነት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ይ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "47,577 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንዲሁም",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ",
+      "ህ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "45,995 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ድረስ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ር",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "43,908 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንዲህ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "42,656 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወቅት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ቅ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "40,952 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንዴት",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "36,989 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ያህል",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ህ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "36,170 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዘንድ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ዝ",
+      "ን",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "35,772 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በኩል",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ክ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "31,789 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ስለዚህ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ል",
+      "ዝ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "27,690 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንኳን",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ክ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "27,407 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እጅግ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ጅ",
+      "ግ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "27,292 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በርካታ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ር",
+      "ክ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "25,900 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አቀፍ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ቅ",
+      "ፍ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "25,874 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በተለይ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ት",
+      "ል",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "24,147 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ምክር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ክ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "22,684 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሚሊዮን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ል",
+      "ይ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "21,754 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አንዳንድ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ",
+      "ን",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "21,036 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ይልቅ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ል",
+      "ቅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "19,301 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቀደም",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ድ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "18,363 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዙሪያ",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ዝ",
+      "ር",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "15,930 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ነኝ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ኝ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "15,922 tokens; copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሂደት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ህ",
+      "ድ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "15,383 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንኳ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ክ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "14,939 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አቡነ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ብ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "14,508 tokens; construct form; reviewed 2026-10-30"
+  },
+  {
+    "word": "ይሄ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "14,202 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ስነ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "14,149 tokens; construct form; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዶላር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ል",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,923 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ትኩረት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ክ",
+      "ር",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,734 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ምላሽ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ል",
+      "ሽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,704 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ውይይት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ይ",
+      "ይ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,573 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ልክ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ል",
+      "ክ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,472 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ተጨማሪ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ጭ",
+      "ም",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,443 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ግልጽ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ል",
+      "ጽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,435 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ናት",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,353 tokens; copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወይ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "13,074 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ከፍ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ፍ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "12,952 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እኮ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ክ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "12,926 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አንጻር",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ጽ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "12,877 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ስብሰባ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ብ",
+      "ስ",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "12,787 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ነጥብ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ጥ",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "12,558 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ኮሚቴ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ም",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,906 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሚኒስቴር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ን",
+      "ስ",
+      "ት",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,842 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጥናት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,814 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አዋጅ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ው",
+      "ጅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,611 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጭምር",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጭ",
+      "ም",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,571 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ፕሬዚዳንት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ፕ",
+      "ር",
+      "ዝ",
+      "ድ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,510 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጥቂት",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ቅ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,467 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ታዲያ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ድ",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "11,365 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሜትር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ት",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,934 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በቂ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ቅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,760 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አህመድ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ህ",
+      "ም",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,711 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዩኒቨርሲቲ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ን",
+      "ቭ",
+      "ር",
+      "ስ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,666 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ነን",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,634 tokens; copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "ደስ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,610 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አንቀጽ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ቅ",
+      "ጽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,370 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አየር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ይ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,314 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ትርጉም",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ር",
+      "ግ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,216 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "መሰረታዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ስ",
+      "ር",
+      "ት",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,151 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ክስ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,149 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንግዲህ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ግ",
+      "ድ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,143 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ይፋ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ፍ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,135 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወዲህ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ድ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,088 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ህዝባዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ህ",
+      "ዝ",
+      "ብ",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,084 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሰባት",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ብ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,019 tokens; numeral; reviewed 2026-10-30"
+  },
+  {
+    "word": "ፕሮግራም",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ፕ",
+      "ር",
+      "ግ",
+      "ር",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "10,012 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ያ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,843 tokens; short: check it does not split ያለ-forms; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዝግጅት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ዝ",
+      "ግ",
+      "ጅ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,829 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሺ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ሽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,715 tokens; numeral; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሰፊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ፍ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,689 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ተግባራዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ግ",
+      "ብ",
+      "ር",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,639 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ስፍራ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ፍ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,217 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ማንኛውም",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ን",
+      "ኝ",
+      "ው",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,216 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሆይ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ህ",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,159 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሚና",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,141 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ማህበራዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ህ",
+      "ብ",
+      "ር",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,140 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ልዩነት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ል",
+      "ይ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,108 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እነ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "9,049 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "መልክ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ል",
+      "ክ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,998 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ማየት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ይ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,958 tokens; infinitives are entries, ruling V5; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወዘተ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ዝ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,900 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ምክትል",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ክ",
+      "ት",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,788 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጥበቃ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ብ",
+      "ቅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,642 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዮሀንስ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ህ",
+      "ን",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,565 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "እርዳታ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ር",
+      "ድ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,444 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ተገቢ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ግ",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,415 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዝም",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ዝ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,318 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቢያንስ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ይ",
+      "ን",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,195 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወይስ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ይ",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,123 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አስተዋጽኦ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ስ",
+      "ት",
+      "ው",
+      "ጽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,090 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዘገባ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ዝ",
+      "ግ",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "8,029 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ፖለቲካዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ፕ",
+      "ል",
+      "ት",
+      "ክ",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,980 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ህጋዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ህ",
+      "ግ",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,939 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ድርጊት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ር",
+      "ግ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,918 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ረገድ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ር",
+      "ግ",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,879 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጸረ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጽ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,877 tokens; written apart; reviewed 2026-10-30"
+  },
+  {
+    "word": "ፍጹም",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ፍ",
+      "ጽ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,867 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አቅጣጫ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ቅ",
+      "ጥ",
+      "ጭ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,840 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ተዋህዶ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ው",
+      "ህ",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,828 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ስድስት",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ድ",
+      "ስ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,776 tokens; numeral; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጥበብ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ብ",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,763 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሲኖዶስ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ን",
+      "ድ",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,657 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቢሊዮን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ል",
+      "ይ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,642 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሪፖርት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ር",
+      "ፕ",
+      "ር",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,634 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ኦርቶዶክስ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ር",
+      "ት",
+      "ድ",
+      "ክ",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,608 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አመለካከት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ም",
+      "ል",
+      "ክ",
+      "ክ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,545 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ብጹእ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ጽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,431 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቁልፍ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ል",
+      "ፍ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,356 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንዲሁ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,320 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንዴ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,287 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "መንግስታዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ን",
+      "ግ",
+      "ስ",
+      "ት",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,201 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ምርጥ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ር",
+      "ጥ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,190 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ስልጠና",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ል",
+      "ጥ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,174 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አጠቃላይ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ጥ",
+      "ቅ",
+      "ል",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,161 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ደብዳቤ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ብ",
+      "ድ",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,134 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ብዙሀን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ዝ",
+      "ህ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,124 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በስተቀር",
+    "category": "preposition",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ስ",
+      "ት",
+      "ቅ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "7,034 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዴሞክራሲያዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ም",
+      "ክ",
+      "ር",
+      "ስ",
+      "ይ",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,946 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጳውሎስ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጵ",
+      "ው",
+      "ል",
+      "ስ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,920 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "ምናልባት",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ን",
+      "ል",
+      "ብ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,879 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቅድሚያ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ድ",
+      "ም",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,872 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ወሳኝ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ው",
+      "ስ",
+      "ኝ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,862 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ግዜ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ዝ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,860 tokens; spelling of ጊዜ; reviewed 2026-10-30"
+  },
+  {
+    "word": "ደሳለኝ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ስ",
+      "ል",
+      "ኝ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,820 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "መስከረም",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ስ",
+      "ክ",
+      "ር",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,781 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጠቃሚ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጥ",
+      "ቅ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,747 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ግንባር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ን",
+      "ብ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,684 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ተቀባይነት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ቅ",
+      "ብ",
+      "ይ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,675 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ድርሻ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ድ",
+      "ር",
+      "ሽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,667 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ኪሎ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,555 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ጽህፈት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ጽ",
+      "ህ",
+      "ፍ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,524 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሰብአዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ብ",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,522 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ኮሚሽን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ክ",
+      "ም",
+      "ሽ",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,519 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "መሀል",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ህ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,510 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "እንጅ",
+    "category": "conjunction",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ን",
+      "ጅ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,506 tokens; spelling of እንጂ; reviewed 2026-10-30"
+  },
+  {
+    "word": "መሀመድ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ም",
+      "ህ",
+      "ም",
+      "ድ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,478 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "ብዛት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ዝ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,466 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ይቅርታ",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ይ",
+      "ቅ",
+      "ር",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,397 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ታሪካዊ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ር",
+      "ክ",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,325 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "አላህ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ል",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,241 tokens; name; not አለ + ኣ + ህ; reviewed 2026-10-30"
+  },
+  {
+    "word": "አማካኝነት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ም",
+      "ክ",
+      "ኝ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,203 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ዜናዊ",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ዝ",
+      "ን",
+      "ው"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,203 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሀይለማርያም",
+    "category": "other",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ህ",
+      "ይ",
+      "ል",
+      "ም",
+      "ር",
+      "ይ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,053 tokens; personal name; reviewed 2026-10-30"
+  },
+  {
+    "word": "አይደሉም",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ይ",
+      "ድ",
+      "ል",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,035 tokens; negative copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቁጥጥር",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ጥ",
+      "ጥ",
+      "ር"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,029 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ነህ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "5,164 tokens; copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "እርግጥ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ር",
+      "ግ",
+      "ጥ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "4,739 tokens; base of በእርግጥ; needs the እ-fusion rule; reviewed 2026-10-30"
+  },
+  {
+    "word": "ነች",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ች"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "4,499 tokens; copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "እዚያ",
+    "category": "adverb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "እ",
+      "ዝ",
+      "ይ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "3,866 tokens; base of ከዚያ, በዚያ (IRIT ከ_እዚያ); needs the እ-fusion rule; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቅርብ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ር",
+      "ብ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "2,438 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ሰሞን",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ስ",
+      "ም",
+      "ን"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "2,220 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ናችሁ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ች",
+      "ህ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "2,123 tokens; copula; IRIT ን_አችሁ; reviewed 2026-10-30"
+  },
+  {
+    "word": "ተደጋጋሚ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ት",
+      "ድ",
+      "ግ",
+      "ግ",
+      "ም"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "1,773 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ቀጥታ",
+    "category": "adjective",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ቅ",
+      "ጥ",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "1,524 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "ነሽ",
+    "category": "verb",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ን",
+      "ሽ"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "1,242 tokens; copula; reviewed 2026-10-30"
+  },
+  {
+    "word": "ግል",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ግ",
+      "ል"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "729 tokens; reviewed 2026-10-30"
+  },
+  {
+    "word": "በላይነት",
+    "category": "noun",
+    "gender": null,
+    "allows_prefix": [],
+    "allows_suffix": [],
+    "allows_infix": null,
+    "root_consonants": [
+      "ብ",
+      "ል",
+      "ይ",
+      "ን",
+      "ት"
+    ],
+    "root_source": "skeleton",
+    "stems": {},
+    "source": "native_speaker",
+    "validated": true,
+    "notes": "6,171 tokens of የበላይነት; without it የ + በ + ለ + አይነት"
   }
 ]

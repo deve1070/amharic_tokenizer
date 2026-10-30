@@ -229,6 +229,7 @@ src/amharic_morph/lexicon/candidates.json
 src/amharic_morph/lexicon/category_review.tsv
 src/amharic_morph/lexicon/root_review.tsv
 src/amharic_morph/lexicon/stem_review.tsv
+src/amharic_morph/lexicon/function_word_review.tsv
 commit_msg.txt
 
 # Verb-detection working file: regenerable from the corpus.
